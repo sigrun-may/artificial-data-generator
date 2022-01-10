@@ -10,9 +10,9 @@ from sklearn.utils import shuffle
 from sklearn.datasets import make_spd_matrix
 import seaborn as sns
 from matplotlib import pyplot
-from sklearn.preprocessing import PowerTransformer
 from statsmodels.stats import correlation_tools
 import warnings
+import random
 
 # Settings
 PATH_TO_SAVE_CSV = "../data/artifical_biological_data.csv"
@@ -211,7 +211,6 @@ def generate_pseudo_class(
 
 
 def generate_normal_distributed_correlated_block(
-    label,
     number_of_features,
     number_of_samples,
     # mean_list,
@@ -267,7 +266,7 @@ def generate_normal_distributed_correlated_block(
         check_valid="raise",
     )
     print("correlated class generation finished")
-    # visualize_intra_class_correlations(covariant_class)
+    # _visualize_intra_class_correlations(covariant_class)
 
     # # generate labels
     # label_vector = np.full((number_of_samples, 1), label)
@@ -275,32 +274,12 @@ def generate_normal_distributed_correlated_block(
     return covariant_block
 
 
-def generate_lognormal_distributed_correlated_class(
-    label,
-    number_of_biomarkers,
-    number_of_samples_per_class,
-    mean_list,
-    lower_bound,
-    upper_bound,
-):
-    intra_correlated_features = generate_normal_distributed_correlated_block(
-        label=label,
-        number_of_features=number_of_biomarkers,
-        number_of_samples=number_of_samples_per_class,
-        mean_list=mean_list,  # [0, 0.5, 1, 1.5, 2, 2.5],
-        lower_bound=lower_bound,
-        upper_bound=upper_bound,
-    )
-    # If the random variable X is lognormally distributed, then Y=ln(X) has a normal distribution.
-    # If Y is normally distributed, then X=exp(Y) is also lognormally distributed.
-    # The lognormal distribution has two parameters μ - location and σ - scale.
-    # In my example I assumed the simplest approach with μ=0 and σ=1.
-    # If you want to have μ=m and σ=s then just put X <- m + s*exp(Y)
-    visualize_intra_class_correlations(intra_correlated_features[:, 1:])
-    visualize_intra_class_correlations(np.exp(intra_correlated_features[:, 1:]))
+def _visualize_intra_class_correlations(data):
+    """
 
-
-def visualize_intra_class_correlations(data):
+    :param data:
+    :return:
+    """
     # convert numpy array to DataFrame
     data_df = pd.DataFrame(data)
 
@@ -310,26 +289,62 @@ def visualize_intra_class_correlations(data):
         column_names.append("feature_" + str(column_name))
     data_df.columns = column_names
 
-    sns.set(color_codes=True)
-    sns.displot(data=data_df, kind="kde")
-    pyplot.show()
-
-    sns.set(color_codes=True)
-    sns.displot(data=data_df, kind="hist", kde=True)
-    pyplot.show()
-
     sns.set_theme(style="white")
     corr = data_df.corr()
     sns.heatmap(corr, annot=True, cmap="Blues", fmt=".1g")
     pyplot.show()
     # pyplot.savefig('C:/Users/sma19/Pictures/correlation_FS/healthy_{}.png'.format(data_name))
 
-
-def visualize_classes(data):
+    sns.heatmap(corr, cmap="YlGnBu")
     pyplot.show()
 
 
+def _visualize_distributions(data):
+    """
+
+    :param data:
+    :return:
+    """
+    # convert numpy array to DataFrame
+    data_df = pd.DataFrame(data)
+
+    # generate column names
+    column_names = []
+    for column_name in data_df.columns:
+        column_names.append("element_" + str(column_name))
+    data_df.columns = column_names
+
+    sns.set(color_codes=True)
+    sns.displot(data=data_df, kind="kde")
+    pyplot.show()
+
+
+def _generate_column_names(
+    data_df,
+    number_of_biomarkers,
+    number_of_pseudo_class_features,
+    number_of_random_features,
+):
+
+    # generate label as first entry
+    column_names = ["label"]
+
+    # generate names for artificial biomarkers
+    for column_name in range(number_of_biomarkers):
+        column_names.append("bm_" + str(column_name))
+
+    for column_name in range(number_of_pseudo_class_features):
+        column_names.append("pseudo_" + str(column_name))
+
+    for column_name in range(number_of_random_features):
+        column_names.append("random_" + str(column_name))
+
+    data_df.columns = column_names
+    return data_df
+
+
 def _generate_classes(
+    labels,
     number_of_features,
     number_of_classes,
     number_of_correlated_blocks,
@@ -340,34 +355,35 @@ def _generate_classes(
 ):
     classes = []
     assert len(scales) == number_of_classes
+    assert len(labels) == number_of_classes
     # simulation of intraclass correlation
     if number_of_correlated_blocks is not None:
         # generate intraclass correlated classes
-        for class_label in range(len(number_of_correlated_blocks)):
-            assert number_of_features % number_of_correlated_blocks[class_label] == 0
-            assert number_of_correlated_blocks[class_label] > 0
+        for i, label in enumerate(labels):
+            assert number_of_features % number_of_correlated_blocks[i] == 0
+            assert number_of_correlated_blocks[i] > 0
             # generate blocks of correlated features
             blocks = []
-            for block_number in range(number_of_correlated_blocks[class_label]):
+            for block_number in range(number_of_correlated_blocks[i]):
                 # generate block of correlated features
                 block = generate_normal_distributed_correlated_block(
-                    label=class_label,
                     number_of_features=int(
-                        number_of_features / number_of_correlated_blocks[class_label]
+                        number_of_features / number_of_correlated_blocks[i]
                     ),
                     number_of_samples=number_of_samples_per_class,
                     # mean_list,
-                    lower_bound=lower_bounds_for_correlations[class_label],
-                    upper_bound=upper_bounds_for_correlations[class_label],
+                    lower_bound=lower_bounds_for_correlations[i],
+                    upper_bound=upper_bounds_for_correlations[i],
                 )
-                visualize_intra_class_correlations(block)
+                # _visualize_intra_class_correlations(block)
                 blocks.append(block)
             generated_class = np.concatenate(blocks, axis=1)
+            # _visualize_intra_class_correlations(generated_class)
             assert generated_class.shape[1] == number_of_features
             assert generated_class.shape[0] == number_of_samples_per_class
 
             # generate labels
-            label_vector = np.full((number_of_samples_per_class, 1), class_label)
+            label_vector = np.full((number_of_samples_per_class, 1), label)
 
             labeled_class = np.concatenate((label_vector, generated_class), axis=1)
             assert labeled_class.shape[1] == number_of_features + 1
@@ -404,16 +420,17 @@ def _generate_classes(
 
 def generate_artificial_data(
     number_of_normal_distributed_classes=2,
-    means_of_normal_distributions=[0, 4],
+    means_of_normal_distributions=[0, 8],
     scales_of_normal_distributions=[1, 2],
     number_of_lognormal_distributed_classes=3,
-    shifts_of_lognormal_distribution_centers=[3, 8, 10],
+    shifts_of_lognormal_distribution_centers=[3, 5, 10],
     number_of_samples_per_class=20,
-    number_of_artificial_biomarkers=18,  # divided by number of blocks and rounded up for simulation of intra class correlations must be vielfaches der blocks
-    number_of_intra_class_correlated_blocks_normal_distributed_classes=[3],
+    number_of_artificial_biomarkers=18,
+    # divided by number of blocks and rounded up for simulation of intra class correlations must be vielfaches der blocks
+    number_of_intra_class_correlated_blocks_normal_distributed_classes=[3, 3],
     lower_bounds_for_correlations_normal_distributed_classes=np.full(3, 0.7),
     upper_bounds_for_correlations_normal_distributed_classes=np.full(3, 1),
-    number_of_intra_class_correlated_blocks_lognormal_distributed_classes=[3],
+    number_of_intra_class_correlated_blocks_lognormal_distributed_classes=[3, 3, 3],
     lower_bounds_for_correlations_lognormal_distributed_classes=np.full(3, 0.7),
     upper_bounds_for_correlations_lognormal_distributed_classes=np.full(3, 1),
     number_of_pseudo_class_features=4,
@@ -432,7 +449,8 @@ def generate_artificial_data(
         "must match the number of normal distributed classes."
     )
     assert (
-        len(shifts_of_lognormal_distribution_centers) == number_of_lognormal_distributed_classes
+        len(shifts_of_lognormal_distribution_centers)
+        == number_of_lognormal_distributed_classes
     ), (
         "The length of the list of shifts (shifts_of_lognormal_distribution_centers) for "
         "all lognormal distributed classes "
@@ -450,8 +468,11 @@ def generate_artificial_data(
     classes = []
     classes_df = pd.DataFrame()
 
+    labels = range(number_of_classes)
+
     # generate normal distributed classes
     list_of_normal_distributed_classes = _generate_classes(
+        labels[:number_of_normal_distributed_classes],
         number_of_artificial_biomarkers,
         number_of_normal_distributed_classes,
         number_of_intra_class_correlated_blocks_normal_distributed_classes,
@@ -460,15 +481,28 @@ def generate_artificial_data(
         lower_bounds_for_correlations_normal_distributed_classes,
         upper_bounds_for_correlations_normal_distributed_classes,
     )
-    for normal_distributed_class, mean_shift in list(zip(list_of_normal_distributed_classes, means_of_normal_distributions)):
-        assert len(means_of_normal_distributions) == len(list_of_normal_distributed_classes)
-        shifted_class = normal_distributed_class + mean_shift
-        classes.append(shifted_class)
-        classes_df[str(mean_shift)] = shifted_class.flatten()
+    assert list_of_normal_distributed_classes[0][0, 0] == labels[0]
+
+    for normal_distributed_class, mean_shift in list(
+        zip(list_of_normal_distributed_classes, means_of_normal_distributions)
+    ):
+        assert len(means_of_normal_distributions) == len(
+            list_of_normal_distributed_classes
+        )
+        #  shift class data and exclude the label from shifting
+        label = normal_distributed_class[:, 0].reshape(-1, 1)
+        shifted_class_data = normal_distributed_class[:, 1:] + mean_shift
+        classes_df[str(mean_shift)] = shifted_class_data.flatten()
+
+        labeled_shifted_class = np.hstack((label, shifted_class_data))
+        assert labeled_shifted_class[:, 0].all() == label.all()
+        classes.append(labeled_shifted_class)
     assert len(classes) == number_of_normal_distributed_classes
+    # _visualize_intra_class_correlations(classes_df)
 
     # generate lognormal distributed classes
     list_of_classes = _generate_classes(
+        labels[number_of_normal_distributed_classes:],
         number_of_artificial_biomarkers,
         number_of_lognormal_distributed_classes,
         number_of_intra_class_correlated_blocks_lognormal_distributed_classes,
@@ -477,257 +511,163 @@ def generate_artificial_data(
         lower_bounds_for_correlations_lognormal_distributed_classes,
         upper_bounds_for_correlations_lognormal_distributed_classes,
     )
-    for normal_distributed_class, shift_of_lognormal_distribution_center in list(zip(list_of_classes, shifts_of_lognormal_distribution_centers)):
+    for normal_distributed_class, shift_of_lognormal_distribution_center in list(
+        zip(list_of_classes, shifts_of_lognormal_distribution_centers)
+    ):
         assert len(shifts_of_lognormal_distribution_centers) == len(list_of_classes)
-        shifted_lognormal_distributed_class = np.exp(normal_distributed_class) + shift_of_lognormal_distribution_center
-        classes_df[str(shift_of_lognormal_distribution_center)] = shifted_lognormal_distributed_class.flatten()
-        classes.append(shifted_lognormal_distributed_class)
+        # If the random variable X is lognormally distributed, then Y=ln(X) has a normal distribution.
+        # If Y is normally distributed, then X=exp(Y) is also lognormally distributed.
+        # The lognormal distribution has two parameters μ - location and σ - scale.
+        # In my example I assumed the simplest approach with μ=0 and σ=1.
+        # If you want to have μ=m and σ=s then just put X <- m + s*exp(Y)
+
+        #  shift and transform class data excluding the label
+        label = normal_distributed_class[:, 0].reshape(-1, 1)
+        shifted_lognormal_distributed_class = (
+            np.exp(normal_distributed_class[:, 1:])
+            + shift_of_lognormal_distribution_center
+        )
+        classes_df[
+            str(shift_of_lognormal_distribution_center)
+        ] = shifted_lognormal_distributed_class.flatten()
+
+        labeled_shifted_lognormal_distributed_class = np.concatenate(
+            (label, shifted_lognormal_distributed_class),
+            axis=1,
+        )
+        classes.append(labeled_shifted_lognormal_distributed_class)
     assert len(classes) == number_of_classes
+    _visualize_distributions(classes_df.iloc[1:, :])
 
     complete_classes = np.concatenate(classes, axis=0)
-    assert complete_classes.shape[0] == number_of_samples_per_class * number_of_classes
+
+    # check the data shape and the correct generation of the labels
     print(complete_classes.shape)
-    visualize_intra_class_correlations(classes_df)
-    visualize_intra_class_correlations(complete_classes[:, 1:])
+    assert complete_classes.shape[0] == number_of_samples_per_class * number_of_classes
+    assert (
+        complete_classes.shape[1] == number_of_artificial_biomarkers + 1
+    )  # for the label
+    for class_label in labels:
+        assert (
+            complete_classes[number_of_samples_per_class * class_label, 0]
+            == class_label
+        )
+
+    # append pseudo class
+    pseudo_class = generate_pseudo_class(
+        number_of_pseudo_class_features,
+        number_of_normal_distributed_classes,
+        number_of_lognormal_distributed_classes,
+        number_of_samples_per_class,
+    )
+    complete_classes = np.concatenate((complete_classes, pseudo_class), axis=1)
+    assert (
+        complete_classes.shape[1]
+        == number_of_artificial_biomarkers
+        + number_of_pseudo_class_features
+        + 1  # for the label
+    )
+
+    # append random features
+    random_features = np.random.normal(
+        loc=0.0, scale=2, size=(number_of_all_samples, number_of_random_features)
+    )
+    complete_data_set = np.concatenate((complete_classes, random_features), axis=1)
+
+    # check final data shape
+    print(complete_data_set.shape)
+    assert complete_data_set.shape[0] == number_of_samples_per_class * number_of_classes
+    assert (
+        complete_data_set.shape[1]
+        == number_of_artificial_biomarkers
+        + number_of_pseudo_class_features
+        + 1  # for the label
+        + number_of_random_features
+    )
+
+    complete_data_df = pd.DataFrame(complete_data_set)
+
+    # generate feature names
+    complete_data_df = _generate_column_names(
+        complete_data_df,
+        number_of_artificial_biomarkers,
+        number_of_pseudo_class_features,
+        number_of_random_features,
+    )
+
+    # complete_features_df.columns = map(str, complete_features_df.columns)
+    # complete_features_df.to_feather(path_feather)
+    pd.DataFrame(complete_data_df).to_csv(path_to_save_csv, index=False)
+    print(
+        "Data generated successfully. You can find the generated file relative to artificial_data.py in: ",
+        path_to_save_csv,
+    )
+    return complete_data_df
 
 
+def generate_shuffled_artificial_data(
+        number_of_normal_distributed_classes=2,
+        means_of_normal_distributions=[0, 8],
+        scales_of_normal_distributions=[1, 2],
+        number_of_lognormal_distributed_classes=3,
+        shifts_of_lognormal_distribution_centers=[3, 5, 10],
+        number_of_samples_per_class=20,
+        number_of_artificial_biomarkers=18,
+        # divided by number of blocks and rounded up for simulation of intra class correlations must be vielfaches der blocks
+        number_of_intra_class_correlated_blocks_normal_distributed_classes=[3, 3],
+        lower_bounds_for_correlations_normal_distributed_classes=np.full(3, 0.7),
+        upper_bounds_for_correlations_normal_distributed_classes=np.full(3, 1),
+        number_of_intra_class_correlated_blocks_lognormal_distributed_classes=[3, 3, 3],
+        lower_bounds_for_correlations_lognormal_distributed_classes=np.full(3, 0.7),
+        upper_bounds_for_correlations_lognormal_distributed_classes=np.full(3, 1),
+        number_of_pseudo_class_features=4,
+        number_of_random_features=50,
+        path_to_save_plot=None,
+        path_to_save_csv="../data/complete_artif.csv",
+        path_to_save_feather=None,
+    ):
+
+    complete_data_df = generate_artificial_data(
+        number_of_normal_distributed_classes,
+        means_of_normal_distributions,
+        scales_of_normal_distributions,
+        number_of_lognormal_distributed_classes,
+        shifts_of_lognormal_distribution_centers,
+        number_of_samples_per_class,
+        number_of_artificial_biomarkers,
+        # divided by number of blocks and rounded up for simulation of intra class correlations must be vielfaches der blocks
+        number_of_intra_class_correlated_blocks_normal_distributed_classes,
+        lower_bounds_for_correlations_normal_distributed_classes,
+        upper_bounds_for_correlations_normal_distributed_classes,
+        number_of_intra_class_correlated_blocks_lognormal_distributed_classes,
+        lower_bounds_for_correlations_lognormal_distributed_classes,
+        upper_bounds_for_correlations_lognormal_distributed_classes,
+        number_of_pseudo_class_features,
+        number_of_random_features,
+        path_to_save_plot,
+        path_to_save_csv,
+        path_to_save_feather,
+    )
+
+    # shuffle artificial features
+    column_names = list(complete_data_df.columns[1:])
+    random.shuffle(column_names)
+    shuffled_column_names = ["label"] + column_names
+    shuffled_data_df = complete_data_df[shuffled_column_names]
+
+    assert shuffled_data_df.columns[0] == "label"
+
+    # complete_features_df.columns = map(str, complete_features_df.columns)
+    # complete_features_df.to_feather(path_feather)
+    pd.DataFrame(shuffled_data_df).to_csv(path_to_save_csv, index=False)
+    print(
+        "Data generated successfully. You can find the generated file relative to artificial_data.py in: ",
+        path_to_save_csv,
+    )
+
+    return shuffled_data_df
 
 
-    # # generate "healthy" normal distributed data
-    # if number_of_intra_class_correlated_blocks_normal_distributed_classes is not None:
-    #     # simulation of intraclass correlation
-    #     assert (
-    #         number_of_artificial_biomarkers
-    #         % number_of_intra_class_correlated_blocks_normal_distributed_classes
-    #         == 0
-    #     )
-    #     assert number_of_intra_class_correlated_blocks_normal_distributed_classes > 0
-    #
-    #     # generate intraclass correlated normal distributed classes
-    #     for class_number in range(
-    #         len(number_of_intra_class_correlated_blocks_normal_distributed_classes)
-    #     ):
-    #         # generate blocks of correlated features
-    #         for block_number in range(
-    #             number_of_intra_class_correlated_blocks_normal_distributed_classes[
-    #                 class_number
-    #             ]
-    #         ):
-    #             # generate block of correlated features
-    #             pass
-    #
-    #     # generate remaining normal distributed classes without intraclass correlation
-    #     if (
-    #         len(number_of_intra_class_correlated_blocks_normal_distributed_classes)
-    #         < number_of_normal_distributed_classes
-    #     ):
-    #         for class_number in range(
-    #             number_of_normal_distributed_classes
-    #             - len(
-    #                 number_of_intra_class_correlated_blocks_normal_distributed_classes
-    #             )
-    #         ):
-    #             label = class_number + len(
-    #                 number_of_intra_class_correlated_blocks_normal_distributed_classes
-    #             )
-    #
-    # # no simulation of intraclass correlation
-    # else:
-    #     for class_number in range(number_of_normal_distributed_classes):
-    #         normal_distributed_class = generate_normal_distributed_class(
-    #             label=class_number,
-    #             number_of_samples=number_of_samples_per_class,
-    #             number_of_biomarkers=number_of_artificial_biomarkers,
-    #             mean_of_normal_distribution=means_of_normal_distributions[class_number],
-    #             scale=scales_of_normal_distributions[class_number],
-    #         )
-    #
-    # # generate lognormal distributed data simulating diagnosis of a specific disease
-    # if (
-    #     number_of_intra_class_correlated_blocks_lognormal_distributed_classes
-    #     is not None
-    # ):
-    #     # simulation of intraclass correlation
-    #     assert (
-    #         number_of_artificial_biomarkers
-    #         % number_of_intra_class_correlated_blocks_lognormal_distributed_classes
-    #         == 0
-    #     )
-    #     assert number_of_intra_class_correlated_blocks_lognormal_distributed_classes > 0
-    #
-    #     # generate intraclass correlated normal distributed classes
-    #     for class_number in range(
-    #         len(number_of_intra_class_correlated_blocks_lognormal_distributed_classes)
-    #     ):
-    #         # generate blocks of correlated features
-    #         for block_number in range(
-    #             number_of_intra_class_correlated_blocks_lognormal_distributed_classes[
-    #                 class_number
-    #             ]
-    #         ):
-    #             # generate block of correlated features
-    #             pass
-    #
-    #     # generate remaining normal distributed classes without intraclass correlation
-    #     if (
-    #         len(number_of_intra_class_correlated_blocks_lognormal_distributed_classes)
-    #         < number_of_lognormal_distributed_classes
-    #     ):
-    #         for class_number in range(
-    #             number_of_lognormal_distributed_classes
-    #             - len(
-    #                 number_of_intra_class_correlated_blocks_normal_distributed_classes
-    #             )
-    #         ):
-    #             label = class_number + len(
-    #                 number_of_intra_class_correlated_blocks_normal_distributed_classes
-    #             )
-    #
-    # # no simulation of intraclass correlation
-    # else:
-    #     for class_number in range(number_of_normal_distributed_classes):
-    #         normal_distributed_class = generate_normal_distributed_class(
-    #             label=class_number,
-    #             number_of_samples=number_of_samples_per_class,
-    #             number_of_biomarkers=number_of_artificial_biomarkers,
-    #             mean_of_normal_distribution=means_of_normal_distributions[class_number],
-    #             scale=scales_of_normal_distributions[class_number],
-    #         )
-    #
-    # all_features = generate_lognormal_distributed_class(
-    #     0,
-    #     number_of_samples_per_class,
-    #     shift_of_lognormal_distributions[0],
-    #     mean_of_underlying_normal_distribution_of_lognormal_distributions[0],
-    #     sigma_of_lognormal_distributions[0],
-    #     number_of_artificial_biomarkers,
-    # )
-    # assert (
-    #     len(
-    #         means_of_underlying_normal_distribution_of_correlated_lognormal_distributions
-    #     )
-    #     == number_of_intra_class_correlated_blocks
-    # )
-    # for k in range(number_of_lognormal_distributed_classes):
-    #     assert int(
-    #         number_of_artificial_biomarkers / number_of_intra_class_correlated_blocks
-    #     ) == len(
-    #         means_of_underlying_normal_distribution_of_correlated_lognormal_distributions[
-    #             k
-    #         ]
-    #     )
-    #
-    #     all_features = generate_normal_distributed_correlated_block(
-    #         0,
-    #         int(
-    #             number_of_artificial_biomarkers
-    #             / number_of_intra_class_correlated_blocks
-    #         ),
-    #         number_of_samples_per_class,
-    #         means_of_underlying_normal_distribution_of_correlated_lognormal_distributions[
-    #             k
-    #         ],
-    #         lower_bound_for_correlations,
-    #         upper_bound_for_correlations,
-    #     )
-    #
-    # # generate data with diagnosis of a specific disease
-    # for class_number in range(1, number_of_lognormal_distributed_classes):
-    #     labeled_features_lognormal = generate_lognormal_distributed_class(
-    #         class_number,
-    #         number_of_samples_per_class,
-    #         shift_of_lognormal_distributions[class_number],
-    #         mean_of_underlying_normal_distribution_of_lognormal_distributions[
-    #             class_number
-    #         ],
-    #         sigma_of_lognormal_distributions[class_number],
-    #         number_of_artificial_biomarkers,
-    #     )
-    #     generate_lognormal_distributed_correlated_class(
-    #         label=class_number,
-    #         number_of_biomarkers=6,
-    #         number_of_samples_per_class=number_of_samples_per_class,
-    #         mean_list=[0, 0, 0, 0, 0, 0],  # [0, 0.5, 1, 1.5, 2, 2.5],
-    #         lower_bound=lower_bound_for_correlations,
-    #         upper_bound=upper_bound_for_correlations,
-    #     )
-    #
-    #     all_features = np.vstack((all_features, labeled_features_lognormal))
-    #
-    # # generate "healthy" data
-    # for class_number in range(number_of_normal_distributed_classes):
-    #     if simulate_intra_class_correlations:
-    #         intra_correlated_features = generate_normal_distributed_correlated_block(
-    #             label=class_number + number_of_lognormal_distributed_classes,
-    #             number_of_features=6,
-    #             mean_list=[0, 0, 0, 0, 0, 0],
-    #             lower_bound=lower_bound_for_correlations,
-    #             upper_bound=upper_bound_for_correlations,
-    #         )
-    #         all_features = np.vstack((all_features, intra_correlated_features))
-    #     else:
-    #         # generate "healthy" data
-    #         healthy_class = generate_normal_distributed_class(
-    #             label=class_number + number_of_lognormal_distributed_classes,
-    #             number_of_samples=number_of_samples_per_class,
-    #             number_of_biomarkers=number_of_artificial_biomarkers,
-    #             mean_of_normal_distribution=mean_of_normal_distributions[class_number],
-    #             scale=scale_of_normal_distributions[class_number],
-    #         )
-    #         all_features = np.vstack((all_features, healthy_class))
-    #
-    # # visualize the distributions
-    # # sns.set(color_codes=True)
-    # # input = labeled_features_class_1[:, 1:].flatten()
-    # # sns.distplot(input)
-    # # # ptnorm = PowerTransformer(copy=True, method='yeo-johnson', standardize=True)
-    # # # input4 = (ptnorm.fit_transform(labeled_features_class_1)).flatten()
-    # # # sns.distplot(input4);
-    # # input2 = labeled_features_class_0[:, 1:].flatten()
-    # # sns.distplot(input2)
-    # # # ptlog = PowerTransformer(copy=True, method='yeo-johnson', standardize=True)
-    # # # input3 = (ptlog.fit_transform(labeled_features_class_0)).flatten()
-    # # # sns.distplot(input3);
-    # #
-    # # if path_to_save_plot is not None:
-    # #     pyplot.savefig(
-    # #         "C:/Users/sma19/Pictures/correlation_FS/complete_{}.png".format(data_name)
-    # #     )
-    # # pyplot.show()
-    #
-    # # generate random data
-    # # mean for the random data is 0 TODO: ist mean = 0 realistisch? Macht der mean hier einen Unterschied?
-    # random_features = np.random.normal(
-    #     loc=0.0, scale=2, size=(number_of_all_samples, number_of_random_features)
-    # )
-    # pseudo_class_features = generate_pseudo_class(
-    #     number_of_pseudo_class_features,
-    #     number_of_normal_distributed_classes,
-    #     number_of_lognormal_distributed_classes,
-    #     number_of_samples_per_class,
-    # )
-    # # print(pseudo_class_features)
-    # all_features = np.hstack((all_features, pseudo_class_features))
-    # complete_features = np.hstack((all_features, random_features))
-    #
-    # complete_features_df = pd.DataFrame(complete_features)
-    #
-    # # generate feature names
-    # column_names = []
-    # for column_name in complete_features_df.columns:
-    #     column_names.append("feature_" + str(column_name))
-    # column_names[0] = "label"
-    #
-    # complete_features_df.columns = column_names
-    #
-    # # complete_features_df.columns = map(str, complete_features_df.columns)
-    # # complete_features_df.to_feather(path_feather)
-    # pd.DataFrame(complete_features_df).to_csv(PATH_TO_SAVE_CSV, index=False)
-    # print(
-    #     "Data generated successfully. You can find the generated file relative to artificial_data.py in: ",
-    #     PATH_TO_SAVE_CSV,
-    # )
+# generate_artificial_data()
 
-
-# print(generate_normal_distributed_correlated_block(0, number_of_features=6, mean_list=[1,2,3,4,5,6] ,lower_bound=0.8, upper_bound=1.0, positive_covariance=True))
-generate_artificial_data()
+generate_shuffled_artificial_data()
