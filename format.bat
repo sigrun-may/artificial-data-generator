@@ -1,3 +1,3 @@
-black cv_pruner examples tests
-isort cv_pruner examples tests
+black biomarker_data_generator
+isort biomarker_data_generator
 mdformat README.md

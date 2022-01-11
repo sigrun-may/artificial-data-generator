@@ -1,7 +1,7 @@
-pydocstyle --count biomarker-data-generator
-black cv_pruner biomarker-data-generator --check --diff
-flake8 cv_pruner biomarker-data-generator
-isort cv_pruner biomarker-data-generator --check --diff
+pydocstyle --count biomarker_data_generator
+black biomarker_data_generator --check --diff
+flake8 biomarker_data_generator
+isort biomarker_data_generator --check --diff
 mdformat --check README.md
-mypy --install-types --non-interactive biomarker-data-generator
-pylint biomarker-data-generator
+mypy --install-types --non-interactive biomarker_data_generator
+pylint biomarker_data_generator
