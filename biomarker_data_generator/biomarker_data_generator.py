@@ -19,6 +19,7 @@ from typing import Dict
 import numpy as np
 import pandas as pd
 import seaborn as sns
+import joblib
 from matplotlib import pyplot
 from numpy.random import default_rng
 from sklearn.utils import shuffle
@@ -313,7 +314,7 @@ def _generate_column_names(
                         "random" for random data
 
     """
-    # :param data_df:
+    # :param meta_data_dict:
     # :param number_of_biomarkers: Number of artificial
     # biomarkers inculded in the given DataFrame.
     # :param number_of_pseudo_class_features: Number of
@@ -769,7 +770,7 @@ def generate_artificial_data(params_dict: dict):
     # generate feature names
     _generate_column_names(complete_data_df, params_dict)
 
-    return complete_data_df
+    return complete_data_df, meta_data_dict
 
 
 def save_result(
@@ -800,6 +801,26 @@ def save_result(
         print(f"Data generated successfully and saved in " f"{path_to_save_feather}")
 
 
+def save_meta_data(
+    meta_data: Dict[str, list],
+    path_to_save_meta_data=None,
+):
+    """Save the generated data.
+
+    Args:
+        path_to_save_meta_data: Path for saving the meta data.
+        Default is None.
+        meta_data: Dict including meta data to be saved.
+
+    """
+    if path_to_save_meta_data is not None:
+        assert isinstance(path_to_save_meta_data, str)
+        joblib.dump(meta_data, "../data/meta_data_complete_artif.pkl")
+
+        print(f"Meta data successfully saved in " 
+              f"{path_to_save_meta_data}")
+
+
 def generate_shuffled_artificial_data(params_dict: dict):
     """Generate artificial biomarker data with shuffled features.
 
@@ -809,7 +830,7 @@ def generate_shuffled_artificial_data(params_dict: dict):
     Returns: Generated artificial data with shuffled features as DataFrame.
 
     """
-    complete_data_df = generate_artificial_data(params_dict)
+    complete_data_df, meta_data_dict = generate_artificial_data(params_dict)
 
     # shuffle artificial features
     column_names = list(complete_data_df.columns[1:])
@@ -819,7 +840,7 @@ def generate_shuffled_artificial_data(params_dict: dict):
 
     assert shuffled_data_df.columns[0] == "label"
 
-    return shuffled_data_df
+    return shuffled_data_df, meta_data_dict
 
 
 parameters = dict(
@@ -853,5 +874,6 @@ parameters = dict(
 )
 
 # generate_artificial_data()
-generated_data_df = generate_shuffled_artificial_data(parameters)
+generated_data_df, meta_data_dict = generate_shuffled_artificial_data(parameters)
+save_meta_data(meta_data_dict, "../data/complete_artif.pkl")
 save_result(generated_data_df, "../data/complete_artif.csv")
