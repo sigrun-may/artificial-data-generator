@@ -14,6 +14,7 @@ from biomarker_data_generator.biomarker_data_generator import (
     save_result,
 )
 
+
 __version__ = "0.0.1rc1"
 
 __all__ = [

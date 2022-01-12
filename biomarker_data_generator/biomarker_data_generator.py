@@ -14,6 +14,7 @@ Can be used as baseline for benchmarking and the development of new methods.
 import math
 import random
 import warnings
+from typing import Dict
 
 import numpy as np
 import pandas as pd
@@ -164,9 +165,7 @@ def generate_pseudo_class(params_dict: dict):
             )
         simulated_classes.append(normal_distributed_class)
 
-    shifted_simulated_classes, _ = _shift_all_classes(
-        simulated_classes, params_dict
-    )
+    shifted_simulated_classes, _ = _shift_all_classes(simulated_classes, params_dict)
     classes = np.concatenate(shifted_simulated_classes, axis=0)
 
     assert classes.shape == (
@@ -388,9 +387,7 @@ def _transform_normal_to_lognormal(classes_list: list):
         #  transform class data excluding the label
         label = generated_class[:, 0].reshape(-1, 1)
         lognormal_distributed_class = np.exp(generated_class[:, 1:])
-        labeled_lognormal = np.concatenate(
-            (label, lognormal_distributed_class), axis=1
-        )
+        labeled_lognormal = np.concatenate((label, lognormal_distributed_class), axis=1)
         lognormal_distributed_classes.append(labeled_lognormal)
 
     return lognormal_distributed_classes
@@ -436,9 +433,7 @@ def _generate_normal_distributed_classes(
             # generate blocks of correlated features
             blocks = [
                 generate_normal_distributed_correlated_block(
-                    number_of_features=number_of_features_per_correlated_block[
-                        i
-                    ][j],
+                    number_of_features=number_of_features_per_correlated_block[i][j],
                     number_of_samples=number_of_samples_per_class,
                     lower_bound=lower_bounds_for_correlations[i],
                     upper_bound=upper_bounds_for_correlations[i],
@@ -467,8 +462,7 @@ def _generate_normal_distributed_classes(
                 uncorrelated_features = generate_normal_distributed_class(
                     label,
                     number_of_samples_per_class,
-                    number_of_biomarkers=number_of_features
-                    - generated_class.shape[1],
+                    number_of_biomarkers=number_of_features - generated_class.shape[1],
                     scale=scales[i],
                 )
                 unlabeled_uncorrelated_features = uncorrelated_features[:, 1:]
@@ -480,9 +474,7 @@ def _generate_normal_distributed_classes(
                 for uncorrelated_feature_number in range(
                     unlabeled_uncorrelated_features.shape[1]
                 ):
-                    class_features.append(
-                        ["uncorr_" + str(uncorrelated_feature_number)]
-                    )
+                    class_features.append(["uncorr_" + str(uncorrelated_feature_number)])
                 meta_data_dict["class_" + str(label)] = class_features
 
             assert generated_class.shape[1] == number_of_features
@@ -503,9 +495,7 @@ def _generate_normal_distributed_classes(
             # generate labels
             label_vector = np.full((number_of_samples_per_class, 1), label)
 
-            labeled_class = np.concatenate(
-                (label_vector, generated_class), axis=1
-            )
+            labeled_class = np.concatenate((label_vector, generated_class), axis=1)
             assert labeled_class.shape[1] == number_of_features + 1
             classes.append(labeled_class)
         assert len(classes) == len(number_of_features_per_correlated_block)
@@ -513,17 +503,14 @@ def _generate_normal_distributed_classes(
         # generate remaining classes without intraclass correlation
         if len(number_of_features_per_correlated_block) < number_of_classes:
             for class_label in range(
-                number_of_classes
-                - len(number_of_features_per_correlated_block)
+                number_of_classes - len(number_of_features_per_correlated_block)
             ):
                 normal_distributed_class = generate_normal_distributed_class(
-                    label=class_label
-                    + len(number_of_features_per_correlated_block),
+                    label=class_label + len(number_of_features_per_correlated_block),
                     number_of_samples=number_of_samples_per_class,
                     number_of_biomarkers=number_of_features,
                     scale=scales[
-                        class_label
-                        + len(number_of_features_per_correlated_block)
+                        class_label + len(number_of_features_per_correlated_block)
                     ],
                 )
                 # generate uncorrelated class feature names
@@ -550,12 +537,8 @@ def _generate_normal_distributed_classes(
             )
             # generate uncorrelated class feature names
             class_features = []
-            for uncorrelated_feature_number in range(
-                normal_distributed_class.shape[1]
-            ):
-                class_features.append(
-                    ["bm_uncorr_" + str(uncorrelated_feature_number)]
-                )
+            for uncorrelated_feature_number in range(normal_distributed_class.shape[1]):
+                class_features.append(["bm_uncorr_" + str(uncorrelated_feature_number)])
             meta_data_dict["class_" + str(class_label)] = class_features
             classes.append(normal_distributed_class)
     assert len(classes) == number_of_classes
@@ -617,8 +600,7 @@ def _validate_parameters(params_dict):
 
     if params_dict["number_of_samples_per_class"] < 1:
         raise ValueError(
-            "Number of samples number_of_samples_per_class "
-            "must be greater than zero."
+            "Number of samples number_of_samples_per_class " "must be greater than zero."
         )
 
     if not params_dict["number_of_normal_distributed_classes"] == len(
@@ -665,7 +647,7 @@ def generate_artificial_data(params_dict: dict):
         params_dict["number_of_samples_per_class"] * total_number_of_classes
     )
 
-    meta_data_dict = {}
+    meta_data_dict: Dict[str, list] = {}
 
     # generate labels
     labels = list(range(total_number_of_classes))
@@ -746,9 +728,7 @@ def generate_artificial_data(params_dict: dict):
     )
     for class_label in labels:
         assert (
-            complete_classes[
-                params_dict["number_of_samples_per_class"] * class_label, 0
-            ]
+            complete_classes[params_dict["number_of_samples_per_class"] * class_label, 0]
             == class_label
         )
 
@@ -768,9 +748,7 @@ def generate_artificial_data(params_dict: dict):
         scale=2,
         size=(number_of_all_samples, params_dict["number_of_random_features"]),
     )
-    complete_data_set = np.concatenate(
-        (complete_classes, random_features), axis=1
-    )
+    complete_data_set = np.concatenate((complete_classes, random_features), axis=1)
 
     # check final data shape
     print(complete_data_set.shape)
@@ -813,18 +791,13 @@ def save_result(
         assert isinstance(path_to_save_csv, str)
         pd.DataFrame(data_df).to_csv(path_to_save_csv, index=False)
 
-        print(
-            f"Data generated successfully and saved in " f"{path_to_save_csv}"
-        )
+        print(f"Data generated successfully and saved in " f"{path_to_save_csv}")
 
     if path_to_save_feather is not None:
         assert isinstance(path_to_save_feather, str)
         pd.DataFrame(data_df).to_feather(path_to_save_feather, index=False)
 
-        print(
-            f"Data generated successfully and saved in "
-            f"{path_to_save_feather}"
-        )
+        print(f"Data generated successfully and saved in " f"{path_to_save_feather}")
 
 
 def generate_shuffled_artificial_data(params_dict: dict):
