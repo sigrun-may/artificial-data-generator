@@ -12,6 +12,7 @@ from biomarker_data_generator.biomarker_data_generator import (
     generate_artificial_data,
     generate_shuffled_artificial_data,
     save_result,
+    save_meta_data,
 )
 
 
@@ -21,5 +22,6 @@ __all__ = [
     "generate_artificial_data",
     "generate_shuffled_artificial_data",
     "save_result",
+    "save_meta_data",
     "__version__",
 ]
