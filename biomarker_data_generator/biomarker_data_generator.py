@@ -245,7 +245,7 @@ def generate_normal_distributed_correlated_block(
         check_valid="raise",
     )
     print("correlated class generation finished")
-    # _visualize_correlations(covariant_class)
+    _visualize_correlations(covariant_block)
 
     return covariant_block
 
@@ -273,9 +273,6 @@ def _visualize_correlations(data):
     # pyplot.savefig('C:/Users/sma19/Pictures/
     # correlation_FS/healthy_{}.png'.format(data_name))
 
-    sns.heatmap(corr, cmap="YlGnBu")
-    pyplot.show()
-
 
 def _visualize_distributions(data):
     """Visualize the distribution of different classes.
@@ -294,7 +291,7 @@ def _visualize_distributions(data):
     data_df.columns = column_names
 
     sns.set(color_codes=True)
-    sns.displot(data=data_df, kind="kde")
+    sns.displot(data=data_df, kde=True)
     pyplot.show()
 
 
@@ -456,7 +453,7 @@ def _generate_normal_distributed_classes(
 
             generated_class = np.concatenate(blocks, axis=1)
 
-            # _visualize_correlations(generated_class)
+            _visualize_correlations(generated_class)
 
             # generate uncorrelated features
             if generated_class.shape[1] < number_of_features:
@@ -546,7 +543,7 @@ def _generate_normal_distributed_classes(
     return classes
 
 
-def _set_parameters(params_dict):
+def _set_default_parameters(params_dict):
     # initialize shifts of classes
     if "all_shifts" in params_dict.keys():
         # not all shifts were given correctly by the user: set default shifts
@@ -609,9 +606,9 @@ def _validate_parameters(params_dict):
     ):
         warnings.warn(
             "No or not all mean values are given in the "
-            '"means_of_normal_distributions" list. All mean '
-            "values are reset to default: Means of all classes are "
-            "shifted by 2 each."
+            '"means_of_normal_distributions" list. All locales '
+            "are reset to default: Locales of all classes are "
+            "shifted by 2 respectively."
         )
         params_dict["all_shifts"] = None
 
@@ -619,10 +616,11 @@ def _validate_parameters(params_dict):
         params_dict["shifts_of_lognormal_distribution_centers"]
     ):
         warnings.warn(
-            "No or not all mean values are given in the "
-            '"shifts_of_lognormal_distribution_centers" list. '
-            "All mean values are reset to default: Means of all "
-            "classes are shifted by 2 each."
+            "The number of shifted locales given in the "
+            '"shifts_of_lognormal_distribution_centers" list does not match '
+            'the number of lognormal distributed classes. '
+            "All location values are reset to default: Locations of all "
+            "classes are shifted by 2 respectively."
         )
         params_dict["all_shifts"] = None
 
@@ -638,8 +636,10 @@ def generate_artificial_data(params_dict: dict):
     Returns: Generated artificial data as DataFrame.
 
     """
-    params_dict = _set_parameters(params_dict)
-    # TODO: update to different sample numbers per class
+    # validate input parameters
+    _validate_parameters(params_dict)
+    params_dict = _set_default_parameters(params_dict)
+
     total_number_of_classes = (
         params_dict["number_of_normal_distributed_classes"]
         + params_dict["number_of_lognormal_distributed_classes"]
@@ -711,8 +711,8 @@ def generate_artificial_data(params_dict: dict):
 
     assert total_number_of_classes == len(artificial_classes_list)
 
-    # visualize correlations
-    _visualize_correlations(classes_df)
+    # visualize distributions
+    _visualize_distributions(classes_df)
 
     complete_classes = np.concatenate(artificial_classes_list, axis=0)
 
