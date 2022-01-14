@@ -9,10 +9,10 @@
 """Data generator main package."""
 
 from biomarker_data_generator.biomarker_data_generator import (
+    generate_artificial_classification_data,
     generate_artificial_data,
-    generate_shuffled_artificial_data,
-    save_result,
     save_meta_data,
+    save_result,
 )
 
 
@@ -20,7 +20,7 @@ __version__ = "0.0.1rc1"
 
 __all__ = [
     "generate_artificial_data",
-    "generate_shuffled_artificial_data",
+    "generate_artificial_classification_data",
     "save_result",
     "save_meta_data",
     "__version__",

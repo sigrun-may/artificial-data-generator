@@ -5,41 +5,41 @@
 #
 # This software is distributed under the terms of the MIT license
 # which is available at https://opensource.org/licenses/MIT
-"""
-Generator for artificial biomarker data from high throughput experiments.
+
+"""Generator for artificial biomarker data from high throughput experiments.
 
 Can be used as baseline for benchmarking and the development of new methods.
 """
-
 import math
 import random
 import warnings
-from typing import Dict
+from numbers import Number
+from typing import Any, Dict, List, Union
 
+import joblib
 import numpy as np
 import pandas as pd
 import seaborn as sns
-import joblib
 from matplotlib import pyplot
+from numpy import ndarray
 from numpy.random import default_rng
 from sklearn.utils import shuffle
 from statsmodels.stats import correlation_tools
 
 
 def generate_normal_distributed_class(
-    label: int,
+    label: float,
     number_of_samples: int,
     number_of_biomarkers: int,
-    scale,
+    scale: float,
 ):
-    """
-    Generate artificial data to simulate the samples from healthy patients.
+    """Generate artificial data to simulate the samples from healthy patients.
 
     :param label: Label for the generated artificial class.
     :param number_of_samples: Number of rows of generated data.
     :param number_of_biomarkers: Number of columns of generated data.
     :param mean_of_normal_distribution: Mean of the data distribution.
-    :param scale:
+    :param scale: Scale of the normal distribution.
     :return: Normal distributed data of the given shape and parameters
     with the given label in the first column.
     """
@@ -62,6 +62,7 @@ def generate_normal_distributed_class(
             + str(0)
             + " -> Try choosing a smaller scale for a "
             "small sample size or accept a deviating mean."
+            " The current scale is " + str(scale) + "."
         )
 
     normal_distributed_data = np.hstack((label_vector, features))
@@ -84,7 +85,7 @@ def generate_normal_distributed_class(
     # parameters with the given label in the first column.
 
 
-def generate_pseudo_class(params_dict: dict):
+def generate_pseudo_class(params_dict: Dict[str, Any]):
     """Create a pseudo-class by shuffling artificial classes.
 
     Creates a pseudo-class by shuffling the specified number of artificial
@@ -186,22 +187,22 @@ def generate_pseudo_class(params_dict: dict):
 
 
 def generate_normal_distributed_correlated_block(
-    number_of_features,
-    number_of_samples,
+    number_of_features: int,
+    number_of_samples: int,
     # mean_list,
-    lower_bound,
-    upper_bound,
+    lower_bound: float,
+    upper_bound: float,
 ):
     """Generate a block of correlated features.
 
-    :param label: Label for the generated artificial class.
-    :param number_of_features: Number of columns of generated data.
-    :param number_of_samples: Number of rows of generated data.
-    # :param mean_list:
-    :param lower_bound:
-    :param upper_bound:
-    :return: Numpy array of the given shape with correlating features
-    in the given range.
+    Args:
+        number_of_features: Number of columns of generated data.
+        number_of_samples: Number of rows of generated data.
+        lower_bound: Lower bound of the generated correlations.
+        upper_bound: Upper bound of the generated correlations.
+
+    Returns: Numpy array of the given shape with correlating features in the given range.
+
     """
     rng = default_rng()
 
@@ -250,7 +251,7 @@ def generate_normal_distributed_correlated_block(
     return covariant_block
 
 
-def _visualize_correlations(data):
+def _visualize_correlations(data: Union[ndarray, pd.DataFrame]):
     """Visualize correlations.
 
     Args:
@@ -274,7 +275,7 @@ def _visualize_correlations(data):
     # correlation_FS/healthy_{}.png'.format(data_name))
 
 
-def _visualize_distributions(data):
+def _visualize_distributions(data: Union[ndarray, pd.DataFrame]):
     """Visualize the distribution of different classes.
 
     Args:
@@ -296,17 +297,20 @@ def _visualize_distributions(data):
 
 
 def _generate_column_names(
-    data_df,
-    params_dict,
+    data_df: pd.DataFrame,
+    params_dict: Dict[str, Any],
 ):
     """Generate semantic names for the columns of the given DataFrame.
 
     Args:
         data_df: DataFrame with unnamed columns.
-        params_dict:
+        params_dict: Parameter dict including the number of features per
+        class, the number of pseudo-class features and the number of random
+        features (see parameters of
+        :func:`generate_artificial_classification_data`).
 
     Returns: DataFrame with meaningful named columns:
-                        "bm" for artificial biomarker
+                        "bm" for artificial class feature
                         "pseudo" for pseudo-class feature
                         "random" for random data
 
@@ -327,7 +331,7 @@ def _generate_column_names(
     column_names = ["label"]
 
     # generate names for artificial biomarkers
-    for column_name in range(params_dict["number_of_artificial_biomarkers"]):
+    for column_name in range(params_dict["number_of_features_per_class"]):
         column_names.append("bm_" + str(column_name))
 
     for column_name in range(params_dict["number_of_pseudo_class_features"]):
@@ -340,7 +344,7 @@ def _generate_column_names(
     return data_df
 
 
-def _shift_all_classes(classes_list: list, params_dict: dict):
+def _shift_all_classes(classes_list: List[ndarray], params_dict: Dict[str, Any]):
     """Shift the locale of all classes.
 
     Args:
@@ -368,7 +372,7 @@ def _shift_all_classes(classes_list: list, params_dict: dict):
     return shifted_classes, classes_df
 
 
-def _transform_normal_to_lognormal(classes_list: list):
+def _transform_normal_to_lognormal(classes_list: List[ndarray]):
     """Transform normal distributed data to lognormal distributions.
 
     Args:
@@ -392,28 +396,34 @@ def _transform_normal_to_lognormal(classes_list: list):
 
 
 def _generate_normal_distributed_classes(
-    labels,
-    meta_data_dict,
-    number_of_features,
-    number_of_classes,
-    number_of_features_per_correlated_block,
-    number_of_samples_per_class,
-    scales,
-    lower_bounds_for_correlations,
-    upper_bounds_for_correlations,
-) -> list:
+    labels: List[float],
+    meta_data_dict: Dict[str, Union[List[List[str]], List[str], int]],
+    number_of_features: int,
+    number_of_classes: int,
+    number_of_features_per_correlated_block: Union[ndarray, List[List[int]]],
+    number_of_samples_per_class: int,
+    scales: Union[List[float], ndarray],
+    lower_bounds_for_correlations: Union[List[float], ndarray],
+    upper_bounds_for_correlations: Union[List[float], ndarray],
+) -> List[ndarray]:
     """Generate artificial classes with the given parameters as numpy arrays.
 
     Args:
-        labels:
-        meta_data_dict:
-        number_of_features:
-        number_of_classes:
-        number_of_features_per_correlated_block:
-        number_of_samples_per_class:
-        scales:
-        lower_bounds_for_correlations:
-        upper_bounds_for_correlations:
+        labels: Labels of the classes to be generated.
+        meta_data_dict: Dict to store meta data for the correlated features
+        within the artificial classes.
+        number_of_features: Number of features (columns) per class.
+        number_of_classes: Nunmber of classes to be generated.
+        number_of_features_per_correlated_block: Number of features within
+        each block of correlated features for each class.
+        number_of_samples_per_class: Number of samples (rows) per class.
+        scales: Scales of the respective class distributions.
+        lower_bounds_for_correlations: Lower bounds for the correlations of
+        the separate blocks of correlated features within the
+            respective generated classes.
+        upper_bounds_for_correlations: Upper bounds for the correlations
+            of the separate blocks of correlated features within the
+            respective generated classes.
 
     Returns: List of generated classes of the given shape as numpy arrays.
 
@@ -479,9 +489,11 @@ def _generate_normal_distributed_classes(
             assert generated_class.shape[0] == number_of_samples_per_class
 
             # generate names to check the number of generated features
-            assert isinstance(meta_data_dict, dict)
             class_feature_names_array = np.concatenate(
-                [np.array(i) for i in meta_data_dict["class_" + str(label)]]
+                [
+                    np.array(i)
+                    for i in meta_data_dict["class_" + str(label)]  # type:ignore
+                ]
             )
             assert class_feature_names_array.size == number_of_features, (
                 "Number of features "
@@ -543,7 +555,7 @@ def _generate_normal_distributed_classes(
     return classes
 
 
-def _set_default_parameters(params_dict):
+def _set_default_parameters(params_dict: Dict[str, Any]):
     # initialize shifts of classes
     if "all_shifts" in params_dict.keys():
         # not all shifts were given correctly by the user: set default shifts
@@ -565,73 +577,306 @@ def _set_default_parameters(params_dict):
 
 
 def _validate_parameters(params_dict):
+    """Validate given input parameters.
+
+    Args:
+        params_dict: Dict including the input parameters to validate. See...
+
+    Returns: True, if no error was raised.
+
+    """
+    if ("number_of_samples_per_class" not in params_dict.keys()) or (
+        params_dict["number_of_samples_per_class"] <= 0
+    ):
+        raise ValueError(
+            "To generate any data at least one sample must be "
+            'set for "number_of_samples_per_class".'
+        )
+
+    if ("number_of_features_per_class" not in params_dict.keys()) or (
+        params_dict["number_of_features_per_class"] <= 0
+    ):
+        raise ValueError(
+            "In order to generate meaningful classifiable data, "
+            "at least one relevant feature per class must be generated.\n "
+            "Otherwise, the generated data cannot be used meaningfully "
+            "for classification because it is purely random."
+        )
+
     if (
-        not len(params_dict["means_of_normal_distributions"])
-        == len(params_dict["scales_of_normal_distributions"])
-        == params_dict["number_of_normal_distributed_classes"]
+        (params_dict["number_of_normal_distributed_classes"] is None)
+        or ("number_of_normal_distributed_classes" not in params_dict.keys())
+    ) and (
+        (params_dict["number_of_lognormal_distributed_classes"] is None)
+        or ("number_of_lognormal_distributed_classes" not in params_dict.keys())
     ):
-        raise ValueError(
-            "The length of the list of means "
-            "(mean_of_normal_distributions) and "
-            "scales (scale_of_normal_distributions) for all "
-            "normal distributed classes must match the number "
-            "of normal distributed classes."
-        )
-    if not (
-        len(params_dict["shifts_of_lognormal_distribution_centers"])
-        == params_dict["number_of_lognormal_distributed_classes"]
+        raise ValueError("No class is selected to be generated.")
+
+    if (params_dict["number_of_normal_distributed_classes"] <= 0) and (
+        params_dict["number_of_lognormal_distributed_classes"] <= 0
     ):
-        raise ValueError(
-            "The length of the list of shifts "
-            "(shifts_of_lognormal_distribution_centers) for "
-            "all lognormal distributed classes "
-            "must match the number of lognormal distributed classes."
-        )
+        raise ValueError("The number of classes must be positive.")
+
     if (
         params_dict["number_of_normal_distributed_classes"]
         + params_dict["number_of_lognormal_distributed_classes"]
     ) < 2:
         warnings.warn(
-            "The number of classes to be generated is is less than two. "
+            "The number of classes to be generated is is less than two.\n "
             "The generated data cannot be used for classification in this way."
+        )
+
+    if (
+        not len(params_dict["means_of_normal_distributions"])
+        == len(params_dict["scales_of_normal_distributions"])
+        == params_dict["number_of_normal_distributed_classes"]
+    ):
+        warnings.warn(
+            "The length of the list of means "
+            "(mean_of_normal_distributions) and "
+            "scales (scale_of_normal_distributions) for all "
+            "normal distributed classes must match the number "
+            "of normal distributed classes.\nMean and scale will be set to "
+            "default values mean=0 and scale=1."
+        )
+        params_dict["scales_of_normal_distributions"] = np.ones(
+            params_dict["number_of_normal_distributed_classes"]
+        )
+        params_dict["means_of_normal_distributions"] = np.zeros(
+            params_dict["number_of_normal_distributed_classes"]
         )
 
     if params_dict["number_of_samples_per_class"] < 1:
         raise ValueError(
-            "Number of samples number_of_samples_per_class " "must be greater than zero."
+            "Number of samples 'number_of_samples_per_class' must be greater "
+            "than zero. "
         )
 
-    if not params_dict["number_of_normal_distributed_classes"] == len(
-        params_dict["means_of_normal_distributions"]
+    if (params_dict["means_of_normal_distributions"] is not None) and (
+        not params_dict["number_of_normal_distributed_classes"]
+        == len(params_dict["means_of_normal_distributions"])
     ):
         warnings.warn(
-            "No or not all mean values are given in the "
-            '"means_of_normal_distributions" list. All locales '
-            "are reset to default: Locales of all classes are "
-            "shifted by 2 respectively."
-        )
-        params_dict["all_shifts"] = None
-
-    if not params_dict["number_of_lognormal_distributed_classes"] == len(
-        params_dict["shifts_of_lognormal_distribution_centers"]
-    ):
-        warnings.warn(
-            "The number of shifted locales given in the "
-            '"shifts_of_lognormal_distribution_centers" list does not match '
-            'the number of lognormal distributed classes. '
+            "The number of means given in the "
+            '"means_of_normal_distributions" list does not match '
+            "the number of normal distributed classes. "
             "All location values are reset to default: Locations of all "
             "classes are shifted by 2 respectively."
         )
         params_dict["all_shifts"] = None
 
+    if params_dict["shifts_of_lognormal_distribution_centers"] is not None:
+        if not params_dict["number_of_lognormal_distributed_classes"] == len(
+            params_dict["shifts_of_lognormal_distribution_centers"]
+        ):
+            warnings.warn(
+                "The number of shifted locales given in the "
+                '"shifts_of_lognormal_distribution_centers" list does not match '
+                "the number of lognormal distributed classes.\n "
+                "All location values are reset to default: Locations of all "
+                "classes are shifted by 2 respectively."
+            )
+            params_dict["all_shifts"] = None
+
+    if (params_dict["lower_bounds_for_correlations_normal"] is None) and (
+        params_dict["number_of_features_per_correlated_block_normal_dist"] is not None
+    ):
+        warnings.warn(
+            '"lower_bounds_for_correlations_normal" is '
+            f'{params_dict["lower_bounds_for_correlations_normal"]}'
+            f' and "number_of_features_per_correlated_block_normal_dist"'
+            f" is "
+            f'{params_dict["number_of_features_per_correlated_block_normal_dist"]}.'
+            " Lower bounds are all set to default 0.7."
+        )
+        params_dict["lower_bounds_for_correlations_normal"] = np.full(
+            len(params_dict["number_of_features_per_correlated_block_normal_dist"]),
+            0.7,
+        )
+
+    if (params_dict["upper_bounds_for_correlations_normal"] is None) and (
+        params_dict["number_of_features_per_correlated_block_normal_dist"] is not None
+    ):
+        warnings.warn(
+            '"upper_bounds_for_correlations_normal" is '
+            f'{params_dict["upper_bounds_for_correlations_normal"]}'
+            f' and "number_of_features_per_correlated_block_normal_dist"'
+            f" is "
+            f'{params_dict["number_of_features_per_correlated_block_normal_dist"]}.'
+            " Upper bounds are all set to default 1.0."
+        )
+        params_dict["upper_bounds_for_correlations_normal"] = np.full(
+            len(params_dict["number_of_features_per_correlated_block_normal_dist"]),
+            1.0,
+        )
+
+    if (params_dict["lower_bounds_for_correlations_lognormal"] is None) and (
+        params_dict["number_of_features_per_correlated_block_lognormal"] is not None
+    ):
+        warnings.warn(
+            '"lower_bounds_for_correlations_lognormal" is '
+            f'{params_dict["lower_bounds_for_correlations_lognormal"]}'
+            f' and "number_of_features_per_correlated_block_lognormal"'
+            f" is "
+            f'{params_dict["number_of_features_per_correlated_block_lognormal"]}.'
+            " Lower bounds are all set to default 0.7."
+        )
+        params_dict["lower_bounds_for_correlations_lognormal"] = np.full(
+            len(params_dict["number_of_features_per_correlated_block_lognormal"]),
+            0.7,
+        )
+
+    if (params_dict["upper_bounds_for_correlations_lognormal"] is None) and (
+        params_dict["number_of_features_per_correlated_block_lognormal"] is not None
+    ):
+        warnings.warn(
+            '"upper_bounds_for_correlations_lognormal" is '
+            f'{params_dict["upper_bounds_for_correlations_lognormal"]}'
+            f' and "number_of_features_per_correlated_block_lognormal"'
+            f" is "
+            f'{params_dict["number_of_features_per_correlated_block_lognormal"]}.'
+            " Upper bounds are all set to default 1.0."
+        )
+        params_dict["upper_bounds_for_correlations_lognormal"] = np.full(
+            len(params_dict["number_of_features_per_correlated_block_lognormal" ""]),
+            1.0,
+        )
+
+    if (params_dict["lower_bounds_for_correlations_normal"] is not None) and (
+        params_dict["number_of_features_per_correlated_block_normal_dist"] is not None
+    ):
+        if not (
+            len(params_dict["lower_bounds_for_correlations_normal"])
+            == len(params_dict["number_of_features_per_correlated_block_normal_dist"])
+        ):
+            warnings.warn(
+                "The number of lower bounds for the correlated features of a "
+                "normal distributed class given in the "
+                '"lower_bounds_for_correlations_normal" list does not match '
+                "the number of blocks with correlating features specified by "
+                "the length of the"
+                "number_of_features_per_correlated_block_normal_dist list.\n"
+                "All lower and upper bound values will be set to default: "
+                "lower_bound=0.7 and upper_bound=1.0."
+            )
+            params_dict["lower_bounds_for_correlations_normal"] = (
+                np.full(
+                    len(
+                        params_dict["number_of_features_per_correlated_block_normal_dist"]
+                    ),
+                    0.7,
+                ),
+            )
+
+            params_dict["upper_bounds_for_correlations_normal"] = (
+                np.full(
+                    len(
+                        params_dict["number_of_features_per_correlated_block_normal_dist"]
+                    ),
+                    1.0,
+                ),
+            )
+
+    if (
+        (params_dict["upper_bounds_for_correlations_lognormal"] is not None)
+        and (params_dict["number_of_features_per_correlated_block_lognormal"] is not None)
+        and (
+            not len(params_dict["upper_bounds_for_correlations_lognormal"])
+            == len(params_dict["number_of_features_per_correlated_block_lognormal"])
+        )
+    ):
+        warnings.warn(
+            "The number of upper bounds for the correlated features of a "
+            "normal distributed class\ngiven in the "
+            '"upper_bounds_for_correlations_lognormal" list does not match '
+            "the number of blocks with correlating features specified by "
+            "the length of the "
+            "number_of_features_per_correlated_block_lognormal list.\n"
+            "All lower and upper bound values will be set to default: "
+            "lower_bound=0.7 and upper_bound=1.0."
+        )
+        params_dict["lower_bounds_for_correlations_lognormal"] = (
+            np.full(
+                len(params_dict["number_of_features_per_correlated_block_lognormal"]),
+                0.7,
+            ),
+        )
+
+        params_dict["upper_bounds_for_correlations_lognormal"] = (
+            np.full(
+                len(params_dict["number_of_features_per_correlated_block_lognormal"]),
+                1.0,
+            ),
+        )
+
+    if (params_dict["upper_bounds_for_correlations_normal"] is not None) and not len(
+        params_dict["upper_bounds_for_correlations_normal"]
+    ) == len(params_dict["number_of_features_per_correlated_block_normal_dist"]):
+        warnings.warn(
+            "The number of upper bounds for the correlated features of a "
+            "normal distributed class given in the "
+            '"upper_bounds_for_correlations_normal" list does not match '
+            "the number of blocks with correlating features specified by "
+            "the length of the"
+            "number_of_features_per_correlated_block_normal_dist list.\n"
+            "All lower and upper bound values will be set to default: "
+            "lower_bound=0.7 and upper_bound=1.0."
+        )
+        params_dict["lower_bounds_for_correlations_normal"] = (
+            np.full(
+                len(params_dict["number_of_features_per_correlated_block_normal_dist"]),
+                0.7,
+            ),
+        )
+
+        params_dict["upper_bounds_for_correlations_normal"] = (
+            np.full(
+                len(params_dict["number_of_features_per_correlated_block_normal_dist"]),
+                1.0,
+            ),
+        )
+
+    if (params_dict["upper_bounds_for_correlations_lognormal"] is not None) and (
+        params_dict["number_of_features_per_correlated_block_lognormal"] is not None
+    ):
+        if not (
+            len(params_dict["upper_bounds_for_correlations_lognormal"])
+            == len(params_dict["number_of_features_per_correlated_block_lognormal"])
+        ):
+            warnings.warn(
+                "The number of upper bounds for the correlated features of a "
+                "normal distributed class given in the "
+                '"upper_bounds_for_correlations_lognormal" list does not '
+                "match "
+                "the number of blocks with correlating features specified by "
+                "the length of the"
+                "number_of_features_per_correlated_block_lognormal list.\n"
+                "All lower and upper bound values will be set to default: "
+                "lower_bound=0.7 and upper_bound=1.0."
+            )
+            params_dict["lower_bounds_for_correlations_lognormal"] = (
+                np.full(
+                    len(params_dict["number_of_features_per_correlated_block_lognormal"]),
+                    0.7,
+                ),
+            )
+
+            params_dict["upper_bounds_for_correlations_lognormal"] = (
+                np.full(
+                    len(params_dict["number_of_features_per_correlated_block_lognormal"]),
+                    1.0,
+                ),
+            )
+
     return True
 
 
-def generate_artificial_data(params_dict: dict):
+def generate_artificial_data(params_dict: Dict[str, Any]):
     """Generate artificial biomarker data.
 
     Args:
-        params_dict:
+        params_dict: Parameters for the data to generate (see
+        parameters of :func:`generate_artificial_classification_data`).
 
     Returns: Generated artificial data as DataFrame.
 
@@ -648,10 +893,10 @@ def generate_artificial_data(params_dict: dict):
         params_dict["number_of_samples_per_class"] * total_number_of_classes
     )
 
-    meta_data_dict: Dict[str, list] = {}
+    meta_data_dict: dict = {}
 
     # generate labels
-    labels = list(range(total_number_of_classes))
+    labels = np.asarray(range(total_number_of_classes), dtype=np.float64)
 
     number_of_lognormal_distributed_classes = params_dict[
         "number_of_lognormal_distributed_classes"
@@ -661,10 +906,9 @@ def generate_artificial_data(params_dict: dict):
     lognormal_distributed_classes_list = _generate_normal_distributed_classes(
         labels[: params_dict["number_of_lognormal_distributed_classes"]],
         meta_data_dict,
-        params_dict["number_of_artificial_biomarkers"],
+        params_dict["number_of_features_per_class"],
         params_dict["number_of_lognormal_distributed_classes"],
-        params_dict["number_of_features_per_correlated_block"],
-        # params_dict["number_of_intra_class_correlated_blocks_lognormal"],
+        params_dict["number_of_features_per_correlated_block_lognormal"],
         params_dict["number_of_samples_per_class"],
         params_dict["scales_of_normal_distributions"],
         params_dict["lower_bounds_for_correlations_lognormal"],
@@ -687,10 +931,9 @@ def generate_artificial_data(params_dict: dict):
     normal_distributed_classes_list = _generate_normal_distributed_classes(
         labels[number_of_lognormal_distributed_classes:],
         meta_data_dict,
-        params_dict["number_of_artificial_biomarkers"],
+        params_dict["number_of_features_per_class"],
         params_dict["number_of_normal_distributed_classes"],
-        params_dict["number_of_features_per_correlated_block"],
-        # params_dict["number_of_intra_class_correlated_blocks_normal"],
+        params_dict["number_of_features_per_correlated_block_normal_dist"],
         params_dict["number_of_samples_per_class"],
         params_dict["scales_of_normal_distributions"],
         params_dict["lower_bounds_for_correlations_normal"],
@@ -724,10 +967,11 @@ def generate_artificial_data(params_dict: dict):
     )
     assert (
         complete_classes.shape[1]
-        == params_dict["number_of_artificial_biomarkers"] + 1
+        == params_dict["number_of_features_per_class"] + 1
         # for the label
     )
-    for class_label in labels:
+    # cast labels to list of int
+    for class_label in np.int_(labels).tolist():
         assert (
             complete_classes[params_dict["number_of_samples_per_class"] * class_label, 0]
             == class_label
@@ -738,7 +982,7 @@ def generate_artificial_data(params_dict: dict):
     complete_classes = np.concatenate((complete_classes, pseudo_class), axis=1)
     assert (
         complete_classes.shape[1]
-        == params_dict["number_of_artificial_biomarkers"]
+        == params_dict["number_of_features_per_class"]
         + params_dict["number_of_pseudo_class_features"]
         + 1  # for the label
     )
@@ -759,7 +1003,7 @@ def generate_artificial_data(params_dict: dict):
     )
     assert (
         complete_data_set.shape[1]
-        == params_dict["number_of_artificial_biomarkers"]
+        == params_dict["number_of_features_per_class"]
         + params_dict["number_of_pseudo_class_features"]
         + 1  # for the label
         + params_dict["number_of_random_features"]
@@ -817,27 +1061,136 @@ def save_meta_data(
         assert isinstance(path_to_save_meta_data, str)
         joblib.dump(meta_data, "../data/meta_data_complete_artif.pkl")
 
-        print(f"Meta data successfully saved in " 
-              f"{path_to_save_meta_data}")
+        print(f"Meta data successfully saved in " f"{path_to_save_meta_data}")
 
 
-def generate_shuffled_artificial_data(params_dict: dict):
-    """Generate artificial biomarker data with shuffled features.
+def generate_artificial_classification_data(
+    number_of_normal_distributed_classes: int = None,
+    means_of_normal_distributions: Union[List[Number], ndarray] = None,
+    scales_of_normal_distributions: Union[List[Number], ndarray] = None,
+    scales_of_lognormal_distributions: Union[List[Number], ndarray] = None,
+    number_of_lognormal_distributed_classes: int = None,
+    shifts_of_lognormal_distribution_centers: Union[List[Number], ndarray] = None,
+    number_of_samples_per_class: int = None,
+    number_of_features_per_class: int = None,
+    number_of_features_per_correlated_block_normal_dist: Union[
+        List[List[int]], ndarray
+    ] = None,
+    lower_bounds_for_correlations_normal: Union[List[Number], ndarray] = None,
+    upper_bounds_for_correlations_normal: Union[List[Number], ndarray] = None,
+    number_of_features_per_correlated_block_lognormal: Union[
+        List[List[int]], ndarray
+    ] = None,
+    lower_bounds_for_correlations_lognormal: Union[List[Number], ndarray] = None,
+    upper_bounds_for_correlations_lognormal: Union[List[Number], ndarray] = None,
+    number_of_pseudo_class_features: int = None,
+    number_of_random_features: int = None,
+    path_to_save_plot: str = None,
+    path_to_save_csv: str = None,
+    path_to_save_feather: str = None,
+    path_to_save_meta_data: str = None,
+    shuffle_features: bool = False,
+):
+    """Generate artificial classification (e.g. biomarker) data.
 
     Args:
-        params_dict:
+        number_of_normal_distributed_classes: Number of classes with a
+        normal distribution.
+        means_of_normal_distributions: Means of normal distributed classes.
+        Default is zero and a shift of 2 for each class.
+        scales_of_normal_distributions: Scales of normal distributed
+        classes. Default is scale 1 for each class.
+        scales_of_lognormal_distributions: Scales of the underlying normal
+        distributions of the lognormal distributed classes.
+        Default is scale 1 for each underlying normal distribution.
+        number_of_lognormal_distributed_classes: Number of classes with a
+        lognormal distribution to simulate outliers and extreme values.
+        shifts_of_lognormal_distribution_centers: Shifts for all lognormal
+        distributed classes. Default is a shift of 2 for each class
+        respectively.
+        number_of_samples_per_class: Number of samples (rows) to generate
+        for each artificial class.
+        number_of_features_per_class: Total number of features (columns) to
+        generate for each artificial class.
+        number_of_features_per_correlated_block_normal_dist: Number of
+        features (columns) to generate for each block of correlated features
+        within a normal distributed class for the simulation of
+        intra class correlation.
+        lower_bounds_for_correlations_normal: Lower bounds for the
+        correlation of each block of correlated features within normal
+        distributed class. Default is 0.7.
+        upper_bounds_for_correlations_normal: Upper bounds for the
+        correlation of each block of correlated features within a normal
+        distributed class. Default is 1.0.
+        number_of_features_per_correlated_block_lognormal: Number of features
+        (columns) for each block of correlated features within a
+        lognormal distributed class. This can simulate intra-class
+        correlation. In biology, for example, this can be the activation of
+        complete pathways or redundant systems.
+        lower_bounds_for_correlations_lognormal: Lower bounds for the
+        correlation of each block of correlated features within a lognormal
+        distributed class. Default is 0.7.
+        upper_bounds_for_correlations_lognormal:Upper bounds for the
+        correlation of each block of correlated features within a lognormal
+        distributed class. Default is 1.0.
+        number_of_pseudo_class_features: Number of pseudo-class features.
+        The underlying classes correspond to the selected classes for
+        lognormal and normal distributions and the given shifts of the
+        generated artificial classes or their default values. All samples
+        of the generated classes are randomly shuffled and therefore have
+        no relation to any class label.
+        number_of_random_features: Number of randomly generated features.
+        For their generation, a normal distribution with mean zero
+        and scale 2 is used.
+        path_to_save_plot: Path to save generated plots.
+        path_to_save_csv: Path to save generated data as csv.
+        path_to_save_feather: Path to save generated data in the feather
+        format.
+        path_to_save_meta_data: Path to pickle metadata (names of
+        correlated features) of the generated blocks of correlated features.
+        shuffle_features: Generate artificial classification data with shuffled
+        features.
 
-    Returns: Generated artificial data with shuffled features as DataFrame.
+    Returns: Generated artificial data as DataFrame.
 
     """
+    # Save variables to adjust the line length in dict
+    num_features_corr_lognormal = number_of_features_per_correlated_block_normal_dist
+    num_features_corr_normal = number_of_features_per_correlated_block_lognormal
+
+    params_dict = dict(
+        number_of_normal_distributed_classes=number_of_normal_distributed_classes,
+        means_of_normal_distributions=means_of_normal_distributions,
+        scales_of_normal_distributions=scales_of_normal_distributions,
+        scales_of_lognormal_distributions=scales_of_lognormal_distributions,
+        number_of_lognormal_distributed_classes=number_of_lognormal_distributed_classes,
+        shifts_of_lognormal_distribution_centers=shifts_of_lognormal_distribution_centers,
+        number_of_samples_per_class=number_of_samples_per_class,
+        number_of_features_per_class=number_of_features_per_class,
+        number_of_features_per_correlated_block_normal_dist=num_features_corr_normal,
+        lower_bounds_for_correlations_normal=lower_bounds_for_correlations_normal,
+        upper_bounds_for_correlations_normal=upper_bounds_for_correlations_normal,
+        number_of_features_per_correlated_block_lognormal=num_features_corr_lognormal,
+        lower_bounds_for_correlations_lognormal=lower_bounds_for_correlations_lognormal,
+        upper_bounds_for_correlations_lognormal=upper_bounds_for_correlations_lognormal,
+        number_of_pseudo_class_features=number_of_pseudo_class_features,
+        number_of_random_features=number_of_random_features,
+        path_to_save_plot=path_to_save_plot,
+        path_to_save_csv=path_to_save_csv,
+        path_to_save_feather=path_to_save_feather,
+    )
     complete_data_df, meta_data_dict = generate_artificial_data(params_dict)
 
-    # shuffle artificial features
-    column_names = list(complete_data_df.columns[1:])
-    random.shuffle(column_names)
-    shuffled_column_names = ["label"] + column_names
-    shuffled_data_df = complete_data_df[shuffled_column_names]
+    if shuffle_features:
+        # shuffle artificial features
+        column_names = list(complete_data_df.columns[1:])
+        random.shuffle(column_names)
+        shuffled_column_names = ["label"] + column_names
+        complete_data_df = complete_data_df[shuffled_column_names]
 
-    assert shuffled_data_df.columns[0] == "label"
+        assert complete_data_df.columns[0] == "label"
 
-    return shuffled_data_df, meta_data_dict
+    save_result(complete_data_df, path_to_save_csv, path_to_save_feather)
+    save_meta_data(meta_data_dict, path_to_save_meta_data)
+
+    return complete_data_df, meta_data_dict
