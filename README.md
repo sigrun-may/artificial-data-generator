@@ -78,6 +78,9 @@ recognized as relevant by a feature selection algorithm.
 
 ## Random Features
 
+The artificial biomarkers and, if applicable, the optional pseudo-classes can be combined with any number 
+of random features. Varying the number of random features can be used, for example, to analyze random effects 
+that occur in small sample sizes with a very large number of features.
 
 # Installation
 
