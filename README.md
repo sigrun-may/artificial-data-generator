@@ -1,4 +1,4 @@
-# Data generator for artificial high-throughput data including artificial biomarkers and pseudo-classes.
+# Data generator for artificial high-throughput data including artificial biomarkers, intraclass correlations and pseudo-classes.
 
 ## Purpose
 
