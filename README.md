@@ -21,6 +21,7 @@ A generated artificial data set consists of up to three parts:
 3. [optional] **Random data** representing the features (biomarker candidates) that are not associated with any class
 
 This is an example of simulated binary biological data including artificial biomarkers:
+
 ![Different blocks of the artificial data.](<./docs/figures/artificial_data.png>)
 
 The number of artificial classes is not limited. Each class is generated individually and then combined with the others.
@@ -37,6 +38,7 @@ Therefore, the values of a diseased individual could be simulated with a lognorm
 
 The different **classes can be shifted** to regulate the effect sizes and to influence the difficulty of data analysis.
 Example:
+
 ![Different distributions of the classes.](<./docs/figures/distributions.png>)
 
 ### Correlations
@@ -73,3 +75,10 @@ But after the generation of the individual classes, all samples (rows) are rando
 Finally, combining the shuffled data with the original, unshuffled class labels, the pseudo-class no longer 
 has a valid association with any class label. Consequently, no element of the pseudo-class should be 
 recognized as relevant by a feature selection algorithm.
+
+## Random Features
+
+
+# Installation
+
+pip...
