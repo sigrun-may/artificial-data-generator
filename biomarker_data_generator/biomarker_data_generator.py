@@ -117,8 +117,10 @@ def generate_pseudo_class(params_dict: Dict[str, Any]):
     # shifting the mean of a normal distribution
     # in order to clearly distinguish artificial classes from each other.
     # Default is 10.
-    :return: Randomly shuffled pseudo-class with the given number of specific
-    classes: Numpy array of the given shape.
+
+    Returns:
+        Randomly shuffled pseudo-class with the given number of specific
+        classes: Numpy array of the given shape.
     """
     rng = default_rng()
     simulated_classes = []
@@ -305,14 +307,15 @@ def _generate_column_names(
     Args:
         data_df: DataFrame with unnamed columns.
         params_dict: Parameter dict including the number of features per
-        class, the number of pseudo-class features and the number of random
-        features (see parameters of
-        :func:`generate_artificial_classification_data`).
+            class, the number of pseudo-class features and the number of random
+            features (see parameters of
+            :func:`generate_artificial_classification_data`).
 
-    Returns: DataFrame with meaningful named columns:
-                        "bm" for artificial class feature
-                        "pseudo" for pseudo-class feature
-                        "random" for random data
+    Returns:
+        DataFrame with meaningful named columns:
+            - ``bm`` for artificial class feature
+            - ``pseudo`` for pseudo-class feature
+            - ``random`` for random data
 
     """
     # :param meta_data_dict:
@@ -411,22 +414,22 @@ def _generate_normal_distributed_classes(
     Args:
         labels: Labels of the classes to be generated.
         meta_data_dict: Dict to store meta data for the correlated features
-        within the artificial classes.
+            within the artificial classes.
         number_of_features: Number of features (columns) per class.
         number_of_classes: Nunmber of classes to be generated.
         number_of_features_per_correlated_block: Number of features within
-        each block of correlated features for each class.
+            each block of correlated features for each class.
         number_of_samples_per_class: Number of samples (rows) per class.
         scales: Scales of the respective class distributions.
         lower_bounds_for_correlations: Lower bounds for the correlations of
-        the separate blocks of correlated features within the
+            the separate blocks of correlated features within the
             respective generated classes.
         upper_bounds_for_correlations: Upper bounds for the correlations
             of the separate blocks of correlated features within the
             respective generated classes.
 
-    Returns: List of generated classes of the given shape as numpy arrays.
-
+    Returns:
+        List of generated classes of the given shape as numpy arrays.
     """
     classes = []
 
@@ -876,10 +879,10 @@ def generate_artificial_data(params_dict: Dict[str, Any]):
 
     Args:
         params_dict: Parameters for the data to generate (see
-        parameters of :func:`generate_artificial_classification_data`).
+            parameters of :func:`generate_artificial_classification_data`).
 
-    Returns: Generated artificial data as DataFrame.
-
+    Returns:
+        Generated artificial data as DataFrame.
     """
     # validate input parameters
     _validate_parameters(params_dict)
@@ -1095,64 +1098,64 @@ def generate_artificial_classification_data(
 
     Args:
         number_of_normal_distributed_classes: Number of classes with a
-        normal distribution.
+            normal distribution.
         means_of_normal_distributions: Means of normal distributed classes.
-        Default is zero and a shift of 2 for each class.
+            Default is zero and a shift of 2 for each class.
         scales_of_normal_distributions: Scales of normal distributed
-        classes. Default is scale 1 for each class.
+            classes. Default is scale 1 for each class.
         scales_of_lognormal_distributions: Scales of the underlying normal
-        distributions of the lognormal distributed classes.
-        Default is scale 1 for each underlying normal distribution.
+            distributions of the lognormal distributed classes.
+            Default is scale 1 for each underlying normal distribution.
         number_of_lognormal_distributed_classes: Number of classes with a
-        lognormal distribution to simulate outliers and extreme values.
+            lognormal distribution to simulate outliers and extreme values.
         shifts_of_lognormal_distribution_centers: Shifts for all lognormal
-        distributed classes. Default is a shift of 2 for each class
-        respectively.
+            distributed classes. Default is a shift of 2 for each class
+            respectively.
         number_of_samples_per_class: Number of samples (rows) to generate
-        for each artificial class.
+            for each artificial class.
         number_of_features_per_class: Total number of features (columns) to
-        generate for each artificial class.
+            generate for each artificial class.
         number_of_features_per_correlated_block_normal_dist: Number of
-        features (columns) to generate for each block of correlated features
-        within a normal distributed class for the simulation of
-        intra class correlation.
+            features (columns) to generate for each block of correlated features
+            within a normal distributed class for the simulation of
+            intra class correlation.
         lower_bounds_for_correlations_normal: Lower bounds for the
-        correlation of each block of correlated features within normal
-        distributed class. Default is 0.7.
+            correlation of each block of correlated features within normal
+            distributed class. Default is 0.7.
         upper_bounds_for_correlations_normal: Upper bounds for the
-        correlation of each block of correlated features within a normal
-        distributed class. Default is 1.0.
+            correlation of each block of correlated features within a normal
+            distributed class. Default is 1.0.
         number_of_features_per_correlated_block_lognormal: Number of features
-        (columns) for each block of correlated features within a
-        lognormal distributed class. This can simulate intra-class
-        correlation. In biology, for example, this can be the activation of
-        complete pathways or redundant systems.
+            (columns) for each block of correlated features within a
+            lognormal distributed class. This can simulate intra-class
+            correlation. In biology, for example, this can be the activation of
+            complete pathways or redundant systems.
         lower_bounds_for_correlations_lognormal: Lower bounds for the
-        correlation of each block of correlated features within a lognormal
-        distributed class. Default is 0.7.
+            correlation of each block of correlated features within a lognormal
+            distributed class. Default is 0.7.
         upper_bounds_for_correlations_lognormal:Upper bounds for the
-        correlation of each block of correlated features within a lognormal
-        distributed class. Default is 1.0.
+            correlation of each block of correlated features within a lognormal
+            distributed class. Default is 1.0.
         number_of_pseudo_class_features: Number of pseudo-class features.
-        The underlying classes correspond to the selected classes for
-        lognormal and normal distributions and the given shifts of the
-        generated artificial classes or their default values. All samples
-        of the generated classes are randomly shuffled and therefore have
-        no relation to any class label.
+            The underlying classes correspond to the selected classes for
+            lognormal and normal distributions and the given shifts of the
+            generated artificial classes or their default values. All samples
+            of the generated classes are randomly shuffled and therefore have
+            no relation to any class label.
         number_of_random_features: Number of randomly generated features.
-        For their generation, a normal distribution with mean zero
-        and scale 2 is used.
+            For their generation, a normal distribution with mean zero
+            and scale 2 is used.
         path_to_save_plot: Path to save generated plots.
         path_to_save_csv: Path to save generated data as csv.
         path_to_save_feather: Path to save generated data in the feather
-        format.
+            format.
         path_to_save_meta_data: Path to pickle metadata (names of
-        correlated features) of the generated blocks of correlated features.
+            correlated features) of the generated blocks of correlated features.
         shuffle_features: Generate artificial classification data with shuffled
-        features.
+            features.
 
-    Returns: Generated artificial data as DataFrame.
-
+    Returns:
+        Generated artificial data as DataFrame.
     """
     # Save variables to adjust the line length in dict
     num_features_corr_lognormal = number_of_features_per_correlated_block_normal_dist
