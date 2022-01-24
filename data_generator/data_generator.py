@@ -15,7 +15,7 @@ import math
 import random
 import warnings
 from numbers import Number
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union, Tuple
 
 import joblib
 import numpy as np
@@ -983,7 +983,7 @@ def generate_artificial_classification_data(
     path_to_save_feather: str = None,
     path_to_save_meta_data: str = None,
     shuffle_features: bool = False,
-) -> [pd.DataFrame, Dict[str, Any]]:
+) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """Generate artificial classification (e.g. biomarker) data.
 
     Args:
@@ -1026,7 +1026,7 @@ def generate_artificial_classification_data(
         shuffle_features: Generate artificial classification data with shuffled features.
 
     Returns:
-        Generated artificial data as DataFrame.
+        Generated artificial data and metadata for correlated features.
     """
     # Save variables to adjust the line length in dict
     num_features_corr_lognormal = number_of_features_per_correlated_block_normal_dist
