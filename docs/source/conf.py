@@ -88,7 +88,7 @@ html_show_sphinx = False
 html_context = {
     "display_github": True,
     "github_user": "sigrun-may",
-    "github_repo": "biomarker-data-generator",
+    "github_repo": "data-generator",
     "github_version": "main/docs/source/",
 }
 
@@ -118,6 +118,8 @@ autodoc_default_options = {
     "private-members": None,
     "exclude-members": "__weakref__, __init__",
 }
+
+doc_module_names = False
 
 # True to convert the type definitions in the docstrings as references.
 # https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html#confval-napoleon_preprocess_types

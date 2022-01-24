@@ -1,3 +1,3 @@
-black biomarker_data_generator
-isort biomarker_data_generator
+black data_generator
+isort data_generator
 mdformat README.md

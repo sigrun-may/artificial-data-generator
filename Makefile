@@ -1,4 +1,4 @@
-src := cv_pruner
+src := data_generator
 test-src := tests
 other-src := examples
 

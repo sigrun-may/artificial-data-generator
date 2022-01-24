@@ -13,7 +13,7 @@ import os
 import setuptools
 
 
-project_name = "biomarker_data_generator"
+project_name = "data_generator"
 source_code = "https://github.com/sigrun-may/biomarker-data-generator"
 keywords = ("")  # TODO: add keywords
 install_requires = ["joblib", "numpy", "pandas", "seaborn", "matplotlib", "scikit-learn", "statsmodels"]
@@ -52,7 +52,7 @@ setuptools.setup(
     maintainer="Sigrun May",
     author="Sigrun May",
     author_email="",  # TODO: add mail
-    description="",  # TODO: add short descrition
+    description="",  # TODO: add short description
     long_description=long_description,
     long_description_content_type="text/markdown",
     url=source_code,

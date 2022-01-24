@@ -1,5 +1,16 @@
-import biomarker_data_generator
+# Copyright (c) 2022 Sigrun May,
+# Helmholtz-Zentrum für Infektionsforschung GmbH (HZI)
+# Copyright (c) 2022 Sigrun May,
+# Ostfalia Hochschule für angewandte Wissenschaften
+#
+# This software is distributed under the terms of the MIT license
+# which is available at https://opensource.org/licenses/MIT
+
+"""Example for usage of generator for artificial data data_generator."""
 import numpy as np
+
+import data_generator
+
 
 parameters = dict(
     number_of_normal_distributed_classes=1,
@@ -24,10 +35,7 @@ parameters = dict(
 )
 
 # generate_artificial_data()
-(
-    generated_data_df,
-    meta_data_dict,
-) = biomarker_data_generator.generate_artificial_classification_data(
+(generated_data_df, meta_data_dict,) = data_generator.generate_artificial_classification_data(
     number_of_normal_distributed_classes=1,
     means_of_normal_distributions=[0],
     scales_of_normal_distributions=[2],
@@ -48,5 +56,5 @@ parameters = dict(
     path_to_save_csv="../data/complete_artif.csv",
     path_to_save_feather=None,
 )
-biomarker_data_generator.save_meta_data(meta_data_dict, "../data/complete_artif.pkl")
-biomarker_data_generator.save_result(generated_data_df, "../data/complete_artif.csv")
+data_generator.save_meta_data(meta_data_dict, "../data/complete_artif.pkl")
+data_generator.save_result(generated_data_df, "../data/complete_artif.csv")
