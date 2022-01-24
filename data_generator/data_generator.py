@@ -42,7 +42,8 @@ def _generate_normal_distributed_class(
         number_of_features: Number of columns of generated data.
         scale: Scale of the normal distribution.
 
-    Returns: Normal distributed data of the given shape and parameters with the given label in the first column.
+    Returns:
+        Normal distributed data of the given shape and parameters with the given label in the first column.
 
     """
     # generate labels
@@ -70,22 +71,6 @@ def _generate_normal_distributed_class(
     normal_distributed_data = np.hstack((label_vector, features))
     return normal_distributed_data
 
-    # Generate artificial data to simulate the samples from
-    # ill patients including extreme values and outliers.
-    #
-    # :param label: Label for the generated artificial class.
-    # :param number_of_samples: Number of rows of generated data.
-    # :param number_of_biomarkers: Number of columns of generated data.
-    # :param shift_of_lognormal_distribution: Shift of the
-    # lognormal distribution simulate different classes.
-    # :param mean_lognormal_distribution: Mean value of the underlying
-    # normal distribution. Default is zero.
-    # :param sigma_of_lognormal_distribution: Standard deviation of the
-    # underlying normal distribution.
-    # Should be greater than zero. Default is 1.
-    # :return: Lognormal distributed data of the given shape and
-    # parameters with the given label in the first column.
-
 
 def _generate_pseudo_class(params_dict: Dict[str, Any]) -> ndarray:
     """Create a pseudo-class by shuffling artificial classes.
@@ -99,6 +84,7 @@ def _generate_pseudo_class(params_dict: Dict[str, Any]) -> ndarray:
 
     Returns:
         Randomly shuffled pseudo-class: Numpy array of the given shape.
+
     """
     rng = default_rng()
     simulated_classes = []
@@ -180,7 +166,8 @@ def _generate_normal_distributed_correlated_block(
         lower_bound: Lower bound of the generated correlations.
         upper_bound: Upper bound of the generated correlations.
 
-    Returns: Numpy array of the given shape with correlating features in the given range.
+    Returns:
+        Numpy array of the given shape with correlating features in the given range.
 
     """
     rng = default_rng()
@@ -276,7 +263,7 @@ def _visualize_distributions(data: Union[ndarray, pd.DataFrame]) -> None:
 def _generate_column_names(
     data_df: pd.DataFrame,
     params_dict: Dict[str, Any],
-):
+) -> pd.DataFrame:
     """Generate semantic names for the columns of the given DataFrame.
 
     Args:
@@ -287,10 +274,10 @@ def _generate_column_names(
             :func:`generate_artificial_classification_data`).
 
     Returns:
-        DataFrame with meaningful named columns:
-            - ``bm`` for artificial class feature
-            - ``pseudo`` for pseudo-class feature
-            - ``random`` for random data
+        DataFrame with meaningful named columns.
+            - `bm` for artificial class feature
+            - `pseudo` for pseudo-class feature
+            - `random` for random data
 
     """
     # generate label as first entry
@@ -344,8 +331,8 @@ def _transform_normal_to_lognormal(classes_list: List[ndarray]) -> List[ndarray]
     Args:
         classes_list: List of classes as numpy arrays.
 
-    Returns: List of classes as numpy arrays transformed to lognormal
-    distributions.
+    Returns:
+        List of classes as numpy arrays transformed to lognormal distributions.
 
     """
     lognormal_distributed_classes = []
@@ -538,7 +525,8 @@ def _validate_parameters(params_dict) -> bool:
         params_dict: Dict including the input parameters to validate (see
             :func:`generate_artificial_classification_data`).
 
-    Returns: True, if no error was raised.
+    Returns:
+        True, if no error was raised.
 
     """
     if ("number_of_samples_per_class" not in params_dict.keys()) or (params_dict["number_of_samples_per_class"] <= 0):
