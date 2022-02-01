@@ -1,9 +1,14 @@
 # Data generator for synthetic data including artificial classes, intraclass correlations, pseudo-classes and random data
 
 ## Table of Contents
-- [Purpose](#Purpose)
-- [Data structure](#Data structure)
-  - [Different parts of the data set](#Different parts of the data set)
+- [Purpose](#purpose)
+- [Data structure](#data-structure)
+  - [Different parts of the data set](#different-parts-of-the-data-set)
+  - [Data distribution and effect sizes](#data-distribution-and-effect-sizes)
+  - [Correlations](#correlations)
+- [Pseudo-classes](#pseudo-classes)
+- [Random Features](#random-features)
+- [Installation](#installation)
 
 ## Purpose
 
