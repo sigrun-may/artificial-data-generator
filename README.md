@@ -1,53 +1,53 @@
-# Data generator for artificial high-throughput data including artificial biomarkers, intraclass correlations and pseudo-classes.
+# Data generator for synthetic data including artificial classes, intraclass correlations, pseudo-classes and random data
 
 ## Purpose
 
-Since commonly not all true biomarkers and internal dependencies of high-dimensional biological datasets are known with
-certainty, artificial data, in contrast, **enable to know the expected outcome in advance**. In artificially generated data,
-it is known in advance which features are relevant and what the distribution of each class is. The remaining
-irrelevant features can be purely random or belong to a pseudo-class. This can be helpful, for example, to make random
-effects transparent.
-
-In order to develop new methods or to compare existing methods for feature selection (finding biomarkers),
-reference data with known dependencies and importance of the individual features are necessary.
+In order to develop new methods or to compare existing methods for feature selection, reference data with known dependencies and importance of the individual features are needed. This data generator can be used to simulate biological data for example artificial high throughput data including artificial biomarkers. Since commonly not all true biomarkers and internal dependencies of high-dimensional biological datasets are known with
+certainty, artificial data **enables to know the expected outcome in advance**. In synthetic data, the feature importances and the distribution of each class are known. Irrelevant features can be purely random or belong to a pseudo-class. Such data can be used, for example, to make random effects observable.
 
 ## Data structure
 
 ### Different parts of the data set
 
-A generated artificial data set consists of up to three parts:
+The synthetic-data-generator produces data sets consisting of up to three parts:
 
-1. **Relevant features** belonging to an artificial class: artificial biomarkers
+1. **Relevant features** belonging to an artificial class (for example artificial biomarkers)
 1. \[optional\] **Pseudo-classes** (for example a patient's height or gender, which have no association with a particular disease)
-1. \[optional\] **Random data** representing the features (biomarker candidates) that are not associated with any class
+1. \[optional\] **Random data** representing the features (for example biomarker candidates) that are not associated with any class
+
+The number of artificial classes is not limited. Each class is generated individually and then combined with the others.
+In order to simulate artificial biomarkers in total, all individual classes have the same number of features in total.
 
 This is an example of simulated binary biological data including artificial biomarkers:
 
 ![Different blocks of the artificial data.](./docs/figures/artificial_data.png)
 
-The number of artificial classes is not limited. Each class is generated individually and then combined with the others.
-In order to simulate artificial biomarkers in total, all individual classes have the same number of features in total.
-
 ### Data distribution and effect sizes
 
-For each class, either the **normal distribution or the log normal distribution** can be selected.
-The normally distributed data could, for example, represent the range of values of healthy individuals.
+For each class, either the **normal distribution or the log normal distribution** can be selected. The different **classes can be shifted** to regulate the effect sizes and to influence the difficulty of data analysis.
 
+The normally distributed data could, for example, represent the range of values of healthy individuals.
 In the case of a disease, biological systems are in some way out of balance.
 Extreme changes in values as well as outliers can then be observed.  CITE.
 Therefore, the values of a diseased individual could be simulated with a lognormal distribution.
 
-The different **classes can be shifted** to regulate the effect sizes and to influence the difficulty of data analysis.
-Example:
+Example of log-normal and normal distributed classes:
 
 ![Different distributions of the classes.](./docs/figures/distributions.png)
 
 ### Correlations
 
-It is probably likely that biomarkers in healthy individuals usually have a relatively low correlation. On average,
-their values are within a usual "normal" range. In this case, one biomarker tends to be in the upper normal range
-and another biomarker in the lower normal range. In another person, however, it could be exactly the opposite,
-so that the correlation in the healthy individuals would be rather low. Therefore, the **values of healthy people
+**Intra-class correlation can be generated for each artificial class**. Any number of groups
+containing correlated features can be combined with any given number of uncorrelated features.
+
+However, a high correlation within a group does not necessarily lead to
+a high correlation to other groups or features of the same class. An example of a class with three
+highly correlated groups but without high correlations between all groups:
+
+![Different distributions of the classes.](./docs/figures/corr_3_groups.png)
+
+It is probably likely that biomarkers of healthy individuals usually have a relatively low correlation. On average,
+their values are within a usual "normal" range. In this case, one biomarker tends to be in the upper normal range and another biomarker in the lower normal range. However, individually it can also be exactly the opposite, so that the correlation between healthy individuals would be rather low. Therefore, the **values of healthy people
 could be simulated without any special artificially generated correlations**.
 
 In the case of a disease, however, a biological system is brought out of balance in a certain way and must react to it.
@@ -56,15 +56,6 @@ or corresponding cascades (e.g. pathways) can be activated or blocked. This can 
 correlation of biomarkers in patients suffering from a disease**. To simulate these intra-class correlations,
 a class is divided into a given number of groups with high internal correlation
 (the respective strength can be defined).
-
-However, a high correlation within a group does not necessarily lead to
-a high correlation to other groups or features of the same class. An example of a class with three
-highly correlated groups but without high correlations between all groups:
-
-![Different distributions of the classes.](./docs/figures/corr_3_groups.png)
-
-**Intra-class correlation can be generated for each artificial class**. Any number of groups
-containing correlated features can be combined with any given number of uncorrelated features.
 
 ## Pseudo-classes
 
