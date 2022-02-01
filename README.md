@@ -1,5 +1,10 @@
 # Data generator for synthetic data including artificial classes, intraclass correlations, pseudo-classes and random data
 
+## Table of Contents
+- [Purpose](#Purpose)
+- [Data structure](#Data structure)
+  - [Different parts of the data set](#Different parts of the data set)
+
 ## Purpose
 
 In order to develop new methods or to compare existing methods for feature selection, reference data with known dependencies and importance of the individual features are needed. This data generator can be used to simulate biological data for example artificial high throughput data including artificial biomarkers. Since commonly not all true biomarkers and internal dependencies of high-dimensional biological datasets are known with
@@ -28,7 +33,7 @@ For each class, either the **normal distribution or the log normal distribution*
 
 The normally distributed data could, for example, represent the range of values of healthy individuals.
 In the case of a disease, biological systems are in some way out of balance.
-Extreme changes in values as well as outliers can then be observed.  CITE.
+Extreme changes in values as well as outliers can then be observed ([Concordet et al., 2009](https://doi.org/10.1016/j.cca.2009.03.057)).
 Therefore, the values of a diseased individual could be simulated with a lognormal distribution.
 
 Example of log-normal and normal distributed classes:
