@@ -9,6 +9,7 @@
 - [Pseudo-classes](#pseudo-classes)
 - [Random Features](#random-features)
 - [Installation](#installation)
+- [Licensing](#licensing)
 
 ## Purpose
 
