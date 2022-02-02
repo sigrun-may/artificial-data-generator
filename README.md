@@ -86,4 +86,4 @@ that occur in small sample sizes with a very large number of features.
 
 # Installation
 
-pip...
+Will be described later.
