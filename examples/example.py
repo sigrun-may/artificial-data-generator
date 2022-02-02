@@ -6,7 +6,7 @@
 # This software is distributed under the terms of the MIT license
 # which is available at https://opensource.org/licenses/MIT
 
-"""Example for usage of generator for artificial data data_generator."""
+"""Example for usage of generator for artificial data artificial_data_generator."""
 import numpy as np
 
 import data_generator

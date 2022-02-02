@@ -13,7 +13,7 @@ import os
 import setuptools
 
 
-project_name = "data_generator"
+project_name = "artificial_data_generator"
 source_code = "https://github.com/sigrun-may/biomarker-data-generator"
 keywords = ("")  # TODO: add keywords
 install_requires = ["joblib", "numpy", "pandas", "seaborn", "matplotlib", "scikit-learn", "statsmodels"]
