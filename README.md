@@ -84,6 +84,21 @@ The artificial biomarkers and, if applicable, the optional pseudo-classes can be
 of random features. Varying the number of random features can be used, for example, to analyze random effects
 that occur in small sample sizes with a very large number of features.
 
-# Installation
+## Installation
 
-Will be described later.
+Artificial-data-generator is available at [the Python Package Index (PyPI)](https://pypi.org/project/artificial-data-generator/).
+It can be installed with pip:
+
+```bash
+$ pip install artificial-data-generator
+```
+
+## Licensing
+
+Copyright (c) 2021 Sigrun May, Helmholtz-Zentrum für Infektionsforschung GmbH (HZI)<br/>
+Copyright (c) 2021 Sigrun May, Ostfalia Hochschule für angewandte Wissenschaften
+
+Licensed under the **MIT License** (the "License"); you may not use this file except in compliance with the License.
+You may obtain a copy of the License by reviewing the file
+[LICENSE](https://github.com/sigrun-may/artificial-data-generator/blob/main/LICENSE) in the repository.
+
