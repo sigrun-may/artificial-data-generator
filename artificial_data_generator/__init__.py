@@ -8,7 +8,7 @@
 
 """Data generator main package."""
 
-from data_generator.data_generator import (
+from artificial_data_generator.artificial_data_generator import (
     generate_artificial_classification_data,
     generate_artificial_data,
     save_meta_data,

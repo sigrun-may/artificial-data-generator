@@ -1,4 +1,4 @@
-Biomarker Data Generator
+Artificial Data Generator
 ========================
 
 .. todo:
@@ -12,8 +12,8 @@ Content
    :maxdepth: 2
 
    code-doc
-   License <https://github.com/sigrun-may/biomarker-data-generator/blob/main/LICENSE>
-   GitHub Repository <https://github.com/sigrun-may/biomarker-data-generator>
+   License <https://github.com/sigrun-may/artificial-data-generator/blob/main/LICENSE>
+   GitHub Repository <https://github.com/sigrun-may/artificial-data-generator>
 
 Indices and Tables
 ------------------

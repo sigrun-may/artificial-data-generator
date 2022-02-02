@@ -58,7 +58,7 @@ setuptools.setup(
     url=source_code,
     project_urls={
         "Bug Tracker": source_code + "/issues",
-        "Documentation": "",  # TODO: add link to Sphinx page
+        # "Documentation": "",  # TODO: add link to Sphinx page
         "Source Code": source_code,
 #        "Contributing": source_code + "/blob/main/CONTRIBUTING.md",
 #        "Code of Conduct": source_code + "/blob/main/CODE_OF_CONDUCT.md",
