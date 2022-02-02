@@ -1,5 +1,5 @@
 Artificial Data Generator
-========================
+=========================
 
 .. todo:
    add content
