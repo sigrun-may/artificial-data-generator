@@ -16,7 +16,7 @@ from artificial_data_generator.artificial_data_generator import (
 )
 
 
-__version__ = "0.0.1rc1"
+__version__ = "0.0.1rc2"
 
 __all__ = [
     "generate_artificial_data",
