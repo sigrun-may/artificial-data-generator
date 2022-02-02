@@ -88,7 +88,7 @@ html_show_sphinx = False
 html_context = {
     "display_github": True,
     "github_user": "sigrun-may",
-    "github_repo": "data-generator",
+    "github_repo": "artificial-data-generator",
     "github_version": "main/docs/source/",
 }
 
