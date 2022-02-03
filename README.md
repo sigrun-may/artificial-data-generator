@@ -20,7 +20,7 @@ certainty, artificial data **enables to know the expected outcome in advance**. 
 
 ### Different parts of the data set
 
-The synthetic-data-generator produces data sets consisting of up to three parts:
+The synthetic-data-generator produces data sets consisting of up to three main parts:
 
 1. **Relevant features** belonging to an artificial class (for example artificial biomarkers)
 1. \[optional\] **Pseudo-classes** (for example a patient's height or gender, which have no association with a particular disease)
