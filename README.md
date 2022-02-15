@@ -31,7 +31,7 @@ In order to simulate artificial biomarkers in total, all individual classes have
 
 This is an example of simulated binary biological data including artificial biomarkers:
 
-![Different blocks of the artificial data.](./docs/figures/artificial_data.png)
+![Different blocks of the artificial data.](docs/source/imgs/artificial_data.png)
 
 ### Data distribution and effect sizes
 
@@ -44,7 +44,7 @@ Therefore, the values of a diseased individual could be simulated with a lognorm
 
 Example of log-normal and normal distributed classes:
 
-![Different distributions of the classes.](./docs/figures/distributions.png)
+![Different distributions of the classes.](docs/source/imgs/distributions.png)
 
 ### Correlations
 
@@ -55,7 +55,7 @@ However, a high correlation within a group does not necessarily lead to
 a high correlation to other groups or features of the same class. An example of a class with three
 highly correlated groups but without high correlations between all groups:
 
-![Different distributions of the classes.](./docs/figures/corr_3_groups.png)
+![Different distributions of the classes.](docs/source/imgs/corr_3_groups.png)
 
 It is probably likely that biomarkers of healthy individuals usually have a relatively low correlation. On average,
 their values are within a usual "normal" range. In this case, one biomarker tends to be in the upper normal range and another biomarker in the lower normal range. However, individually it can also be exactly the opposite, so that the correlation between healthy individuals would be rather low. Therefore, the **values of healthy people
