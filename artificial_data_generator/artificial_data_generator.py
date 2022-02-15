@@ -956,7 +956,7 @@ def save_meta_data(
     """
     if path_to_save_meta_data is not None:
         assert isinstance(path_to_save_meta_data, str)
-        joblib.dump(meta_data, "../data/meta_data_complete_artif.pkl")
+        joblib.dump(meta_data, path_to_save_meta_data)
 
         print(f"Meta data successfully saved in " f"{path_to_save_meta_data}")
 
