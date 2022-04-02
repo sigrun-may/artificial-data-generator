@@ -302,8 +302,8 @@
 
     <span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
     <span class="n">corr</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.1g&quot;</span><span class="p">)</span>
-    <span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+    <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">corr</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.1g&quot;</span><span class="p">)</span></div>
+    <span class="c1"># pyplot.show()</span>
     <span class="c1"># pyplot.savefig(&#39;C:/Users/sma19/Pictures/</span>
     <span class="c1"># correlation_FS/healthy_{}.png&#39;.format(data_name))</span>
 
@@ -325,8 +325,8 @@
     <span class="n">data_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">column_names</span>
 
     <span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">color_codes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">sns</span><span class="o">.</span><span class="n">displot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data_df</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">pyplot</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+    <span class="n">sns</span><span class="o">.</span><span class="n">displot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data_df</span><span class="p">,</span> <span class="n">kde</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+    <span class="c1"># pyplot.show()</span>
 
 
 <div class="viewcode-block" id="_generate_column_names"><a class="viewcode-back" href="../../code-doc.html#artificial_data_generator.artificial_data_generator._generate_column_names">[docs]</a><span class="k">def</span> <span class="nf">_generate_column_names</span><span class="p">(</span>
@@ -353,14 +353,22 @@
     <span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span>
 
     <span class="c1"># generate names for artificial biomarkers</span>
-    <span class="k">for</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;number_of_features_per_class&quot;</span><span class="p">]):</span>
-        <span class="n">column_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;bm_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">column_name</span><span class="p">))</span>
+    <span class="n">number_of_names</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;number_of_features_per_correlated_block_normal_dist&quot;</span><span class="p">]:</span>
+        <span class="k">for</span> <span class="n">artificial_class</span> <span class="ow">in</span> <span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;number_of_features_per_correlated_block_normal_dist&quot;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">block_number</span><span class="p">,</span> <span class="n">block_size</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">artificial_class</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">block_size</span><span class="p">):</span>
+                    <span class="n">column_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bmc</span><span class="si">{</span><span class="n">block_number</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">column_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">number_of_names</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">for</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;number_of_features_per_class&quot;</span><span class="p">]</span><span class="o">-</span><span class="n">number_of_names</span><span class="p">):</span>
+        <span class="n">column_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bm_</span><span class="si">{</span><span class="n">column_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;number_of_pseudo_class_features&quot;</span><span class="p">]):</span>
-        <span class="n">column_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;pseudo_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">column_name</span><span class="p">))</span>
+        <span class="n">column_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;pseudo_</span><span class="si">{</span><span class="n">column_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">column_name</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;number_of_random_features&quot;</span><span class="p">]):</span>
-        <span class="n">column_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;random_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">column_name</span><span class="p">))</span>
+        <span class="n">column_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;random_</span><span class="si">{</span><span class="n">column_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="n">data_df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">column_names</span>
     <span class="k">return</span> <span class="n">data_df</span></div>
@@ -451,6 +459,8 @@
 
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">scales</span><span class="p">)</span> <span class="o">==</span> <span class="n">number_of_classes</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span> <span class="o">==</span> <span class="n">number_of_classes</span>
+
+    <span class="n">column_names</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="c1"># simulation of intraclass correlation</span>
     <span class="k">if</span> <span class="n">number_of_features_per_correlated_block</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># generate intraclass correlated classes</span>
