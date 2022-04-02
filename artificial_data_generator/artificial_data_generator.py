@@ -232,7 +232,7 @@ def _visualize_correlations(data: Union[ndarray, pd.DataFrame]) -> None:
     sns.set_theme(style="white")
     corr = data_df.corr()
     sns.heatmap(corr, annot=True, cmap="Blues", fmt=".1g")
-    pyplot.show()
+    # pyplot.show()
     # pyplot.savefig('C:/Users/sma19/Pictures/
     # correlation_FS/healthy_{}.png'.format(data_name))
 
@@ -255,7 +255,7 @@ def _visualize_distributions(data: Union[ndarray, pd.DataFrame]) -> None:
 
     sns.set(color_codes=True)
     sns.displot(data=data_df, kde=True)
-    pyplot.show()
+    # pyplot.show()
 
 
 def _generate_column_names(
@@ -282,14 +282,22 @@ def _generate_column_names(
     column_names = ["label"]
 
     # generate names for artificial biomarkers
-    for column_name in range(params_dict["number_of_features_per_class"]):
-        column_names.append("bm_" + str(column_name))
+    number_of_names = 0
+    if params_dict["number_of_features_per_correlated_block_normal_dist"]:
+        for artificial_class in params_dict["number_of_features_per_correlated_block_normal_dist"]:
+            for block_number, block_size in enumerate(artificial_class):
+                for column_name in range(block_size):
+                    column_names.append(f"bmc{block_number}_{column_name}")
+                    number_of_names += 1
+
+    for column_name in range(params_dict["number_of_features_per_class"]-number_of_names):
+        column_names.append(f"bm_{column_name}")
 
     for column_name in range(params_dict["number_of_pseudo_class_features"]):
-        column_names.append("pseudo_" + str(column_name))
+        column_names.append(f"pseudo_{column_name}")
 
     for column_name in range(params_dict["number_of_random_features"]):
-        column_names.append("random_" + str(column_name))
+        column_names.append(f"random_{column_name}")
 
     data_df.columns = column_names
     return data_df
@@ -380,6 +388,8 @@ def _generate_normal_distributed_classes(
 
     assert len(scales) == number_of_classes
     assert len(labels) == number_of_classes
+
+    column_names = []
     # simulation of intraclass correlation
     if number_of_features_per_correlated_block is not None:
         # generate intraclass correlated classes
