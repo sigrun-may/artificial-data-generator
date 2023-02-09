@@ -253,10 +253,6 @@ def _visualize_distributions(data: Union[ndarray, pd.DataFrame]) -> None:
         column_names.append("element_" + str(column_name))
     data_df.columns = column_names
 
-    sns.set(color_codes=True)
-    sns.displot(data=data_df, kde=True)
-    # pyplot.show()
-
 
 def _generate_column_names(
     data_df: pd.DataFrame,
@@ -602,7 +598,7 @@ def _validate_parameters(params_dict) -> bool:
         params_dict["all_shifts"] = None
 
     if params_dict["shifts_of_lognormal_distribution_centers"] is not None:
-        if not params_dict["number_of_lognormal_distributed_classes"] == len(
+        if params_dict["number_of_lognormal_distributed_classes"] != len(
             params_dict["shifts_of_lognormal_distribution_centers"]
         ):
             warnings.warn(
@@ -681,9 +677,9 @@ def _validate_parameters(params_dict) -> bool:
     if (params_dict["lower_bounds_for_correlations_normal"] is not None) and (
         params_dict["number_of_features_per_correlated_block_normal_dist"] is not None
     ):
-        if not (
+        if (
             len(params_dict["lower_bounds_for_correlations_normal"])
-            == len(params_dict["number_of_features_per_correlated_block_normal_dist"])
+            != len(params_dict["number_of_features_per_correlated_block_normal_dist"])
         ):
             warnings.warn(
                 "The number of lower bounds for the correlated features of a "
@@ -771,9 +767,9 @@ def _validate_parameters(params_dict) -> bool:
     if (params_dict["upper_bounds_for_correlations_lognormal"] is not None) and (
         params_dict["number_of_features_per_correlated_block_lognormal"] is not None
     ):
-        if not (
+        if (
             len(params_dict["upper_bounds_for_correlations_lognormal"])
-            == len(params_dict["number_of_features_per_correlated_block_lognormal"])
+            != len(params_dict["number_of_features_per_correlated_block_lognormal"])
         ):
             warnings.warn(
                 "The number of upper bounds for the correlated features of a "
@@ -925,7 +921,7 @@ def generate_artificial_data(params_dict: Dict[str, Any]):
     return complete_data_df, meta_data_dict
 
 
-def save_result(
+def save_generated_data(
     data_df: pd.DataFrame,
     path_to_save_csv=None,
     path_to_save_feather=None,
@@ -1072,7 +1068,7 @@ def generate_artificial_classification_data(
 
         assert complete_data_df.columns[0] == "label"
 
-    save_result(complete_data_df, path_to_save_csv, path_to_save_feather)
+    save_generated_data(complete_data_df, path_to_save_csv, path_to_save_feather)
     save_meta_data(meta_data_dict, path_to_save_meta_data)
 
     return complete_data_df, meta_data_dict
