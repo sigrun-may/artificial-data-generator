@@ -229,13 +229,6 @@ def _visualize_correlations(data: Union[ndarray, pd.DataFrame]) -> None:
         column_names.append("feature_" + str(column_name))
     data_df.columns = column_names
 
-    sns.set_theme(style="white")
-    corr = data_df.corr()
-    sns.heatmap(corr, annot=True, cmap="Blues", fmt=".1g")
-    # pyplot.show()
-    # pyplot.savefig('C:/Users/sma19/Pictures/
-    # correlation_FS/healthy_{}.png'.format(data_name))
-
 
 def _visualize_distributions(data: Union[ndarray, pd.DataFrame]) -> None:
     """Visualize the distribution of different classes.
@@ -286,7 +279,7 @@ def _generate_column_names(
                     column_names.append(f"bmc{block_number}_{column_name}")
                     number_of_names += 1
 
-    for column_name in range(params_dict["number_of_features_per_class"]-number_of_names):
+    for column_name in range(params_dict["number_of_features_per_class"] - number_of_names):
         column_names.append(f"bm_{column_name}")
 
     for column_name in range(params_dict["number_of_pseudo_class_features"]):
@@ -385,7 +378,6 @@ def _generate_normal_distributed_classes(
     assert len(scales) == number_of_classes
     assert len(labels) == number_of_classes
 
-    column_names = []
     # simulation of intraclass correlation
     if number_of_features_per_correlated_block is not None:
         # generate intraclass correlated classes
@@ -534,7 +526,7 @@ def _validate_parameters(params_dict) -> bool:
 
     """
     if ("number_of_samples_per_class" not in params_dict.keys()) or (params_dict["number_of_samples_per_class"] <= 0):
-        raise ValueError("To generate any data at least one sample must be " 'set for "number_of_samples_per_class".')
+        raise ValueError('To generate any data at least one sample must be set for "number_of_samples_per_class".')
 
     if ("number_of_features_per_class" not in params_dict.keys()) or (params_dict["number_of_features_per_class"] <= 0):
         raise ValueError(
@@ -566,8 +558,8 @@ def _validate_parameters(params_dict) -> bool:
             "The generated data cannot be used for classification in this way."
         )
 
-    if (
-        not len(params_dict["means_of_normal_distributions"])
+    if not (
+        len(params_dict["means_of_normal_distributions"])
         == len(params_dict["scales_of_normal_distributions"])
         == params_dict["number_of_normal_distributed_classes"]
     ):
@@ -583,10 +575,10 @@ def _validate_parameters(params_dict) -> bool:
         params_dict["means_of_normal_distributions"] = np.zeros(params_dict["number_of_normal_distributed_classes"])
 
     if params_dict["number_of_samples_per_class"] < 1:
-        raise ValueError("Number of samples 'number_of_samples_per_class' must be greater " "than zero. ")
+        raise ValueError("Number of samples 'number_of_samples_per_class' must be greater than zero. ")
 
     if (params_dict["means_of_normal_distributions"] is not None) and (
-        not params_dict["number_of_normal_distributed_classes"] == len(params_dict["means_of_normal_distributions"])
+        params_dict["number_of_normal_distributed_classes"] != len(params_dict["means_of_normal_distributions"])
     ):
         warnings.warn(
             "The number of means given in the "
@@ -597,18 +589,18 @@ def _validate_parameters(params_dict) -> bool:
         )
         params_dict["all_shifts"] = None
 
-    if params_dict["shifts_of_lognormal_distribution_centers"] is not None:
-        if params_dict["number_of_lognormal_distributed_classes"] != len(
-            params_dict["shifts_of_lognormal_distribution_centers"]
-        ):
-            warnings.warn(
-                "The number of shifted locales given in the "
-                '"shifts_of_lognormal_distribution_centers" list does not match '
-                "the number of lognormal distributed classes.\n "
-                "All location values are reset to default: Locations of all "
-                "classes are shifted by 2 respectively."
-            )
-            params_dict["all_shifts"] = None
+    if params_dict["shifts_of_lognormal_distribution_centers"] is not None and (
+        params_dict["number_of_lognormal_distributed_classes"]
+        != len(params_dict["shifts_of_lognormal_distribution_centers"])
+    ):
+        warnings.warn(
+            "The number of shifted locales given in the "
+            '"shifts_of_lognormal_distribution_centers" list does not match '
+            "the number of lognormal distributed classes.\n "
+            "All location values are reset to default: Locations of all "
+            "classes are shifted by 2 respectively."
+        )
+        params_dict["all_shifts"] = None
 
     if (params_dict["lower_bounds_for_correlations_normal"] is None) and (
         params_dict["number_of_features_per_correlated_block_normal_dist"] is not None
@@ -670,47 +662,48 @@ def _validate_parameters(params_dict) -> bool:
             " Upper bounds are all set to default 1.0."
         )
         params_dict["upper_bounds_for_correlations_lognormal"] = np.full(
-            len(params_dict["number_of_features_per_correlated_block_lognormal" ""]),
+            len(params_dict["number_of_features_per_correlated_block_lognormal"]),
             1.0,
         )
 
-    if (params_dict["lower_bounds_for_correlations_normal"] is not None) and (
-        params_dict["number_of_features_per_correlated_block_normal_dist"] is not None
-    ):
-        if (
+    if (
+        (params_dict["lower_bounds_for_correlations_normal"] is not None)
+        and (params_dict["number_of_features_per_correlated_block_normal_dist"] is not None)
+        and (
             len(params_dict["lower_bounds_for_correlations_normal"])
             != len(params_dict["number_of_features_per_correlated_block_normal_dist"])
-        ):
-            warnings.warn(
-                "The number of lower bounds for the correlated features of a "
-                "normal distributed class given in the "
-                '"lower_bounds_for_correlations_normal" list does not match '
-                "the number of blocks with correlating features specified by "
-                "the length of the"
-                "number_of_features_per_correlated_block_normal_dist list.\n"
-                "All lower and upper bound values will be set to default: "
-                "lower_bound=0.7 and upper_bound=1.0."
-            )
-            params_dict["lower_bounds_for_correlations_normal"] = (
-                np.full(
-                    len(params_dict["number_of_features_per_correlated_block_normal_dist"]),
-                    0.7,
-                ),
-            )
+        )
+    ):
+        warnings.warn(
+            "The number of lower bounds for the correlated features of a "
+            "normal distributed class given in the "
+            '"lower_bounds_for_correlations_normal" list does not match '
+            "the number of blocks with correlating features specified by "
+            "the length of the"
+            "number_of_features_per_correlated_block_normal_dist list.\n"
+            "All lower and upper bound values will be set to default: "
+            "lower_bound=0.7 and upper_bound=1.0."
+        )
+        params_dict["lower_bounds_for_correlations_normal"] = (
+            np.full(
+                len(params_dict["number_of_features_per_correlated_block_normal_dist"]),
+                0.7,
+            ),
+        )
 
-            params_dict["upper_bounds_for_correlations_normal"] = (
-                np.full(
-                    len(params_dict["number_of_features_per_correlated_block_normal_dist"]),
-                    1.0,
-                ),
-            )
+        params_dict["upper_bounds_for_correlations_normal"] = (
+            np.full(
+                len(params_dict["number_of_features_per_correlated_block_normal_dist"]),
+                1.0,
+            ),
+        )
 
     if (
         (params_dict["upper_bounds_for_correlations_lognormal"] is not None)
         and (params_dict["number_of_features_per_correlated_block_lognormal"] is not None)
         and (
-            not len(params_dict["upper_bounds_for_correlations_lognormal"])
-            == len(params_dict["number_of_features_per_correlated_block_lognormal"])
+            len(params_dict["upper_bounds_for_correlations_lognormal"])
+            != len(params_dict["number_of_features_per_correlated_block_lognormal"])
         )
     ):
         warnings.warn(
@@ -737,9 +730,9 @@ def _validate_parameters(params_dict) -> bool:
             ),
         )
 
-    if (params_dict["upper_bounds_for_correlations_normal"] is not None) and not len(
+    if (params_dict["upper_bounds_for_correlations_normal"] is not None) and len(
         params_dict["upper_bounds_for_correlations_normal"]
-    ) == len(params_dict["number_of_features_per_correlated_block_normal_dist"]):
+    ) != len(params_dict["number_of_features_per_correlated_block_normal_dist"]):
         warnings.warn(
             "The number of upper bounds for the correlated features of a "
             "normal distributed class given in the "
@@ -764,37 +757,38 @@ def _validate_parameters(params_dict) -> bool:
             ),
         )
 
-    if (params_dict["upper_bounds_for_correlations_lognormal"] is not None) and (
-        params_dict["number_of_features_per_correlated_block_lognormal"] is not None
-    ):
-        if (
+    if (
+        (params_dict["upper_bounds_for_correlations_lognormal"] is not None)
+        and (params_dict["number_of_features_per_correlated_block_lognormal"] is not None)
+        and (
             len(params_dict["upper_bounds_for_correlations_lognormal"])
             != len(params_dict["number_of_features_per_correlated_block_lognormal"])
-        ):
-            warnings.warn(
-                "The number of upper bounds for the correlated features of a "
-                "normal distributed class given in the "
-                '"upper_bounds_for_correlations_lognormal" list does not '
-                "match "
-                "the number of blocks with correlating features specified by "
-                "the length of the"
-                "number_of_features_per_correlated_block_lognormal list.\n"
-                "All lower and upper bound values will be set to default: "
-                "lower_bound=0.7 and upper_bound=1.0."
-            )
-            params_dict["lower_bounds_for_correlations_lognormal"] = (
-                np.full(
-                    len(params_dict["number_of_features_per_correlated_block_lognormal"]),
-                    0.7,
-                ),
-            )
+        )
+    ):
+        warnings.warn(
+            "The number of upper bounds for the correlated features of a "
+            "normal distributed class given in the "
+            '"upper_bounds_for_correlations_lognormal" list does not '
+            "match "
+            "the number of blocks with correlating features specified by "
+            "the length of the"
+            "number_of_features_per_correlated_block_lognormal list.\n"
+            "All lower and upper bound values will be set to default: "
+            "lower_bound=0.7 and upper_bound=1.0."
+        )
+        params_dict["lower_bounds_for_correlations_lognormal"] = (
+            np.full(
+                len(params_dict["number_of_features_per_correlated_block_lognormal"]),
+                0.7,
+            ),
+        )
 
-            params_dict["upper_bounds_for_correlations_lognormal"] = (
-                np.full(
-                    len(params_dict["number_of_features_per_correlated_block_lognormal"]),
-                    1.0,
-                ),
-            )
+        params_dict["upper_bounds_for_correlations_lognormal"] = (
+            np.full(
+                len(params_dict["number_of_features_per_correlated_block_lognormal"]),
+                1.0,
+            ),
+        )
 
     return True
 
@@ -938,13 +932,13 @@ def save_generated_data(
         assert isinstance(path_to_save_csv, str)
         pd.DataFrame(data_df).to_csv(path_to_save_csv, index=False)
 
-        print(f"Data generated successfully and saved in " f"{path_to_save_csv}")
+        print(f"Data generated successfully and saved in {path_to_save_csv}")
 
     if path_to_save_feather is not None:
         assert isinstance(path_to_save_feather, str)
         pd.DataFrame(data_df).to_feather(path_to_save_feather, index=False)
 
-        print(f"Data generated successfully and saved in " f"{path_to_save_feather}")
+        print(f"Data generated successfully and saved in {path_to_save_feather}")
 
 
 def save_meta_data(
@@ -962,7 +956,7 @@ def save_meta_data(
         assert isinstance(path_to_save_meta_data, str)
         joblib.dump(meta_data, path_to_save_meta_data)
 
-        print(f"Meta data successfully saved in " f"{path_to_save_meta_data}")
+        print(f"Meta data successfully saved in {path_to_save_meta_data}")
 
 
 def generate_artificial_classification_data(

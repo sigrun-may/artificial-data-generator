@@ -13,7 +13,7 @@ import setuptools
 
 project_name = "artificial_data_generator"
 source_code = "https://github.com/sigrun-may/artificial-data-generator"
-keywords = ("")  # TODO: add keywords
+keywords = ""  # TODO: add keywords
 install_requires = ["joblib", "numpy", "pandas", "seaborn", "matplotlib", "scikit-learn", "statsmodels"]
 extras_require = {
     "checking": [
@@ -58,8 +58,8 @@ setuptools.setup(
         "Bug Tracker": source_code + "/issues",
         # "Documentation": "",  # TODO: add link to Sphinx page
         "Source Code": source_code,
-#        "Contributing": source_code + "/blob/main/CONTRIBUTING.md",
-#        "Code of Conduct": source_code + "/blob/main/CODE_OF_CONDUCT.md",
+        #        "Contributing": source_code + "/blob/main/CONTRIBUTING.md",
+        #        "Code of Conduct": source_code + "/blob/main/CODE_OF_CONDUCT.md",
     },
     packages=setuptools.find_packages(),
     python_requires=">=3.6",  # TODO: check this

@@ -70,7 +70,7 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
 }
 
-#html_logo = "imgs/logo.png"
+# html_logo = "imgs/logo.png"
 
 # These paths are either relative to html_static_path
 # or fully qualified paths (eg. https://...)

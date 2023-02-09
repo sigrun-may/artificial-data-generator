@@ -28,10 +28,8 @@ import artificial_data_generator
     number_of_pseudo_class_features=30,
     number_of_random_features=5000,
     path_to_save_plot=None,
-    # path_to_save_csv="your_path_to_save.csv",
-    path_to_save_csv="../../reverse_feature_selection/data/artificial_c1.csv",
+    path_to_save_csv="your_path_to_save.csv",
     path_to_save_feather=None,
-    # path_to_save_meta_data = "your_path_to_save_metadata",
-    path_to_save_meta_data="../../reverse_feature_selection/data/artificial_c1.pkl",
-    shuffle_features = False,
+    path_to_save_meta_data = "your_path_to_save_metadata",
+    shuffle_features=False,
 )
