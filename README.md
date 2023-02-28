@@ -1,6 +1,7 @@
 # Data generator for synthetic data including artificial classes, intraclass correlations, pseudo-classes and random data - [Sphinx Doc](https://sigrun-may.github.io/artificial-data-generator/)
 
 ## Table of Contents
+
 - [Purpose](#purpose)
 - [Data structure](#data-structure)
   - [Different parts of the data set](#different-parts-of-the-data-set)
@@ -102,4 +103,3 @@ Copyright (c) 2022 Sigrun May, Ostfalia Hochschule für angewandte Wissenschafte
 Licensed under the **MIT License** (the "License"); you may not use this file except in compliance with the License.
 You may obtain a copy of the License by reviewing the file
 [LICENSE](https://github.com/sigrun-may/artificial-data-generator/blob/main/LICENSE) in the repository.
-

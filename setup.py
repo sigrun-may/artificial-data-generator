@@ -13,8 +13,8 @@ import setuptools
 
 project_name = "artificial_data_generator"
 source_code = "https://github.com/sigrun-may/artificial-data-generator"
-keywords = ""  # TODO: add keywords
-install_requires = ["joblib", "numpy", "pandas", "seaborn", "matplotlib", "scikit-learn", "statsmodels"]
+keywords = "artificial data"
+install_requires = ["yaml", "numpy", "pandas", "seaborn", "matplotlib", "random", "statsmodels"]
 extras_require = {
     "checking": [
         "black",
@@ -49,7 +49,7 @@ setuptools.setup(
     version=get_version(),
     maintainer="Sigrun May",
     author="Sigrun May",
-    author_email="",  # TODO: add mail
+    author_email="s.may@ostfalia.de",
     description="",  # TODO: add short description
     long_description=long_description,
     long_description_content_type="text/markdown",
