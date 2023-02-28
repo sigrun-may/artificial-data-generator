@@ -5,31 +5,34 @@
 # which is available at https://opensource.org/licenses/MIT
 
 """Example for usage of generator for artificial data artificial_data_generator."""
-import numpy as np
 
-import artificial_data_generator
+from artificial_data_generator import visualizer, artificial_data_generator
 
-# generate_artificial_data()
-(generated_data_df, meta_data_dict,) = artificial_data_generator.generate_artificial_classification_data(
-    number_of_normal_distributed_classes=1,
-    means_of_normal_distributions=[5],
-    scales_of_normal_distributions=[2],
-    scales_of_lognormal_distributions=[1],
-    number_of_lognormal_distributed_classes=1,
-    shifts_of_lognormal_distribution_centers=[0.0],
-    number_of_samples_per_class=15,
-    number_of_features_per_class=100,
-    number_of_features_per_correlated_block_normal_dist=None,
-    lower_bounds_for_correlations_normal=None,
-    upper_bounds_for_correlations_normal=None,
-    number_of_features_per_correlated_block_lognormal=[[20, 20, 20]],
-    lower_bounds_for_correlations_lognormal=np.full(3, 0.8),
-    upper_bounds_for_correlations_lognormal=np.full(3, 1),
-    number_of_pseudo_class_features=30,
-    number_of_random_features=5000,
-    path_to_save_plot=None,
-    path_to_save_csv="your_path_to_save.csv",
-    path_to_save_feather=None,
-    path_to_save_meta_data = "your_path_to_save_metadata",
-    shuffle_features=False,
-)
+params_dict = {
+    "number_of_relevant_features": 12,
+    "number_of_pseudo_class_features": 2,
+    "random_features": {"number_of_features": 10, "distribution": "lognormal", "scale": 1, "mode": 0},
+    "classes": {
+        1: {
+            "number_of_samples": 15,
+            "distribution": "lognormal",
+            "mode": 3,
+            "scale": 1,
+            "correlated_features": {
+                1: {"number_of_features": 4, "correlation_lower_bound": 0.7, "correlation_upper_bound": 1},
+                2: {"number_of_features": 4, "correlation_lower_bound": 0.7, "correlation_upper_bound": 1},
+                3: {"number_of_features": 4, "correlation_lower_bound": 0.7, "correlation_upper_bound": 1},
+            },
+        },
+        2: {"number_of_samples": 15, "distribution": "normal", "mode": 1, "scale": 2, "correlated_features": {}},
+        3: {"number_of_samples": 15, "distribution": "normal", "mode": -10, "scale": 2, "correlated_features": {}},
+    },
+    "path_to_save_csv": "your_path_to_save.csv",
+    "path_to_save_feather": "",
+    "path_to_save_meta_data": "your_path_to_save_params_dict.yaml",
+    "shuffle_features": False,
+}
+data_df = artificial_data_generator.generate_artificial_classification_data(params_dict)
+print(data_df.head)
+
+visualizer.visualize(data_df, params_dict)
