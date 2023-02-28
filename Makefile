@@ -1,5 +1,4 @@
-src := data_generator
-test-src := tests
+src := artificial_data_generator
 other-src := examples
 
 # check the code
