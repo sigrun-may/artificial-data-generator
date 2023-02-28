@@ -3,7 +3,7 @@ import seaborn as sns
 from matplotlib import pyplot
 
 
-def visualize(data_df, params_dict, path=None):
+def visualize(data_df, params_dict, path=None) -> None:
     """Visualize generated artificial biomarker data.
 
     Args:
