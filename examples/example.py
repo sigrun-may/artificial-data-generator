@@ -6,7 +6,8 @@
 
 """Example for usage of generator for artificial data artificial_data_generator."""
 
-from artificial_data_generator import visualizer, artificial_data_generator
+from artificial_data_generator import artificial_data_generator, visualizer
+
 
 params_dict = {
     "number_of_relevant_features": 12,
