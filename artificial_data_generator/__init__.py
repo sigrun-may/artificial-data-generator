@@ -8,9 +8,8 @@
 
 """Data generator main package."""
 
-from artificial_data_generator.artificial_data_generator import (
-    generate_artificial_classification_data,
-)
+from artificial_data_generator.artificial_data_generator import generate_artificial_classification_data
+
 
 __version__ = "0.0.1rc4"
 
