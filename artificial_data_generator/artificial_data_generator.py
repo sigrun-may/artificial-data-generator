@@ -1,3 +1,13 @@
+# Copyright (c) 2022 Sigrun May,
+# Ostfalia Hochschule für angewandte Wissenschaften
+#
+# This software is distributed under the terms of the MIT license
+# which is available at https://opensource.org/licenses/MIT
+
+"""Generator for artificial data.
+Can be used as baseline for benchmarking and the development of new methods.
+For example, simulation of biomarker data from high-throughput experiments.
+"""
 import math
 import random
 import warnings
@@ -273,7 +283,7 @@ def _save(data_df, params_dict):
         print(f"Meta data successfully saved in {params_dict['path_to_save_meta_data']}")
 
 
-def generate_artificial_classification_data(params_dict: Dict[str, Any]):
+def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.DataFrame:
     """Generate artificial classification (e.g. biomarker) data.
 
     Args:
@@ -347,10 +357,10 @@ def generate_artificial_classification_data(params_dict: Dict[str, Any]):
                         "path_to_save_meta_data": "your_path_to_save_params_dict.yaml",
                         "shuffle_features": False,
                       }
+
     Returns:
         Generated artificial data as DataFrame.
     """
-
     # validate input parameters
 
     # generate relevant features

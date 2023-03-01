@@ -1,3 +1,12 @@
+# Copyright (c) 2022 Sigrun May,
+# Ostfalia Hochschule für angewandte Wissenschaften
+#
+# This software is distributed under the terms of the MIT license
+# which is available at https://opensource.org/licenses/MIT
+
+"""Visualizer for the generated artificial data.
+Visualizes correlation matrices of the correlated feature clusters and class histograms.
+"""
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot
