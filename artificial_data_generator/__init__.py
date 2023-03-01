@@ -11,7 +11,7 @@
 from artificial_data_generator.artificial_data_generator import generate_artificial_classification_data
 
 
-__version__ = "0.0.1rc6"
+__version__ = "0.0.1rc7"
 
 __all__ = [
     "generate_artificial_classification_data",
