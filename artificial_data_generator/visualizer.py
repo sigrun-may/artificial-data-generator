@@ -42,10 +42,10 @@ def visualize(data_df, params_dict, path=None) -> None:
                 ]
                 sub_df = data_df.iloc[start_row:stop_row, start_column:stop_column]
                 if path:
-                    complete_path = f"{path}/corrplot_class{class_number}_block{cluster_number}.png"
-                    visualize_correlation_matrix(sub_df, complete_path)
+                    complete_path = f"{path}/corrplot_class{class_number}_block{cluster_number}.pdf"
+                    visualize_correlation_matrix(sub_df, complete_path, annotate=True)
                 else:
-                    visualize_correlation_matrix(sub_df)
+                    visualize_correlation_matrix(sub_df, annotate=True)
                 # shift column start index
                 start_column += params_dict["classes"][class_number]["correlated_features"][cluster_number][
                     "number_of_features"
@@ -55,10 +55,10 @@ def visualize(data_df, params_dict, path=None) -> None:
                 start_row:stop_row, 1 : params_dict["number_of_relevant_features"] + 1
             ]  # skip the label
             if path:
-                complete_path = f"{path}/corrplot_class{class_number}.png"
-                visualize_correlation_matrix(class_df, complete_path)
+                complete_path = f"{path}/corrplot_class{class_number}.pdf"
+                visualize_correlation_matrix(class_df, complete_path, annotate=False)
             else:
-                visualize_correlation_matrix(class_df)
+                visualize_correlation_matrix(class_df, annotate=False)
         class_values = (
             data_df.iloc[start_row:stop_row, 1 : params_dict["number_of_relevant_features"] + 1].to_numpy().flatten()
         )
@@ -73,24 +73,25 @@ def visualize(data_df, params_dict, path=None) -> None:
 
     sns.histplot(data=classes_df)
     if path:
-        complete_path = f"{path}/classes_histogram.png"
-        pyplot.savefig(complete_path, dpi=400)
+        complete_path = f"{path}/classes_histogram.pdf"
+        pyplot.savefig(complete_path, dpi=600)
     pyplot.show()
 
 
-def visualize_correlation_matrix(data_df, path=None) -> None:
+def visualize_correlation_matrix(data_df: pd.DataFrame, path: str = None, annotate: bool = False) -> None:
     """Visualize correlations.
 
     Args:
         data_df: DataFrame where each column equals a class.
-        path: path to save the figure
+        path: Path to save the figure
+        annotate: If the correlation matrix should be annotated.
 
     Returns:
         None
     """
     sns.set_theme(style="white")
     corr = data_df.corr()
-    sns.heatmap(corr, annot=True, cmap="Blues", fmt=".1g")
+    sns.heatmap(corr, annot=annotate, cmap="Blues", fmt=".1g")
     if path:
-        pyplot.savefig(path, dpi=400)
+        pyplot.savefig(path, dpi=600)
     pyplot.show()
