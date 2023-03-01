@@ -42,7 +42,7 @@ def visualize(data_df, params_dict, path=None) -> None:
                 ]
                 sub_df = data_df.iloc[start_row:stop_row, start_column:stop_column]
                 if path:
-                    complete_path = f"{path}/corrplot_class{class_number}_block{cluster_number}.pdf"
+                    complete_path = f"{path}/corrplot_class{class_number}_cluster{cluster_number}.pdf"
                     visualize_correlation_matrix(sub_df, complete_path, annotate=True)
                 else:
                     visualize_correlation_matrix(sub_df, annotate=True)
