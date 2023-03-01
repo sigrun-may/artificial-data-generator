@@ -14,7 +14,7 @@ import setuptools
 project_name = "artificial_data_generator"
 source_code = "https://github.com/sigrun-may/artificial-data-generator"
 keywords = "artificial data"
-install_requires = ["yaml", "numpy", "pandas", "seaborn", "matplotlib", "random", "statsmodels"]
+install_requires = ["pyyaml", "numpy", "pandas", "seaborn", "matplotlib", "statsmodels"]
 extras_require = {
     "checking": [
         "black",
