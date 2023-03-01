@@ -271,7 +271,7 @@ def _save(data_df, params_dict):
     if "path_to_save_feather" in params_dict.keys() and params_dict["path_to_save_feather"]:
         assert isinstance(params_dict["path_to_save_feather"], str)
         assert params_dict["path_to_save_feather"].endswith(".feather")
-        pd.DataFrame(data_df).to_feather(params_dict["path_to_save_feather"], index=False)
+        pd.DataFrame(data_df).to_feather(params_dict["path_to_save_feather"])
         print(f"Data generated successfully and saved in {params_dict['path_to_save_feather']}")
 
     if "path_to_save_meta_data" in params_dict.keys() and params_dict["path_to_save_meta_data"]:
