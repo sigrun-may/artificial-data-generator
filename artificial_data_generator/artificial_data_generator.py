@@ -5,6 +5,7 @@
 # which is available at https://opensource.org/licenses/MIT
 
 """Generator for artificial data.
+
 Can be used as baseline for benchmarking and the development of new methods.
 For example, simulation of biomarker data from high-throughput experiments.
 """
@@ -249,7 +250,7 @@ def _generate_dataframe(
     return data_df
 
 
-def _shuffle_features(data_df: pd.DataFrame, params_dict: Dict[str, any]):
+def _shuffle_features(data_df: pd.DataFrame, params_dict: Dict[str, Any]):
     # shuffle all features
     if params_dict["shuffle_features"]:
         column_names = list(data_df.columns[1:])
@@ -278,7 +279,7 @@ def _save(data_df, params_dict):
         assert params_dict["path_to_save_meta_data"].endswith(".yaml")
         assert isinstance(params_dict, dict)
         # f = open(params_dict["path_to_save_meta_data"], "x")  # throw exception if file exists
-        with open(params_dict["path_to_save_meta_data"], "w") as f:
+        with open(params_dict["path_to_save_meta_data"], "w", encoding="utf-8") as f:
             yaml.dump(params_dict, f)
         print(f"Meta data successfully saved in {params_dict['path_to_save_meta_data']}")
 

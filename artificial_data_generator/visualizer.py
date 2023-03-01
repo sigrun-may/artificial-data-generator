@@ -5,6 +5,7 @@
 # which is available at https://opensource.org/licenses/MIT
 
 """Visualizer for the generated artificial data.
+
 Visualizes correlation matrices of the correlated feature clusters and class histograms.
 """
 import pandas as pd
@@ -67,7 +68,7 @@ def visualize(data_df, params_dict, path=None) -> None:
         # shift start and stop indices
         start_row += params_dict["classes"][class_number]["number_of_samples"]
         # skip stop_row for last class
-        if (class_number + 1) in params_dict["classes"].keys():
+        if class_number + 1 in params_dict["classes"].keys():
             stop_row += params_dict["classes"][class_number + 1]["number_of_samples"]
 
     sns.histplot(data=classes_df)
