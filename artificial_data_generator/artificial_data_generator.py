@@ -308,9 +308,10 @@ def _save(data_df, params_dict):
 def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.DataFrame:
     """Generate artificial classification (e.g. biomarker) data.
 
-    Args:
-        params_dict: Parameters for the data to generate
-            Example:
+    Example:
+
+        .. testcode::
+
             params_dict = { "number_of_relevant_features": 12,
                             "number_of_pseudo_class_features": 2,
                             "random_features": {"number_of_features": 10, "distribution": "lognormal",
@@ -341,7 +342,7 @@ def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.D
                             "shuffle_features": False,
                           }
 
-            Elements of the parameters dict:
+            Elements of the parameter dict:
             "number_of_relevant_features": Total number of features (columns) to generate
                                             for each artificial class.
             "number_of_pseudo_class_features": Number of pseudo-class features.
@@ -378,6 +379,9 @@ def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.D
             "path_to_save_meta_data": "your_path_to_save_params_dict.yaml",
             "shuffle_features": False,
           }
+
+    Args:
+        params_dict: Parameters for the data to generate
 
     Returns:
         Generated artificial data as DataFrame.

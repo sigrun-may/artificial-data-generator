@@ -20,7 +20,7 @@ from typing import List
 
 # -- Project information -----------------------------------------------------
 
-project = "Synthetic Data Generator"
+project = "Artificial Data Generator"
 copyright = "2022, Sigrun May"
 author = "Sigrun May"
 
