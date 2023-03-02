@@ -61,7 +61,7 @@ def _build_pseudo_classes(params_dict: Dict[str, Any]) -> ndarray:
         ):
             print(
                 f"INFO: Mean {np.mean(normal_distributed_class)} "
-                f"of generated data differs from expected mean {2*class_number}"
+                f"of generated data differs from expected mean {2 * class_number}"
                 f" within the pseudo class."
             )
 
@@ -78,7 +78,6 @@ def _build_pseudo_classes(params_dict: Dict[str, Any]) -> ndarray:
 
 
 def _build_single_class(class_params_dict: Dict[str, Any], number_of_relevant_features: int) -> ndarray:
-
     class_data_np = _generate_normal_distributed_class(class_params_dict, number_of_relevant_features)
     if class_params_dict["distribution"] == "lognormal":
         class_data_np = np.exp(class_data_np)
@@ -131,7 +130,7 @@ def _generate_correlated_cluster(
     lower_bound: float,
     upper_bound: float,
 ) -> ndarray:
-    """Generate a block of correlated features.
+    """Generate a cluster of correlated features.
 
     Args:
         number_of_features: Number of columns of generated data.
@@ -156,7 +155,7 @@ def _generate_correlated_cluster(
     print("generation of correlation matrix ...")
     # first iteration generating correlations to
     # improve the fit of the covariance matrix
-    correlation_matrix = correlation_tools.corr_nearest(corr=random_matrix, threshold=1e-15, n_fact=100)
+    correlation_matrix = correlation_tools.corr_nearest(corr=random_matrix, threshold=1e-15, n_fact=10000)
 
     # change values on the diagonal to 1 to
     # improve the fit of the covariance matrix
@@ -169,10 +168,9 @@ def _generate_correlated_cluster(
         correlation_matrix,
         method="nearest",
         threshold=1e-15,
-        n_fact=1000,
+        n_fact=10000,
         return_all=False,
     )
-    print(covariance_matrix)
     print("generation of covariant matrix finished")
 
     # generate correlated cluster
@@ -181,6 +179,7 @@ def _generate_correlated_cluster(
         cov=covariance_matrix,
         size=number_of_samples,
         check_valid="raise",
+        method="eigh",
     )
     print("generation of correlated cluster finished")
 
@@ -196,9 +195,31 @@ def _generate_correlated_features(class_params_dict: Dict[str, Any]) -> ndarray:
             lower_bound=cluster_params_dict["correlation_lower_bound"],
             upper_bound=cluster_params_dict["correlation_upper_bound"],
         )
+        # repeat random generation until lower bound is reached
+        correlated_feature_cluster = _repeat_correlation_cluster_generation(
+            correlated_feature_cluster, cluster_params_dict
+        )
         correlated_feature_clusters.append(correlated_feature_cluster)
     correlated_features = np.concatenate(correlated_feature_clusters, axis=1)
     return correlated_features
+
+
+def _repeat_correlation_cluster_generation(correlated_feature_cluster, cluster_params_dict) -> ndarray:
+    # repeat random generation until lower bound is reached
+    counter = 0
+    correlation_matrix_pd = pd.DataFrame(correlated_feature_cluster).corr(method="spearman")
+    min_corr = np.amin(correlation_matrix_pd.values)
+    while (counter < 100) and (min_corr < cluster_params_dict["correlation_lower_bound"]):
+        correlated_feature_cluster = _generate_correlated_cluster(
+            number_of_features=correlated_feature_cluster.shape[1],
+            number_of_samples=correlated_feature_cluster.shape[0],
+            lower_bound=cluster_params_dict["correlation_lower_bound"],
+            upper_bound=cluster_params_dict["correlation_upper_bound"],
+        )
+        correlation_matrix_pd = pd.DataFrame(correlated_feature_cluster).corr(method="spearman")
+        min_corr = np.amin(correlation_matrix_pd.values)
+        counter += 1
+    return correlated_feature_cluster
 
 
 def _generate_dataframe(

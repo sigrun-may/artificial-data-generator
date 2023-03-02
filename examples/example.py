@@ -33,7 +33,9 @@ params_dict = {
     "path_to_save_meta_data": "your_path_to_save_params_dict.yaml",
     "shuffle_features": False,
 }
-data_df = artificial_data_generator.generate_artificial_classification_data(params_dict)
-print(data_df.head)
 
+# generate artificial data as Dataframe
+data_df = artificial_data_generator.generate_artificial_classification_data(params_dict)
+
+# visualize generated correlations and class distributions
 visualizer.visualize(data_df, params_dict)

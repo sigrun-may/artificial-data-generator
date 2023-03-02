@@ -90,8 +90,8 @@ def visualize_correlation_matrix(data_df: pd.DataFrame, path: str = None, annota
         None
     """
     sns.set_theme(style="white")
-    corr = data_df.corr()
-    sns.heatmap(corr, annot=annotate, cmap="Blues", fmt=".1g")
+    corr = data_df.corr(method="spearman")
+    sns.heatmap(corr, annot=annotate, cmap="Blues", fmt=".2g")
     if path:
         pyplot.savefig(path, dpi=600)
     pyplot.show()
