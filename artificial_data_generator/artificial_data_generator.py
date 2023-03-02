@@ -308,77 +308,75 @@ def _save(data_df, params_dict):
 def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.DataFrame:
     """Generate artificial classification (e.g. biomarker) data.
 
-    Example:
+    .. code-block:: python
 
-        .. highlight:: python
-
-            params_dict = { "number_of_relevant_features": 12,
-                            "number_of_pseudo_class_features": 2,
-                            "random_features": {"number_of_features": 10, "distribution": "lognormal",
-                                                "scale": 1, "mode": 0},
-                            "classes": {
-                                1: {
-                                    "number_of_samples": 15,
-                                    "distribution": "lognormal",
-                                    "mode": 3,
-                                    "scale": 1,
-                                    "correlated_features": {
-                                        1: {"number_of_features": 4, "correlation_lower_bound": 0.7,
-                                            "correlation_upper_bound": 1},
-                                        2: {"number_of_features": 4, "correlation_lower_bound": 0.7,
-                                            "correlation_upper_bound": 1},
-                                        3: {"number_of_features": 4, "correlation_lower_bound": 0.7,
-                                            "correlation_upper_bound": 1},
-                                    },
+        params_dict = { "number_of_relevant_features": 12,
+                        "number_of_pseudo_class_features": 2,
+                        "random_features": {"number_of_features": 10, "distribution": "lognormal",
+                                            "scale": 1, "mode": 0},
+                        "classes": {
+                            1: {
+                                "number_of_samples": 15,
+                                "distribution": "lognormal",
+                                "mode": 3,
+                                "scale": 1,
+                                "correlated_features": {
+                                    1: {"number_of_features": 4, "correlation_lower_bound": 0.7,
+                                        "correlation_upper_bound": 1},
+                                    2: {"number_of_features": 4, "correlation_lower_bound": 0.7,
+                                        "correlation_upper_bound": 1},
+                                    3: {"number_of_features": 4, "correlation_lower_bound": 0.7,
+                                        "correlation_upper_bound": 1},
                                 },
-                                2: {"number_of_samples": 15, "distribution": "normal", "mode": 1,
-                                    "scale": 2, "correlated_features": {}},
-                                3: {"number_of_samples": 15, "distribution": "normal", "mode": -10,
-                                    "scale": 2, "correlated_features": {}},
                             },
-                            "path_to_save_csv": "your_path_to_save.csv",
-                            "path_to_save_feather": "",
-                            "path_to_save_meta_data": "your_path_to_save_params_dict.yaml",
-                            "shuffle_features": False,
-                          }
+                            2: {"number_of_samples": 15, "distribution": "normal", "mode": 1,
+                                "scale": 2, "correlated_features": {}},
+                            3: {"number_of_samples": 15, "distribution": "normal", "mode": -10,
+                                "scale": 2, "correlated_features": {}},
+                        },
+                        "path_to_save_csv": "your_path_to_save.csv",
+                        "path_to_save_feather": "",
+                        "path_to_save_meta_data": "your_path_to_save_params_dict.yaml",
+                        "shuffle_features": False,
+                      }
 
-            Elements of the parameter dict:
-            "number_of_relevant_features": Total number of features (columns) to generate
-                                            for each artificial class.
-            "number_of_pseudo_class_features": Number of pseudo-class features.
-                The underlying classes correspond to the selected number of classes and follow a normal
-                distribution. Shifted modes of the generated artificial classes equal two times
-                the class number. All samples of the generated classes are randomly shuffled and
-                therefore have no relation to any class label.
-            "random_features": {"number_of_features": Number of randomly generated features.
-                                "distribution": "lognormal" or "normal",
-                                "scale": Standard deviation (spread or “width”) of the distribution.
-                                         Must be non-negative.,
-                                "mode": Mean (“centre”) of the distribution.},
-            "classes":  Parameter dicts for each class to generate. The key equals the class label.
-                        "number_of_samples": 15,
-                        "distribution": "lognormal",
-                        "mode": 3,
-                        "scale": 1,
-                        "correlated_features": Parameter dicts for each cluster of correlated features to
-                                               generate. The key equals the cluster number.
-                                               To generate no clusters insert empty dict.
-                                                "number_of_features": Number of correlated features within
-                                                                      a cluster.
-                                                "correlation_lower_bound": Lower bounds for the correlation
-                                                                           of each cluster of correlated
-                                                                           features within a normal
-                                                                           distributed class.
-                                                                           Default is 0.7.
-                                                "correlation_upper_bound": Upper bounds for the correlation
-                                                                           of each cluster of correlated
-                                                                           features within a normal
-                                                                           distributed class. Default is 1.
-            "path_to_save_csv": "your_path_to_save.csv",
-            "path_to_save_feather": "your_path_to_save.feather",
-            "path_to_save_meta_data": "your_path_to_save_params_dict.yaml",
-            "shuffle_features": False,
-          }
+        Elements of the parameter dict:
+        "number_of_relevant_features": Total number of features (columns) to generate
+                                        for each artificial class.
+        "number_of_pseudo_class_features": Number of pseudo-class features.
+            The underlying classes correspond to the selected number of classes and follow a normal
+            distribution. Shifted modes of the generated artificial classes equal two times
+            the class number. All samples of the generated classes are randomly shuffled and
+            therefore have no relation to any class label.
+        "random_features": {"number_of_features": Number of randomly generated features.
+                            "distribution": "lognormal" or "normal",
+                            "scale": Standard deviation (spread or “width”) of the distribution.
+                                     Must be non-negative.,
+                            "mode": Mean (“centre”) of the distribution.},
+        "classes":  Parameter dicts for each class to generate. The key equals the class label.
+                    "number_of_samples": 15,
+                    "distribution": "lognormal",
+                    "mode": 3,
+                    "scale": 1,
+                    "correlated_features": Parameter dicts for each cluster of correlated features to
+                                           generate. The key equals the cluster number.
+                                           To generate no clusters insert empty dict.
+                                            "number_of_features": Number of correlated features within
+                                                                  a cluster.
+                                            "correlation_lower_bound": Lower bounds for the correlation
+                                                                       of each cluster of correlated
+                                                                       features within a normal
+                                                                       distributed class.
+                                                                       Default is 0.7.
+                                            "correlation_upper_bound": Upper bounds for the correlation
+                                                                       of each cluster of correlated
+                                                                       features within a normal
+                                                                       distributed class. Default is 1.
+        "path_to_save_csv": "your_path_to_save.csv",
+        "path_to_save_feather": "your_path_to_save.feather",
+        "path_to_save_meta_data": "your_path_to_save_params_dict.yaml",
+        "shuffle_features": False,
+      }
 
     Args:
         params_dict: Parameters for the data to generate
