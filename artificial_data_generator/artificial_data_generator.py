@@ -311,6 +311,9 @@ def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.D
     Args:
         params_dict: Parameters for the data to generate (see example above).
 
+    Returns:
+        Generated artificial data as DataFrame.
+
     Example:
 
     .. code-block:: python
@@ -367,9 +370,9 @@ def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.D
                     "distribution": "lognormal" or "normal"
                     "mode": Mean (“centre”) of the distribution.
                     "scale": Standard deviation (spread or “width”) of the distribution. Must be non-negative.
-                    "correlated_features": Parameter dicts for each cluster of correlated features to
-                                           generate. The key equals the cluster number.
-                                           To generate no clusters insert empty dict.
+                    "correlated_features":  Parameter dicts for each cluster of correlated features to
+                                            generate. The key equals the cluster number.
+                                            To generate no clusters insert empty dict.
                                             "number_of_features": Number of correlated features within
                                                                   a cluster.
                                             "correlation_lower_bound": Lower bounds for the correlation
@@ -381,13 +384,11 @@ def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.D
                                                                        of each cluster of correlated
                                                                        features within a normal
                                                                        distributed class. Default is 1.
+
         "path_to_save_csv": "your_path_to_save.csv"
         "path_to_save_feather": "your_path_to_save.feather"
         "path_to_save_meta_data": "your_path_to_save_params_dict.yaml"
         "shuffle_features": If generated features should be shuffled.
-
-    Returns:
-        Generated artificial data as DataFrame.
     """
     # validate input parameters
 
