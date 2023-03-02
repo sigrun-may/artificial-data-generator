@@ -312,7 +312,7 @@ def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.D
         params_dict: Parameters for the data to generate (see example below).
 
     Returns:
-        Generated artificial data as DataFrame.
+        Generated artificial data.
 
     Example:
 
