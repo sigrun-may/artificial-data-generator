@@ -174,11 +174,10 @@ features (see parameters of
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>params_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a><em>]</em>) – <dl>
 <dt>Parameters for the data to generate</dt><dd><p>Example:
-params_dict = {</p>
+params_dict = { “number_of_relevant_features”: 12,</p>
 <blockquote>
 <div><blockquote>
-<div><p>”number_of_relevant_features”: 12,
-“number_of_pseudo_class_features”: 2,
+<div><p>”number_of_pseudo_class_features”: 2,
 “random_features”: {“number_of_features”: 10, “distribution”: “lognormal”,</p>
 <blockquote>
 <div><p>”scale”: 1, “mode”: 0},</p>
@@ -222,9 +221,12 @@ params_dict = {</p>
 </div></blockquote>
 <p>}</p>
 </div></blockquote>
+<p>Elements of the parameters dict:
+“number_of_relevant_features”: Total number of features (columns) to generate</p>
+<blockquote>
+<div><p>for each artificial class.</p>
+</div></blockquote>
 <dl>
-<dt>”number_of_relevant_features”: Total number of features (columns) to generate</dt><dd><p>for each artificial class.</p>
-</dd>
 <dt>”number_of_pseudo_class_features”: Number of pseudo-class features.</dt><dd><p>The underlying classes correspond to the selected number of classes and follow a normal
 distribution. Shifted modes of the generated artificial classes equal two times
 the class number. All samples of the generated classes are randomly shuffled and
