@@ -170,7 +170,75 @@ features (see parameters of
 <dt class="sig sig-object py" id="artificial_data_generator.artificial_data_generator.generate_artificial_classification_data">
 <span class="sig-prename descclassname"><span class="pre">artificial_data_generator.artificial_data_generator.</span></span><span class="sig-name descname"><span class="pre">generate_artificial_classification_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/artificial_data_generator/artificial_data_generator.html#generate_artificial_classification_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#artificial_data_generator.artificial_data_generator.generate_artificial_classification_data" title="Permalink to this definition"></a></dt>
 <dd><p>Generate artificial classification (e.g. biomarker) data.</p>
-<p class="rubric">Example</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>  params_dict = { &quot;number_of_relevant_features&quot;: 12,
+                  &quot;number_of_pseudo_class_features&quot;: 2,
+                  &quot;random_features&quot;: {&quot;number_of_features&quot;: 10, &quot;distribution&quot;: &quot;lognormal&quot;,
+                                      &quot;scale&quot;: 1, &quot;mode&quot;: 0},
+                  &quot;classes&quot;: {
+                      1: {
+                          &quot;number_of_samples&quot;: 15,
+                          &quot;distribution&quot;: &quot;lognormal&quot;,
+                          &quot;mode&quot;: 3,
+                          &quot;scale&quot;: 1,
+                          &quot;correlated_features&quot;: {
+                              1: {&quot;number_of_features&quot;: 4, &quot;correlation_lower_bound&quot;: 0.7,
+                                  &quot;correlation_upper_bound&quot;: 1},
+                              2: {&quot;number_of_features&quot;: 4, &quot;correlation_lower_bound&quot;: 0.7,
+                                  &quot;correlation_upper_bound&quot;: 1},
+                              3: {&quot;number_of_features&quot;: 4, &quot;correlation_lower_bound&quot;: 0.7,
+                                  &quot;correlation_upper_bound&quot;: 1},
+                          },
+                      },
+                      2: {&quot;number_of_samples&quot;: 15, &quot;distribution&quot;: &quot;normal&quot;, &quot;mode&quot;: 1,
+                          &quot;scale&quot;: 2, &quot;correlated_features&quot;: {}},
+                      3: {&quot;number_of_samples&quot;: 15, &quot;distribution&quot;: &quot;normal&quot;, &quot;mode&quot;: -10,
+                          &quot;scale&quot;: 2, &quot;correlated_features&quot;: {}},
+                  },
+                  &quot;path_to_save_csv&quot;: &quot;your_path_to_save.csv&quot;,
+                  &quot;path_to_save_feather&quot;: &quot;&quot;,
+                  &quot;path_to_save_meta_data&quot;: &quot;your_path_to_save_params_dict.yaml&quot;,
+                  &quot;shuffle_features&quot;: False,
+                }
+
+  Elements of the parameter dict:
+  &quot;number_of_relevant_features&quot;: Total number of features (columns) to generate
+                                  for each artificial class.
+  &quot;number_of_pseudo_class_features&quot;: Number of pseudo-class features.
+      The underlying classes correspond to the selected number of classes and follow a normal
+      distribution. Shifted modes of the generated artificial classes equal two times
+      the class number. All samples of the generated classes are randomly shuffled and
+      therefore have no relation to any class label.
+  &quot;random_features&quot;: {&quot;number_of_features&quot;: Number of randomly generated features.
+                      &quot;distribution&quot;: &quot;lognormal&quot; or &quot;normal&quot;,
+                      &quot;scale&quot;: Standard deviation (spread or “width”) of the distribution.
+                               Must be non-negative.,
+                      &quot;mode&quot;: Mean (“centre”) of the distribution.},
+  &quot;classes&quot;:  Parameter dicts for each class to generate. The key equals the class label.
+              &quot;number_of_samples&quot;: 15,
+              &quot;distribution&quot;: &quot;lognormal&quot;,
+              &quot;mode&quot;: 3,
+              &quot;scale&quot;: 1,
+              &quot;correlated_features&quot;: Parameter dicts for each cluster of correlated features to
+                                     generate. The key equals the cluster number.
+                                     To generate no clusters insert empty dict.
+                                      &quot;number_of_features&quot;: Number of correlated features within
+                                                            a cluster.
+                                      &quot;correlation_lower_bound&quot;: Lower bounds for the correlation
+                                                                 of each cluster of correlated
+                                                                 features within a normal
+                                                                 distributed class.
+                                                                 Default is 0.7.
+                                      &quot;correlation_upper_bound&quot;: Upper bounds for the correlation
+                                                                 of each cluster of correlated
+                                                                 features within a normal
+                                                                 distributed class. Default is 1.
+  &quot;path_to_save_csv&quot;: &quot;your_path_to_save.csv&quot;,
+  &quot;path_to_save_feather&quot;: &quot;your_path_to_save.feather&quot;,
+  &quot;path_to_save_meta_data&quot;: &quot;your_path_to_save_params_dict.yaml&quot;,
+  &quot;shuffle_features&quot;: False,
+}
+</pre></div>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>params_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a><em>]</em>) – Parameters for the data to generate</p>
