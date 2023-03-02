@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>artificial_data_generator.artificial_data_generator &mdash; Synthetic Data Generator  documentation</title>
+  <title>artificial_data_generator.artificial_data_generator &mdash; Artificial Data Generator  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -34,7 +34,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            Synthetic Data Generator
+            Artificial Data Generator
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -56,7 +56,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">Synthetic Data Generator</a>
+          <a href="../../index.html">Artificial Data Generator</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -385,9 +385,10 @@
 <div class="viewcode-block" id="generate_artificial_classification_data"><a class="viewcode-back" href="../../code-doc.html#artificial_data_generator.artificial_data_generator.generate_artificial_classification_data">[docs]</a><span class="k">def</span> <span class="nf">generate_artificial_classification_data</span><span class="p">(</span><span class="n">params_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate artificial classification (e.g. biomarker) data.</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        params_dict: Parameters for the data to generate</span>
-<span class="sd">            Example:</span>
+<span class="sd">    Example:</span>
+
+<span class="sd">        .. testcode::</span>
+
 <span class="sd">            params_dict = { &quot;number_of_relevant_features&quot;: 12,</span>
 <span class="sd">                            &quot;number_of_pseudo_class_features&quot;: 2,</span>
 <span class="sd">                            &quot;random_features&quot;: {&quot;number_of_features&quot;: 10, &quot;distribution&quot;: &quot;lognormal&quot;,</span>
@@ -418,7 +419,7 @@
 <span class="sd">                            &quot;shuffle_features&quot;: False,</span>
 <span class="sd">                          }</span>
 
-<span class="sd">            Elements of the parameters dict:</span>
+<span class="sd">            Elements of the parameter dict:</span>
 <span class="sd">            &quot;number_of_relevant_features&quot;: Total number of features (columns) to generate</span>
 <span class="sd">                                            for each artificial class.</span>
 <span class="sd">            &quot;number_of_pseudo_class_features&quot;: Number of pseudo-class features.</span>
@@ -455,6 +456,9 @@
 <span class="sd">            &quot;path_to_save_meta_data&quot;: &quot;your_path_to_save_params_dict.yaml&quot;,</span>
 <span class="sd">            &quot;shuffle_features&quot;: False,</span>
 <span class="sd">          }</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        params_dict: Parameters for the data to generate</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Generated artificial data as DataFrame.</span>
