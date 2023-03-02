@@ -102,12 +102,11 @@
 <div class="viewcode-block" id="_build_pseudo_classes"><a class="viewcode-back" href="../../code-doc.html#artificial_data_generator.artificial_data_generator._build_pseudo_classes">[docs]</a><span class="k">def</span> <span class="nf">_build_pseudo_classes</span><span class="p">(</span><span class="n">params_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create pseudo-classes by shuffling artificial classes.</span>
 
-<span class="sd">    The total number of underlying classes equals the total number of artificial classes. The</span>
-<span class="sd">    underlying classes for the pseudo-class are created exactly like the artificial classes.</span>
+<span class="sd">    The total number of underlying classes equals the total number of artificial classes.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        params_dict: Parameter dict containing number of pseudo-class features, number of artificial classes,</span>
-<span class="sd">            their distributions and parameters (see example for parameters of :func:`generate_artificial_classification_data`).</span>
+<span class="sd">        params_dict: Parameter dict containing number of pseudo-class features and number of artificial classes</span>
+<span class="sd">                    (see example for parameters of :func:`generate_artificial_classification_data`).</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Randomly shuffled pseudo-class: Numpy array of the given shape.</span>
