@@ -308,6 +308,8 @@ def _save(data_df, params_dict):
 def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.DataFrame:
     """Generate artificial classification (e.g. biomarker) data.
 
+    Example:
+
     .. code-block:: python
 
         params_dict = { "number_of_relevant_features": 12,
@@ -343,21 +345,25 @@ def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.D
         Elements of the parameter dict:
         "number_of_relevant_features": Total number of features (columns) to generate
                                         for each artificial class.
+
         "number_of_pseudo_class_features": Number of pseudo-class features.
             The underlying classes correspond to the selected number of classes and follow a normal
             distribution. Shifted modes of the generated artificial classes equal two times
             the class number. All samples of the generated classes are randomly shuffled and
             therefore have no relation to any class label.
-        "random_features": {"number_of_features": Number of randomly generated features.
-                            "distribution": "lognormal" or "normal",
+
+        "random_features":  "number_of_features": Number of randomly generated features.
+                            "distribution": "lognormal" or "normal"
                             "scale": Standard deviation (spread or “width”) of the distribution.
-                                     Must be non-negative.,
-                            "mode": Mean (“centre”) of the distribution.},
+                                     Must be non-negative.
+                            "mode": Mean (“centre”) of the distribution.
+
         "classes":  Parameter dicts for each class to generate. The key equals the class label.
+
                     "number_of_samples": 15,
-                    "distribution": "lognormal",
-                    "mode": 3,
-                    "scale": 1,
+                    "distribution": "lognormal" or "normal"
+                    "mode": Mean (“centre”) of the distribution.
+                    "scale": Standard deviation (spread or “width”) of the distribution. Must be non-negative.
                     "correlated_features": Parameter dicts for each cluster of correlated features to
                                            generate. The key equals the cluster number.
                                            To generate no clusters insert empty dict.
@@ -372,11 +378,10 @@ def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.D
                                                                        of each cluster of correlated
                                                                        features within a normal
                                                                        distributed class. Default is 1.
-        "path_to_save_csv": "your_path_to_save.csv",
-        "path_to_save_feather": "your_path_to_save.feather",
-        "path_to_save_meta_data": "your_path_to_save_params_dict.yaml",
-        "shuffle_features": False,
-      }
+        "path_to_save_csv": "your_path_to_save.csv"
+        "path_to_save_feather": "your_path_to_save.feather"
+        "path_to_save_meta_data": "your_path_to_save_params_dict.yaml"
+        "shuffle_features": If generated features should be shuffled.
 
     Args:
         params_dict: Parameters for the data to generate
