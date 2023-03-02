@@ -310,7 +310,7 @@ def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.D
 
     Example:
 
-        .. testcode::
+        .. highlight:: python
 
             params_dict = { "number_of_relevant_features": 12,
                             "number_of_pseudo_class_features": 2,
