@@ -308,6 +308,9 @@ def _save(data_df, params_dict):
 def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.DataFrame:
     """Generate artificial classification (e.g. biomarker) data.
 
+    Args:
+        params_dict: Parameters for the data to generate (see example above).
+
     Example:
 
     .. code-block:: python
@@ -382,9 +385,6 @@ def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.D
         "path_to_save_feather": "your_path_to_save.feather"
         "path_to_save_meta_data": "your_path_to_save_params_dict.yaml"
         "shuffle_features": If generated features should be shuffled.
-
-    Args:
-        params_dict: Parameters for the data to generate (see example above).
 
     Returns:
         Generated artificial data as DataFrame.
