@@ -348,7 +348,9 @@ def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.D
                         "shuffle_features": False,
                       }
 
+        ---------------------------------------------------------------------------------------------------
         Elements of the parameter dict:
+
         "number_of_relevant_features": Total number of features (columns) to generate
                                         for each artificial class.
 
