@@ -30,7 +30,7 @@ def _build_pseudo_classes(params_dict: Dict[str, Any]) -> ndarray:
 
     Args:
         params_dict: Parameter dict containing number of pseudo-class features, number of artificial classes,
-            their distributions and parameters (see parameters of :func:`generate_artificial_classification_data`).
+            their distributions and parameters (see example for parameters of :func:`generate_artificial_classification_data`).
 
     Returns:
         Randomly shuffled pseudo-class: Numpy array of the given shape.
@@ -232,12 +232,12 @@ def _generate_dataframe(
         data_np: Numpy array with generated data.
         params_dict: Parameter dict including the number of features per
             class, the number of pseudo-class features and the number of random
-            features (see parameters of
+            features (see example for parameters of
             :func:`generate_artificial_classification_data`).
 
     Returns:
         DataFrame with meaningful named columns.
-            - 'label' for the labels
+            - `label` for the labels
             - `bm` for artificial class feature
             - `pseudo` for pseudo-class feature
             - `random` for random data
