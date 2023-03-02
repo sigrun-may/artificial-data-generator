@@ -384,7 +384,7 @@ def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.D
         "shuffle_features": If generated features should be shuffled.
 
     Args:
-        params_dict: Parameters for the data to generate
+        params_dict: Parameters for the data to generate (see example above).
 
     Returns:
         Generated artificial data as DataFrame.
