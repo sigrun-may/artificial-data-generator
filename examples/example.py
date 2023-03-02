@@ -4,7 +4,7 @@
 # This software is distributed under the terms of the MIT license
 # which is available at https://opensource.org/licenses/MIT
 
-"""Example for usage of generator for artificial data src."""
+"""Example for usage of generator for artificial data artificial_data_generator."""
 
 from src import artificial_data_generator, visualizer
 
