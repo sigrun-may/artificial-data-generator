@@ -385,6 +385,8 @@
 <div class="viewcode-block" id="generate_artificial_classification_data"><a class="viewcode-back" href="../../code-doc.html#artificial_data_generator.artificial_data_generator.generate_artificial_classification_data">[docs]</a><span class="k">def</span> <span class="nf">generate_artificial_classification_data</span><span class="p">(</span><span class="n">params_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate artificial classification (e.g. biomarker) data.</span>
 
+<span class="sd">    Example:</span>
+
 <span class="sd">    .. code-block:: python</span>
 
 <span class="sd">        params_dict = { &quot;number_of_relevant_features&quot;: 12,</span>
@@ -420,21 +422,25 @@
 <span class="sd">        Elements of the parameter dict:</span>
 <span class="sd">        &quot;number_of_relevant_features&quot;: Total number of features (columns) to generate</span>
 <span class="sd">                                        for each artificial class.</span>
+
 <span class="sd">        &quot;number_of_pseudo_class_features&quot;: Number of pseudo-class features.</span>
 <span class="sd">            The underlying classes correspond to the selected number of classes and follow a normal</span>
 <span class="sd">            distribution. Shifted modes of the generated artificial classes equal two times</span>
 <span class="sd">            the class number. All samples of the generated classes are randomly shuffled and</span>
 <span class="sd">            therefore have no relation to any class label.</span>
-<span class="sd">        &quot;random_features&quot;: {&quot;number_of_features&quot;: Number of randomly generated features.</span>
-<span class="sd">                            &quot;distribution&quot;: &quot;lognormal&quot; or &quot;normal&quot;,</span>
+
+<span class="sd">        &quot;random_features&quot;:  &quot;number_of_features&quot;: Number of randomly generated features.</span>
+<span class="sd">                            &quot;distribution&quot;: &quot;lognormal&quot; or &quot;normal&quot;</span>
 <span class="sd">                            &quot;scale&quot;: Standard deviation (spread or “width”) of the distribution.</span>
-<span class="sd">                                     Must be non-negative.,</span>
-<span class="sd">                            &quot;mode&quot;: Mean (“centre”) of the distribution.},</span>
+<span class="sd">                                     Must be non-negative.</span>
+<span class="sd">                            &quot;mode&quot;: Mean (“centre”) of the distribution.</span>
+
 <span class="sd">        &quot;classes&quot;:  Parameter dicts for each class to generate. The key equals the class label.</span>
+
 <span class="sd">                    &quot;number_of_samples&quot;: 15,</span>
-<span class="sd">                    &quot;distribution&quot;: &quot;lognormal&quot;,</span>
-<span class="sd">                    &quot;mode&quot;: 3,</span>
-<span class="sd">                    &quot;scale&quot;: 1,</span>
+<span class="sd">                    &quot;distribution&quot;: &quot;lognormal&quot; or &quot;normal&quot;</span>
+<span class="sd">                    &quot;mode&quot;: Mean (“centre”) of the distribution.</span>
+<span class="sd">                    &quot;scale&quot;: Standard deviation (spread or “width”) of the distribution. Must be non-negative.</span>
 <span class="sd">                    &quot;correlated_features&quot;: Parameter dicts for each cluster of correlated features to</span>
 <span class="sd">                                           generate. The key equals the cluster number.</span>
 <span class="sd">                                           To generate no clusters insert empty dict.</span>
@@ -449,11 +455,10 @@
 <span class="sd">                                                                       of each cluster of correlated</span>
 <span class="sd">                                                                       features within a normal</span>
 <span class="sd">                                                                       distributed class. Default is 1.</span>
-<span class="sd">        &quot;path_to_save_csv&quot;: &quot;your_path_to_save.csv&quot;,</span>
-<span class="sd">        &quot;path_to_save_feather&quot;: &quot;your_path_to_save.feather&quot;,</span>
-<span class="sd">        &quot;path_to_save_meta_data&quot;: &quot;your_path_to_save_params_dict.yaml&quot;,</span>
-<span class="sd">        &quot;shuffle_features&quot;: False,</span>
-<span class="sd">      }</span>
+<span class="sd">        &quot;path_to_save_csv&quot;: &quot;your_path_to_save.csv&quot;</span>
+<span class="sd">        &quot;path_to_save_feather&quot;: &quot;your_path_to_save.feather&quot;</span>
+<span class="sd">        &quot;path_to_save_meta_data&quot;: &quot;your_path_to_save_params_dict.yaml&quot;</span>
+<span class="sd">        &quot;shuffle_features&quot;: If generated features should be shuffled.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        params_dict: Parameters for the data to generate</span>
