@@ -388,6 +388,9 @@
 <span class="sd">    Args:</span>
 <span class="sd">        params_dict: Parameters for the data to generate (see example above).</span>
 
+<span class="sd">    Returns:</span>
+<span class="sd">        Generated artificial data as DataFrame.</span>
+
 <span class="sd">    Example:</span>
 
 <span class="sd">    .. code-block:: python</span>
@@ -444,9 +447,9 @@
 <span class="sd">                    &quot;distribution&quot;: &quot;lognormal&quot; or &quot;normal&quot;</span>
 <span class="sd">                    &quot;mode&quot;: Mean (“centre”) of the distribution.</span>
 <span class="sd">                    &quot;scale&quot;: Standard deviation (spread or “width”) of the distribution. Must be non-negative.</span>
-<span class="sd">                    &quot;correlated_features&quot;: Parameter dicts for each cluster of correlated features to</span>
-<span class="sd">                                           generate. The key equals the cluster number.</span>
-<span class="sd">                                           To generate no clusters insert empty dict.</span>
+<span class="sd">                    &quot;correlated_features&quot;:  Parameter dicts for each cluster of correlated features to</span>
+<span class="sd">                                            generate. The key equals the cluster number.</span>
+<span class="sd">                                            To generate no clusters insert empty dict.</span>
 <span class="sd">                                            &quot;number_of_features&quot;: Number of correlated features within</span>
 <span class="sd">                                                                  a cluster.</span>
 <span class="sd">                                            &quot;correlation_lower_bound&quot;: Lower bounds for the correlation</span>
@@ -458,13 +461,11 @@
 <span class="sd">                                                                       of each cluster of correlated</span>
 <span class="sd">                                                                       features within a normal</span>
 <span class="sd">                                                                       distributed class. Default is 1.</span>
+
 <span class="sd">        &quot;path_to_save_csv&quot;: &quot;your_path_to_save.csv&quot;</span>
 <span class="sd">        &quot;path_to_save_feather&quot;: &quot;your_path_to_save.feather&quot;</span>
 <span class="sd">        &quot;path_to_save_meta_data&quot;: &quot;your_path_to_save_params_dict.yaml&quot;</span>
 <span class="sd">        &quot;shuffle_features&quot;: If generated features should be shuffled.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        Generated artificial data as DataFrame.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># validate input parameters</span>
 

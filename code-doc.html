@@ -174,8 +174,11 @@ features (see parameters of
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>params_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a><em>]</em>) – Parameters for the data to generate (see example above).</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>DataFrame</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Generated artificial data as DataFrame.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>DataFrame</em></p>
 </dd>
 </dl>
 <p>Example:</p>
@@ -231,9 +234,9 @@ Elements of the parameter dict:
             &quot;distribution&quot;: &quot;lognormal&quot; or &quot;normal&quot;
             &quot;mode&quot;: Mean (“centre”) of the distribution.
             &quot;scale&quot;: Standard deviation (spread or “width”) of the distribution. Must be non-negative.
-            &quot;correlated_features&quot;: Parameter dicts for each cluster of correlated features to
-                                   generate. The key equals the cluster number.
-                                   To generate no clusters insert empty dict.
+            &quot;correlated_features&quot;:  Parameter dicts for each cluster of correlated features to
+                                    generate. The key equals the cluster number.
+                                    To generate no clusters insert empty dict.
                                     &quot;number_of_features&quot;: Number of correlated features within
                                                           a cluster.
                                     &quot;correlation_lower_bound&quot;: Lower bounds for the correlation
@@ -245,23 +248,13 @@ Elements of the parameter dict:
                                                                of each cluster of correlated
                                                                features within a normal
                                                                distributed class. Default is 1.
+
 &quot;path_to_save_csv&quot;: &quot;your_path_to_save.csv&quot;
 &quot;path_to_save_feather&quot;: &quot;your_path_to_save.feather&quot;
 &quot;path_to_save_meta_data&quot;: &quot;your_path_to_save_params_dict.yaml&quot;
 &quot;shuffle_features&quot;: If generated features should be shuffled.
 </pre></div>
 </div>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Generated artificial data as DataFrame.</p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>params_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a><em>]</em>) – </p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>DataFrame</em></p>
-</dd>
-</dl>
 </dd></dl>
 
 </section>
