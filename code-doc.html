@@ -101,7 +101,7 @@ underlying classes for the pseudo-class are created exactly like the artificial 
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>params_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a><em>]</em>) – Parameter dict containing number of pseudo-class features, number of artificial classes,
-their distributions and parameters (see parameters of <a class="reference internal" href="#artificial_data_generator.artificial_data_generator.generate_artificial_classification_data" title="artificial_data_generator.artificial_data_generator.generate_artificial_classification_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">generate_artificial_classification_data()</span></code></a>).</p>
+their distributions and parameters (see example for parameters of <a class="reference internal" href="#artificial_data_generator.artificial_data_generator.generate_artificial_classification_data" title="artificial_data_generator.artificial_data_generator.generate_artificial_classification_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">generate_artificial_classification_data()</span></code></a>).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Numpy array of the given shape.</p>
@@ -144,14 +144,14 @@ their distributions and parameters (see parameters of <a class="reference intern
 <li><p><strong>data_np</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>ndarray</em></a>) – Numpy array with generated data.</p></li>
 <li><p><strong>params_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.11)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a><em>]</em>) – Parameter dict including the number of features per
 class, the number of pseudo-class features and the number of random
-features (see parameters of
+features (see example for parameters of
 <a class="reference internal" href="#artificial_data_generator.artificial_data_generator.generate_artificial_classification_data" title="artificial_data_generator.artificial_data_generator.generate_artificial_classification_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">generate_artificial_classification_data()</span></code></a>).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><dl class="simple">
 <dt>DataFrame with meaningful named columns.</dt><dd><ul class="simple">
-<li><p>’label’ for the labels</p></li>
+<li><p><cite>label</cite> for the labels</p></li>
 <li><p><cite>bm</cite> for artificial class feature</p></li>
 <li><p><cite>pseudo</cite> for pseudo-class feature</p></li>
 <li><p><cite>random</cite> for random data</p></li>
