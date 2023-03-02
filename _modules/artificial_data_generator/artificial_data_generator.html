@@ -385,6 +385,9 @@
 <div class="viewcode-block" id="generate_artificial_classification_data"><a class="viewcode-back" href="../../code-doc.html#artificial_data_generator.artificial_data_generator.generate_artificial_classification_data">[docs]</a><span class="k">def</span> <span class="nf">generate_artificial_classification_data</span><span class="p">(</span><span class="n">params_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate artificial classification (e.g. biomarker) data.</span>
 
+<span class="sd">    Args:</span>
+<span class="sd">        params_dict: Parameters for the data to generate (see example above).</span>
+
 <span class="sd">    Example:</span>
 
 <span class="sd">    .. code-block:: python</span>
@@ -459,9 +462,6 @@
 <span class="sd">        &quot;path_to_save_feather&quot;: &quot;your_path_to_save.feather&quot;</span>
 <span class="sd">        &quot;path_to_save_meta_data&quot;: &quot;your_path_to_save_params_dict.yaml&quot;</span>
 <span class="sd">        &quot;shuffle_features&quot;: If generated features should be shuffled.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        params_dict: Parameters for the data to generate (see example above).</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        Generated artificial data as DataFrame.</span>
