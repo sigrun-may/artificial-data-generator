@@ -25,12 +25,11 @@ from statsmodels.stats import correlation_tools
 def _build_pseudo_classes(params_dict: Dict[str, Any]) -> ndarray:
     """Create pseudo-classes by shuffling artificial classes.
 
-    The total number of underlying classes equals the total number of artificial classes. The
-    underlying classes for the pseudo-class are created exactly like the artificial classes.
+    The total number of underlying classes equals the total number of artificial classes.
 
     Args:
-        params_dict: Parameter dict containing number of pseudo-class features, number of artificial classes,
-            their distributions and parameters (see example for parameters of :func:`generate_artificial_classification_data`).
+        params_dict: Parameter dict containing number of pseudo-class features and number of artificial classes
+                    (see example for parameters of :func:`generate_artificial_classification_data`).
 
     Returns:
         Randomly shuffled pseudo-class: Numpy array of the given shape.
