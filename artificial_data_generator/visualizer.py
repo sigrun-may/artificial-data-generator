@@ -49,15 +49,15 @@ def visualize(data_df, params_dict, path=None) -> None:
                 ]
 
             class_df = data_df.iloc[
-                       start_row:stop_row, 1: params_dict["number_of_relevant_features"] + 1
-                       ]  # skip the label
+                start_row:stop_row, 1 : params_dict["number_of_relevant_features"] + 1
+            ]  # skip the label
             if path:
                 complete_path = f"{path}/corrplot_class{class_number}.pdf"
                 visualize_correlation_matrix(class_df, complete_path, annotate=False)
             else:
                 visualize_correlation_matrix(class_df, annotate=False)
         class_values = (
-            data_df.iloc[start_row:stop_row, 1: params_dict["number_of_relevant_features"] + 1].to_numpy().flatten()
+            data_df.iloc[start_row:stop_row, 1 : params_dict["number_of_relevant_features"] + 1].to_numpy().flatten()
         )
         column_name = f"class_{class_number} mode {params_dict['classes'][class_number]['mode']}"
         classes_df[column_name] = class_values
@@ -90,5 +90,3 @@ def visualize_correlation_matrix(data_df: pd.DataFrame, path: str = None, annota
     if path:
         pyplot.savefig(path, dpi=600)
     pyplot.show()
-
-
