@@ -104,7 +104,7 @@ def generate_normal_distributed_informative_features_for_one_class(
     """
 
     # check if number of relevant features is greater than zero
-    if number_of_normal_distributed_relevant_features > 0:
+    if not number_of_normal_distributed_relevant_features > 0:
         raise ValueError("Number of relevant features must be greater than zero.")
 
     # generate normal distributed random data
