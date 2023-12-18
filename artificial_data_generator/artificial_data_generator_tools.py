@@ -1,4 +1,5 @@
 import logging
+from typing import Literal
 
 import numpy as np
 from numpy import ndarray
@@ -68,7 +69,7 @@ def generate_correlated_cluster(
 def generate_normal_distributed_informative_features_for_one_class(
     number_of_samples: int, number_of_normal_distributed_relevant_features: int, scale: float
 ) -> ndarray:
-    """Generate a cluster of normal distributed class features.
+    """Generate a cluster of normal distributed informative features for one class.
     Args:
         number_of_samples: Number of rows of generated data.
         number_of_normal_distributed_relevant_features: Number of columns of generated data.
@@ -77,22 +78,25 @@ def generate_normal_distributed_informative_features_for_one_class(
         Numpy array of the given shape with normal distributed class features.
     """
 
-    # generate normal distributed random data
+    # check if number of relevant features is greater than zero
     if number_of_normal_distributed_relevant_features > 0:
-        rng = np.random.default_rng()
-        relevant_features_np = rng.normal(
-            loc=0,
-            scale=scale,
-            size=(number_of_samples, number_of_normal_distributed_relevant_features),
-        )
+        raise ValueError("Number of relevant features must be greater than zero.")
 
-        if not math.isclose(np.mean(relevant_features_np), 0, abs_tol=0.15):
-            warnings.warn(
-                f"mean of generated data {str(np.mean(relevant_features_np))} differs from expected mean {str(0)} "
-                f"-> Try choosing a smaller scale for a small sample size or accept a deviating mean. "
-                f"The current scale is {str(scale)}."
-            )
-        return relevant_features_np
+    # generate normal distributed random data
+    rng = np.random.default_rng()
+    relevant_features_np = rng.normal(
+        loc=0,
+        scale=scale,
+        size=(number_of_samples, number_of_normal_distributed_relevant_features),
+    )
+
+    if not math.isclose(np.mean(relevant_features_np), 0, abs_tol=0.15):
+        warnings.warn(
+            f"mean of generated data {str(np.mean(relevant_features_np))} differs from expected mean {str(0)} "
+            f"-> Try choosing a smaller scale for a small sample size or accept a deviating mean. "
+            f"The current scale is {str(scale)}."
+        )
+    return relevant_features_np
 
 
 def transform_normal_distributed_class_features_to_lognormal_distribution(class_features_np: ndarray) -> ndarray:
@@ -143,9 +147,7 @@ def generate_pseudo_class(
         )
         # shift class to set effect size between classes equal to two times the class number
         shifted_simulated_class = shift_class_to_enlarge_effectsize(simulated_class, i * 2)
-        if not math.isclose(
-            np.mean(shifted_simulated_class), i * 2, abs_tol=0.15
-        ):
+        if not math.isclose(np.mean(shifted_simulated_class), i * 2, abs_tol=0.15):
             logging.info(
                 f"Mean of shifted class within pseudo classes {str(np.mean(shifted_simulated_class))} "
                 f"differs from expected mean {str(i * 2)}."
@@ -312,15 +314,20 @@ def generate_artificial_classification_data(
     return artificial_classification_data_df
 
 
-def plot_correlated_cluster(covariant_cluster: ndarray, path_to_save_pdf="") -> None:
+def plot_correlated_cluster(
+    feature_cluster: ndarray,
+    correlation_method: Literal["pearson", "kendall", "spearman"] = "spearman",
+    path_to_save_pdf="",
+) -> None:
     """Visualize the given cluster of correlated features.
     Args:
-        covariant_cluster: The cluster of correlated features to visualize.
+        feature_cluster: The cluster of correlated features to visualize.
+        correlation_method: Method to calculate the correlation. Possible values are "pearson", "kendall" and "spearman".
         path_to_save_pdf: Path to save the visualization as pdf.
     """
     sns.set_theme(style="white")
-    data_df = pd.DataFrame(covariant_cluster)
-    corr = data_df.corr(method="spearman")
+    data_df = pd.DataFrame(feature_cluster)
+    corr = data_df.corr(method=correlation_method)
 
     print("min absolute correlation: " + str(np.min(np.abs(corr))))
 
