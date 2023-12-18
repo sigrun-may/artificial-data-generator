@@ -65,7 +65,7 @@ def generate_correlated_cluster(
     return covariant_cluster
 
 
-def generate_normal_distributed_class_features(
+def generate_normal_distributed_informative_features_for_one_class(
     number_of_samples: int, number_of_normal_distributed_relevant_features: int, scale: float
 ) -> ndarray:
     """Generate a cluster of normal distributed class features.
