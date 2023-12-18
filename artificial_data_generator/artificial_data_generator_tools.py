@@ -1,3 +1,20 @@
+# Copyright (c) 2023 Sigrun May,
+# Ostfalia Hochschule für angewandte Wissenschaften
+#
+# This software is distributed under the terms of the MIT license
+# which is available at https://opensource.org/licenses/MIT
+
+"""This module provides tools for generating artificial data for classification tasks.
+It includes functions for generating correlated features, normal distributed features,
+lognormal distributed features, and random noise features.
+It also provides functions for visualizing the generated data,
+including plotting the distribution of class features and the correlation between classes.
+The main function in this module is generate_artificial_classification_data,
+which generates a complete dataset with a specified number of classes,
+each with a specified number of samples and features.
+The generated data can be used for benchmarking and development of new methods
+in machine learning and data analysis."""
+
 import logging
 from typing import Literal
 
@@ -62,6 +79,14 @@ def generate_correlated_cluster(
         size=number_of_samples,
         check_valid="raise",
         method="eigh",
+    )
+    assert covariant_cluster.shape[0] == number_of_samples, (
+        f"Number of rows of generated covariant cluster {covariant_cluster.shape[0]} "
+        f"does not match number of samples {number_of_samples}"
+    )
+    assert covariant_cluster.shape[1] == number_of_features, (
+        f"Number of columns of generated covariant cluster {covariant_cluster.shape[1]} "
+        f"does not match number of features {number_of_features}"
     )
     return covariant_cluster
 
