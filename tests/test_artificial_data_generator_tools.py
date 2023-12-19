@@ -1,10 +1,11 @@
 import unittest
 import numpy as np
+import pandas as pd
+
 from artificial_data_generator import artificial_data_generator_tools as adgt
 
 
 class TestArtificialDataGenerator(unittest.TestCase):
-
     def test_generate_correlated_cluster_with_valid_inputs(self):
         result = adgt.generate_correlated_cluster(5, 100, 0.1, 0.9)
         self.assertEqual(result.shape, (100, 5))
@@ -58,6 +59,53 @@ class TestArtificialDataGenerator(unittest.TestCase):
             input_data = [np.random.normal(0, 1, (100, 5)) for _ in range(5)]
             adgt.generate_artificial_classification_data(input_data, -100)
 
+    def test_find_perfectly_separated_features_with_valid_inputs(self):
+        class1 = np.array([[1, 2, 3], [4, 5, 6]])
+        class2 = np.array([[7, 8, 9], [10, 11, 12]])
+        result = adgt.find_perfectly_separated_features([class1, class2])
+        self.assertEqual(result, [0, 1, 2])
 
-if __name__ == '__main__':
+    def test_find_perfectly_separated_features_with_no_separated_features(self):
+        class1 = np.array([[1, 2, 3], [4, 5, 6]])
+        class2 = np.array([[1, 2, 3], [4, 5, 6]])
+        result = adgt.find_perfectly_separated_features([class1, class2])
+        self.assertEqual(result, [])
+
+    def test_find_perfectly_separated_features_with_empty_class(self):
+        class1 = np.array([])
+        class2 = np.array([[1, 2, 3], [4, 5, 6]])
+        with self.assertRaises(ValueError):
+            adgt.find_perfectly_separated_features([class1, class2])
+
+    def test_find_perfectly_separated_features_with_one_class(self):
+        class1 = np.array([[1, 2, 3], [4, 5, 6]])
+        with self.assertRaises(ValueError):
+            adgt.find_perfectly_separated_features([class1])
+
+    def test_find_perfectly_separated_features_with_different_number_of_features(self):
+        class1 = np.array([[1, 2, 3], [4, 5, 6]])
+        class2 = np.array([[7, 8], [9, 10]])
+        with self.assertRaises(ValueError):
+            adgt.find_perfectly_separated_features([class1, class2])
+
+    def test_drop_perfectly_separated_features_with_valid_inputs(self):
+        data_df = pd.DataFrame({
+            'bm_0': [1, 2, 3],
+            'bm_1': [4, 5, 6],
+            'bm_2': [7, 8, 9]
+        })
+        result = adgt.drop_perfectly_separated_features([0, 2], data_df)
+        self.assertEqual(result.columns.tolist(), ['bm_1'])
+
+    def test_drop_perfectly_separated_features_with_invalid_separated_features(self):
+        data_df = pd.DataFrame({
+            'bm_0': [1, 2, 3],
+            'bm_1': [4, 5, 6],
+            'bm_2': [7, 8, 9]
+        })
+        with self.assertRaises(IndexError):
+            adgt.drop_perfectly_separated_features([3], data_df)
+
+
+if __name__ == "__main__":
     unittest.main()

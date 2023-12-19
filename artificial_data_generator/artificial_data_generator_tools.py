@@ -264,8 +264,8 @@ def generate_artificial_classification_data(
     column_names = ["label"]
 
     # generate column names for class features (bm = biomarker)
-    for column_name in range(generated_classes_list[0].shape[1]):
-        column_names.append(f"bm_{column_name}")
+    for column_index in range(generated_classes_list[0].shape[1]):
+        column_names.append(f"bm_{column_index}")
 
     # append label to class features
     for i, class_features_np in enumerate(generated_classes_list):
@@ -357,6 +357,91 @@ def generate_artificial_classification_data(
     artificial_classification_data_df = pd.DataFrame(artificial_classification_data_np, columns=column_names)
 
     return artificial_classification_data_df
+
+
+def find_perfectly_separated_features(list_of_informative_class_features: list[np.ndarray]) -> list[int]:
+    """Find perfectly separated features in the given data.
+
+    A feature is perfectly separated if all values of this feature are smaller or greater than the corresponding
+    values of the same feature in all other classes. This function checks all features of all classes and returns
+    a list of indices of perfectly separated features. The indices correspond to the columns of the given data.
+    The label must be excluded from the input data.
+    Args:
+        list_of_informative_class_features: List of arrays containing the informative features for the corresponding class..
+    Returns:
+        List of indices of perfectly separated features.
+    """
+    # check if number of classes is greater than one
+    if not len(list_of_informative_class_features) > 1:
+        raise ValueError("Number of classes must be greater than one.")
+
+    # check if number of features is greater than zero
+    if not len(list_of_informative_class_features[0]) > 0:
+        raise ValueError("Number of features must be greater than zero.")
+
+    # check if number of features is equal in each class
+    for i in range(len(list_of_informative_class_features) - 1):
+        if not list_of_informative_class_features[i + 1].shape[1] == list_of_informative_class_features[i].shape[1]:
+            raise ValueError("Number of features must be equal in each class.")
+
+    # check which features perfectly separate all classes
+    perfectly_separating_features = []
+
+    # iterate over all features
+    for i in range(list_of_informative_class_features[0].shape[1]):
+        # iterate over all classes
+        for j in range(len(list_of_informative_class_features) - 1):
+            # check if all features of class j are smaller or greater than the corresponding features of class j+1
+            if np.all(
+                    list_of_informative_class_features[j][:, i] < list_of_informative_class_features[j + 1][:, i]
+            ) or np.all(
+                    list_of_informative_class_features[j][:, i] > list_of_informative_class_features[j + 1][:, i]):
+                print(f"Feature {i} perfectly separates class {j} and class {j + 1}")
+                perfectly_separating_features.append(i)
+    return perfectly_separating_features
+
+
+def drop_perfectly_separated_features(list_of_perfectly_separated_features: list[int], data_df: pd.DataFrame) -> pd.DataFrame:
+    """Drop the perfectly separated informative features from the given data.
+    Args:
+        list_of_perfectly_separated_features: List of indices of perfectly separated features.
+        data_df: Dataframe containing the data to drop the perfectly separated features from.
+    Returns:
+        Dataframe with dropped perfectly separated features.
+    """
+    # check if number of features is greater than zero
+    if not len(list_of_perfectly_separated_features) > 0:
+        raise ValueError("Number of perfectly separated features must be greater than zero.")
+
+    if not len(data_df.columns) > len(list_of_perfectly_separated_features):
+        raise ValueError("Number of columns in dataframe must be greater than number of perfectly separated features.")
+
+    # select columns to drop by index
+    feature_names = data_df.columns
+    feature_names = feature_names.drop(["label"])  # exclude label
+    assert "label" not in feature_names, "Feature names must not include 'label'"
+    columns_to_drop = feature_names[list_of_perfectly_separated_features]
+    for i, column_name in enumerate(columns_to_drop):
+        assert str(list_of_perfectly_separated_features[i]) in column_name, \
+            f"Column name {column_name} must include given index {list_of_perfectly_separated_features[i]} as string"
+        # only remove informative features
+        if "bm" not in column_name:
+            # drop column_name from columns_to_drop if it is not a biomarker
+            columns_to_drop.remove(column_name)
+        assert "bm" in column_name, "Column names must include 'bm' for biomarker"
+
+    # drop perfectly separated features
+    data_df = data_df.drop(columns_to_drop, axis=1)
+
+    # check if all columns were dropped
+    assert len(data_df.columns) < len(feature_names), "Not all perfectly separated features were dropped"
+    for dropped_column in columns_to_drop:
+        assert dropped_column not in data_df.columns, f"Perfectly separated feature {dropped_column} was not dropped"
+
+    # check if label is still the first column
+    assert data_df.columns[0] == "label", "Label must be the first column"
+
+    return data_df
 
 
 def plot_correlated_cluster(
