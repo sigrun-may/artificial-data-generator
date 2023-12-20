@@ -89,20 +89,12 @@ class TestArtificialDataGenerator(unittest.TestCase):
             adgt.find_perfectly_separated_features([class1, class2])
 
     def test_drop_perfectly_separated_features_with_valid_inputs(self):
-        data_df = pd.DataFrame({
-            'bm_0': [1, 2, 3],
-            'bm_1': [4, 5, 6],
-            'bm_2': [7, 8, 9]
-        })
+        data_df = pd.DataFrame({"bm_0": [1, 2, 3], "bm_1": [4, 5, 6], "bm_2": [7, 8, 9]})
         result = adgt.drop_perfectly_separated_features([0, 2], data_df)
-        self.assertEqual(result.columns.tolist(), ['bm_1'])
+        self.assertEqual(result.columns.tolist(), ["bm_1"])
 
     def test_drop_perfectly_separated_features_with_invalid_separated_features(self):
-        data_df = pd.DataFrame({
-            'bm_0': [1, 2, 3],
-            'bm_1': [4, 5, 6],
-            'bm_2': [7, 8, 9]
-        })
+        data_df = pd.DataFrame({"bm_0": [1, 2, 3], "bm_1": [4, 5, 6], "bm_2": [7, 8, 9]})
         with self.assertRaises(IndexError):
             adgt.drop_perfectly_separated_features([3], data_df)
 

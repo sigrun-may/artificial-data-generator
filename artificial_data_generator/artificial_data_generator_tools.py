@@ -393,15 +393,16 @@ def find_perfectly_separated_features(list_of_informative_class_features: list[n
         for j in range(len(list_of_informative_class_features) - 1):
             # check if all features of class j are smaller or greater than the corresponding features of class j+1
             if np.all(
-                    list_of_informative_class_features[j][:, i] < list_of_informative_class_features[j + 1][:, i]
-            ) or np.all(
-                    list_of_informative_class_features[j][:, i] > list_of_informative_class_features[j + 1][:, i]):
+                list_of_informative_class_features[j][:, i] < list_of_informative_class_features[j + 1][:, i]
+            ) or np.all(list_of_informative_class_features[j][:, i] > list_of_informative_class_features[j + 1][:, i]):
                 print(f"Feature {i} perfectly separates class {j} and class {j + 1}")
                 perfectly_separating_features.append(i)
     return perfectly_separating_features
 
 
-def drop_perfectly_separated_features(list_of_perfectly_separated_features: list[int], data_df: pd.DataFrame) -> pd.DataFrame:
+def drop_perfectly_separated_features(
+    list_of_perfectly_separated_features: list[int], data_df: pd.DataFrame
+) -> pd.DataFrame:
     """Drop the perfectly separated informative features from the given data.
     Args:
         list_of_perfectly_separated_features: List of indices of perfectly separated features.
@@ -422,8 +423,9 @@ def drop_perfectly_separated_features(list_of_perfectly_separated_features: list
     assert "label" not in feature_names, "Feature names must not include 'label'"
     columns_to_drop = feature_names[list_of_perfectly_separated_features]
     for i, column_name in enumerate(columns_to_drop):
-        assert str(list_of_perfectly_separated_features[i]) in column_name, \
-            f"Column name {column_name} must include given index {list_of_perfectly_separated_features[i]} as string"
+        assert (
+            str(list_of_perfectly_separated_features[i]) in column_name
+        ), f"Column name {column_name} must include given index {list_of_perfectly_separated_features[i]} as string"
         # only remove informative features
         if "bm" not in column_name:
             # drop column_name from columns_to_drop if it is not a biomarker
