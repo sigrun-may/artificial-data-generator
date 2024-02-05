@@ -47,7 +47,8 @@ def generate_correlated_cluster(
 
     # generate random matrix to constrain a range of values
     # and specify a starting point
-    random_matrix = np.random.uniform(
+    # TODO random_matrix = np.random.uniform(
+    random_matrix = rng.uniform(
         low=lower_bound,
         high=upper_bound,
         size=(number_of_features, number_of_features),
@@ -106,6 +107,14 @@ def generate_normal_distributed_informative_features_for_one_class(
     # check if number of relevant features is greater than zero
     if not number_of_normal_distributed_relevant_features > 0:
         raise ValueError("Number of relevant features must be greater than zero.")
+
+    # TODO check number of samples > 0 and scale > 0?
+    if not number_of_samples > 0:
+        raise ValueError("Number of samples must be greater than zero.")
+
+    if not scale > 0:
+        raise ValueError("Scale must be greater than zero.")
+    # TODO end
 
     # generate normal distributed random data
     rng = np.random.default_rng()
@@ -259,6 +268,17 @@ def generate_artificial_classification_data(
     # check if number of samples per class is greater than zero
     if not number_of_samples_per_class > 0:
         raise ValueError("Number of samples per class must be greater than zero.")
+
+    # TODO check other parameters?
+    if not generated_classes_list:
+        raise ValueError("Generated classes list is empty.")
+
+    if not number_of_random_features >= 0:
+        raise ValueError("Number of random features must be positive or zero.")
+
+    if not number_of_pseudo_class_features >= 0:
+        raise ValueError("Number of pseudo class features must be positive or zero.")
+    # TODO end check parameters
 
     # generate label as first entry for column names
     column_names = ["label"]
