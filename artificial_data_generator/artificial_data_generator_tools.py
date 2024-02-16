@@ -133,15 +133,17 @@ def generate_normal_distributed_informative_features_for_one_class(
     return relevant_features_np
 
 
-def transform_normal_distributed_class_features_to_lognormal_distribution(class_features_np: ndarray) -> ndarray:
+def transform_normal_distributed_class_features_to_lognormal_distribution(
+    class_features_data_array: ndarray,
+) -> ndarray:
     """Transform the given normal distributed class features to a lognormal distribution to simulate outliers.
     Args:
-        class_features_np: Normal distributed class features to transform.
+        class_features_data_array: Normal distributed class features to transform.
     Returns:
         Numpy array of the given shape with lognormal distributed class features.
     """
 
-    lognormal_distributed_class_features_np = np.exp(class_features_np)
+    lognormal_distributed_class_features_np = np.exp(class_features_data_array)
     return lognormal_distributed_class_features_np
 
 
@@ -298,11 +300,11 @@ def generate_artificial_classification_data(
             class_features_np = np.concatenate(
                 (np.full((class_features_np.shape[0], 1), class_labels_list[i]), class_features_np), axis=1
             )
-            # check of all elements of first column of class_features_np are equal to the corresponding class label
+            # check of all elements of first column of class_features_data_array are equal to the corresponding class label
             assert np.all(class_features_np[:, 0] == class_labels_list[i])
         else:
             class_features_np = np.concatenate((np.full((class_features_np.shape[0], 1), i), class_features_np), axis=1)
-            # check of all elements of first column of class_features_np are equal to i (class label)
+            # check of all elements of first column of class_features_data_array are equal to i (class label)
             assert np.all(class_features_np[:, 0] == i)
         generated_classes_list[i] = class_features_np
 
@@ -415,7 +417,7 @@ def find_perfectly_separated_features(list_of_informative_class_features: list[n
             if np.all(
                 list_of_informative_class_features[j][:, i] < list_of_informative_class_features[j + 1][:, i]
             ) or np.all(list_of_informative_class_features[j][:, i] > list_of_informative_class_features[j + 1][:, i]):
-                print(f"Feature {i} perfectly separates class {j} and class {j + 1}")
+                # print(f"Feature {i} perfectly separates class {j} and class {j + 1}")
                 perfectly_separating_features.append(i)
     return perfectly_separating_features
 
