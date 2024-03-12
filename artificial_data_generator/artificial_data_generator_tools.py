@@ -493,7 +493,7 @@ def plot_correlated_cluster(
         sns.heatmap(corr, cmap="Blues")
 
     if path_to_save_pdf != "":
-        pyplot.savefig(path_to_save_pdf)
+        pyplot.savefig(path_to_save_pdf, dpi=300, format='pdf')
 
     pyplot.show()
 
@@ -507,17 +507,19 @@ def plot_distribution_of_class_features_for_single_class(
         class_label: Label of the corresponding class.
         path_to_save_pdf: Path to save the visualization as pdf.
     """
-
+    sns.set_theme(style="white")
     if class_label is not None:
         # remove label column
         class_plot_pd = pd.DataFrame(class_features_np[:, 1:].flatten(), columns=["class" + str(class_label)])
     else:
         class_plot_pd = pd.DataFrame(class_features_np.flatten(), columns=["class"])
 
-    if path_to_save_pdf != "":
-        pyplot.savefig(path_to_save_pdf)
-
     sns.histplot(data=class_plot_pd)
+
+    if path_to_save_pdf != "":
+        pyplot.savefig(path_to_save_pdf, dpi=300, format='pdf')
+
+    pyplot.show()
 
 
 def plot_distributions_of_all_classes(class_features_list: list[np.ndarray], path_to_save_pdf="") -> None:
@@ -526,14 +528,16 @@ def plot_distributions_of_all_classes(class_features_list: list[np.ndarray], pat
         class_features_list: List of (unlabeled) classes to visualize.
         path_to_save_pdf: Path to save the visualization as pdf.
     """
+    sns.set_theme(style="white")
     class_plot_pd = pd.DataFrame()
     for i, class_features_np in enumerate(class_features_list):
-        class_plot_pd["class" + str(i)] = class_features_np[:, 1:].flatten()
-
-    if path_to_save_pdf != "":
-        pyplot.savefig(path_to_save_pdf)
+        class_plot_pd["class" + str(i+1)] = class_features_np[:, 1:].flatten()
 
     sns.histplot(data=class_plot_pd)
+
+    if path_to_save_pdf != "":
+        pyplot.savefig(path_to_save_pdf, dpi=300, format='pdf')
+    pyplot.show()
 
 
 def plot_correlation_between_classes(class_features_list: list[np.ndarray], path_to_save_pdf="") -> None:
@@ -548,6 +552,6 @@ def plot_correlation_between_classes(class_features_list: list[np.ndarray], path
         class_plot_pd["class" + str(i)] = class_features_np.flatten()
 
     if path_to_save_pdf != "":
-        pyplot.savefig(path_to_save_pdf)
+        pyplot.savefig(path_to_save_pdf, dpi=300, format='pdf')
 
     sns.pairplot(class_plot_pd)
