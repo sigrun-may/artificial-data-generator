@@ -471,12 +471,14 @@ def drop_perfectly_separated_features(
 def plot_correlated_cluster(
     feature_cluster: ndarray,
     correlation_method: Literal["pearson", "kendall", "spearman"] = "spearman",
+    show_values: bool = True,
     path_to_save_pdf="",
 ) -> None:
     """Visualize the given cluster of correlated features.
     Args:
         feature_cluster: The cluster of correlated features to visualize.
         correlation_method: Method to calculate the correlation. Possible values are "pearson", "kendall" and "spearman".
+        show_values: Show the correlation values in the visualization.
         path_to_save_pdf: Path to save the visualization as pdf.
     """
     sns.set_theme(style="white")
@@ -485,7 +487,10 @@ def plot_correlated_cluster(
 
     print("min absolute correlation: " + str(np.min(np.abs(corr))))
 
-    sns.heatmap(corr, annot=True, cmap="Blues", fmt=".2g")
+    if show_values:
+        sns.heatmap(corr, annot=True, cmap="Blues", fmt=".2g")
+    else:
+        sns.heatmap(corr, cmap="Blues")
 
     if path_to_save_pdf != "":
         pyplot.savefig(path_to_save_pdf)
