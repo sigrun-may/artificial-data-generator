@@ -195,6 +195,7 @@ def build_class(
         correlated_clusters_list: List of correlated clusters to include in the class.
         plot_correlation_matrix: Plot the correlation matrix of the correlated class features.
         plot_distribution: Plot the distribution of the class features.
+
     Returns:
         Numpy array of the given shape with generated features for the class.
     """
