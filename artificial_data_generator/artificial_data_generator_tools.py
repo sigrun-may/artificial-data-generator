@@ -31,13 +31,13 @@ from statsmodels.stats import correlation_tools
 
 
 def generate_correlated_cluster(
-        number_of_features: int,
-        number_of_samples: int,
-        lower_bound: float,
-        upper_bound: float,
-        plot=True,
-        show_values=True,
-        path_to_save_pdf="",
+    number_of_features: int,
+    number_of_samples: int,
+    lower_bound: float,
+    upper_bound: float,
+    plot=True,
+    show_values=True,
+    path_to_save_pdf="",
 ) -> ndarray:
     """Generate a cluster of correlated features.
 
@@ -103,7 +103,7 @@ def generate_correlated_cluster(
 
 
 def generate_normal_distributed_informative_features_for_one_class(
-        number_of_samples: int, number_of_normal_distributed_relevant_features: int, scale: float = 1.0, plot=True
+    number_of_samples: int, number_of_normal_distributed_relevant_features: int, scale: float = 1.0, plot=True
 ) -> ndarray:
     """Generate normal distributed informative features for one class with the given scale.
 
@@ -148,7 +148,7 @@ def generate_normal_distributed_informative_features_for_one_class(
 
 
 def transform_normal_distributed_class_features_to_lognormal_distribution(
-        class_features_data_array: ndarray,
+    class_features_data_array: ndarray,
 ) -> ndarray:
     """Transform the given normal distributed class features to a lognormal distribution to simulate outliers.
 
@@ -176,14 +176,15 @@ def shift_class_to_enlarge_effectsize(class_features_np: ndarray, effect_size: f
     return class_features_np
 
 
-def build_class(number_of_samples_per_class: int,
-                number_of_informative_features: int,
-                scale: float = 1,
-                distribution: Literal["normal", "lognormal"] = "normal",
-                correlated_clusters_list: Optional[list] = None,
-                plot_correlation_matrix: bool = True,
-                plot_distribution: bool = True,
-                ) -> ndarray:
+def build_class(
+    number_of_samples_per_class: int,
+    number_of_informative_features: int,
+    scale: float = 1,
+    distribution: Literal["normal", "lognormal"] = "normal",
+    correlated_clusters_list: Optional[list] = None,
+    plot_correlation_matrix: bool = True,
+    plot_distribution: bool = True,
+) -> ndarray:
     """Build a class with the given number of samples per class and the given number of informative features.
 
     Args:
@@ -249,7 +250,7 @@ def build_class(number_of_samples_per_class: int,
 
 
 def generate_pseudo_class(
-        number_of_samples_per_class: int, number_of_pseudo_class_features: int, number_of_classes: int = 2
+    number_of_samples_per_class: int, number_of_pseudo_class_features: int, number_of_classes: int = 2
 ) -> ndarray:
     """Generate a pseudo class with the given number of samples per class and the given number of pseudo class features.
 
@@ -326,12 +327,12 @@ def generate_random_features(number_of_samples: int, number_of_random_features: 
 
 
 def generate_artificial_classification_data(
-        generated_classes_list: list[np.ndarray],
-        number_of_samples_per_class: int,
-        class_labels_list: list[int] = None,
-        number_of_random_features: int = 0,
-        number_of_pseudo_class_features: int = 0,
-        number_of_pseudo_classes: int = 2,
+    generated_classes_list: list[np.ndarray],
+    number_of_samples_per_class: int,
+    class_labels_list: list[int] = None,
+    number_of_random_features: int = 0,
+    number_of_pseudo_class_features: int = 0,
+    number_of_pseudo_classes: int = 2,
 ) -> pd.DataFrame:
     """Generate artificial classification data.
 
@@ -448,11 +449,11 @@ def generate_artificial_classification_data(
         artificial_classification_data_np[:, 0] == class_data_np[:, 0]
     ), f"First column of artificial classification data does not match first column of class data"
     assert np.all(
-        artificial_classification_data_np[:, 1: class_data_np.shape[1]] == class_data_np[:, 1:]
+        artificial_classification_data_np[:, 1 : class_data_np.shape[1]] == class_data_np[:, 1:]
     ), f"Class features of artificial classification data do not match the original class features"
     assert (
-            artificial_classification_data_np.shape[1]
-            == class_data_np.shape[1] + number_of_pseudo_class_features + number_of_random_features
+        artificial_classification_data_np.shape[1]
+        == class_data_np.shape[1] + number_of_pseudo_class_features + number_of_random_features
     ), (
         f"Number of columns {artificial_classification_data_np.shape[1]} "
         f"does not match sum of label, class features, pseudo class features and random features "
@@ -500,7 +501,7 @@ def find_perfectly_separated_features(list_of_informative_class_features: list[n
         for j in range(len(list_of_informative_class_features) - 1):
             # check if all features of class j are smaller or greater than the corresponding features of class j+1
             if np.all(
-                    list_of_informative_class_features[j][:, i] < list_of_informative_class_features[j + 1][:, i]
+                list_of_informative_class_features[j][:, i] < list_of_informative_class_features[j + 1][:, i]
             ) or np.all(list_of_informative_class_features[j][:, i] > list_of_informative_class_features[j + 1][:, i]):
                 # print(f"Feature {i} perfectly separates class {j} and class {j + 1}")
                 perfectly_separating_features.append(i)
@@ -508,7 +509,7 @@ def find_perfectly_separated_features(list_of_informative_class_features: list[n
 
 
 def drop_perfectly_separated_features(
-        list_of_perfectly_separated_features: list[int], data_df: pd.DataFrame
+    list_of_perfectly_separated_features: list[int], data_df: pd.DataFrame
 ) -> pd.DataFrame:
     """Drop the perfectly separated informative features from the given data.
 
@@ -538,7 +539,7 @@ def drop_perfectly_separated_features(
     columns_to_drop = feature_names[list_of_perfectly_separated_features]
     for i, column_name in enumerate(columns_to_drop):
         assert (
-                str(list_of_perfectly_separated_features[i]) in column_name
+            str(list_of_perfectly_separated_features[i]) in column_name
         ), f"Column name {column_name} must include given index {list_of_perfectly_separated_features[i]} as string"
         # only remove informative features
         if "bm" not in column_name:
@@ -560,10 +561,10 @@ def drop_perfectly_separated_features(
 
 
 def plot_correlated_cluster(
-        feature_cluster: ndarray,
-        correlation_method: Literal["pearson", "kendall", "spearman"] = "spearman",
-        show_values: bool = True,
-        path_to_save_pdf="",
+    feature_cluster: ndarray,
+    correlation_method: Literal["pearson", "kendall", "spearman"] = "spearman",
+    show_values: bool = True,
+    path_to_save_pdf="",
 ) -> None:
     """Visualize the given cluster of correlated features.
 
@@ -591,7 +592,7 @@ def plot_correlated_cluster(
 
 
 def plot_distribution_of_class_features_for_single_class(
-        class_features_np: ndarray, class_label: int = None, path_to_save_pdf=""
+    class_features_np: ndarray, class_label: int = None, path_to_save_pdf=""
 ) -> None:
     """Visualize the histogram of the given array corresponding to the class features.
 
