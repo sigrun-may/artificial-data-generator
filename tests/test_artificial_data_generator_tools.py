@@ -98,15 +98,32 @@ class TestArtificialDataGenerator(unittest.TestCase):
         with self.assertRaises(ValueError):
             adgt.find_perfectly_separated_features([class1, class2])
 
-    def test_drop_perfectly_separated_features_with_valid_inputs(self):
-        data_df = pd.DataFrame({"bm_0": [1, 2, 3], "bm_1": [4, 5, 6], "bm_2": [7, 8, 9]})
-        result = adgt.drop_perfectly_separated_features([0, 2], data_df)
-        self.assertEqual(result.columns.tolist(), ["bm_1"])
 
-    def test_drop_perfectly_separated_features_with_invalid_separated_features(self):
-        data_df = pd.DataFrame({"bm_0": [1, 2, 3], "bm_1": [4, 5, 6], "bm_2": [7, 8, 9]})
-        with self.assertRaises(IndexError):
-            adgt.drop_perfectly_separated_features([3], data_df)
+class TestDropPerfectlySeparatedFeatures(unittest.TestCase):
+    def setUp(self):
+        self.data_df = pd.DataFrame({
+            'label': [1, 1, 0, 0],
+            'bm_0': [1, 2, 3, 4],
+            'bm_1': [5, 6, 7, 8],
+            'bm_2': [9, 10, 11, 12]
+        })
+
+    def test_drop_perfectly_separated_features(self):
+        result = adgt.drop_perfectly_separated_features([1], self.data_df)
+        self.assertEqual(result.columns.tolist(), ['label', 'bm_0', 'bm_2'])
+
+    def test_zero_perfectly_separated_features(self):
+        with self.assertRaises(ValueError):
+            adgt.drop_perfectly_separated_features([], self.data_df)
+
+    def test_less_columns_than_perfectly_separated_features(self):
+        with self.assertRaises(ValueError):
+            adgt.drop_perfectly_separated_features([0, 1, 2, 3], self.data_df)
+
+    def test_label_not_first_column(self):
+        data_df = self.data_df[['bm_0', 'label', 'bm_1', 'bm_2']]
+        with self.assertRaises(ValueError):
+            adgt.drop_perfectly_separated_features([1], data_df)
 
 
 if __name__ == "__main__":
