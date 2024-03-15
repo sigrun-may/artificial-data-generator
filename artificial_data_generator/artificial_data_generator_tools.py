@@ -177,6 +177,7 @@ def shift_class_to_enlarge_effectsize(class_features_np: ndarray, effect_size: f
 def build_class(number_of_samples_per_class: int,
                 number_of_informative_features: int,
                 scale: float = 1,
+                distribution: Literal["normal", "lognormal"] = "normal",
                 correlated_clusters_list: Optional[list] = None,
                 plot_correlation_matrix: bool = True,
                 plot_distribution: bool = True,
@@ -187,6 +188,7 @@ def build_class(number_of_samples_per_class: int,
         number_of_samples_per_class: Number of samples per class.
         number_of_informative_features: Number of informative features.
         scale: Scale of the normal distribution.
+        distribution: Distribution of the class features. Possible values are "normal" and "lognormal".
         correlated_clusters_list: List of correlated clusters to include in the class.
         plot_correlation_matrix: Plot the correlation matrix of the correlated class features.
         plot_distribution: Plot the distribution of the class features.
@@ -209,6 +211,7 @@ def build_class(number_of_samples_per_class: int,
     if correlated_clusters_list is not None:
         correlated_clusters = np.concatenate(correlated_clusters_list, axis=1)
         if plot_correlation_matrix:
+            print("Correlation matrix of correlated clusters:")
             plot_correlated_cluster(correlated_clusters, show_values=False)
         class_features_list.append(correlated_clusters)
         number_of_normal_distributed_relevant_features = number_of_informative_features - correlated_clusters.shape[1]
@@ -234,7 +237,11 @@ def build_class(number_of_samples_per_class: int,
         f"does not match number of informative features {number_of_informative_features}"
     )
 
+    if distribution == "lognormal":
+        class_features = transform_normal_distributed_class_features_to_lognormal_distribution(class_features)
+
     if plot_distribution:
+        print("Distribution of informative class features:")
         plot_distribution_of_class_features_for_single_class(class_features)
     return class_features
 
