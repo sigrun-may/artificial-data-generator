@@ -462,7 +462,8 @@ def drop_perfectly_separated_features(
 
     Args:
         list_of_perfectly_separated_features: List of indices of perfectly separated features.
-        data_df: Dataframe containing the data to drop the perfectly separated features from.
+        data_df: Dataframe containing the data to drop the perfectly separated features from. The label must be
+            included in the first column.
 
     Returns:
         Dataframe with dropped perfectly separated features.
@@ -473,6 +474,10 @@ def drop_perfectly_separated_features(
 
     if not len(data_df.columns) > len(list_of_perfectly_separated_features):
         raise ValueError("Number of columns in dataframe must be greater than number of perfectly separated features.")
+
+    # check if label is the first column
+    if not data_df.columns[0] == "label":
+        raise ValueError("Label must be the first column.")
 
     # select columns to drop by index
     feature_names = data_df.columns
@@ -493,7 +498,6 @@ def drop_perfectly_separated_features(
     data_df = data_df.drop(columns_to_drop, axis=1)
 
     # check if all columns were dropped
-    assert len(data_df.columns) < len(feature_names), "Not all perfectly separated features were dropped"
     for dropped_column in columns_to_drop:
         assert dropped_column not in data_df.columns, f"Perfectly separated feature {dropped_column} was not dropped"
 
