@@ -36,6 +36,7 @@ def generate_correlated_cluster(
         lower_bound: float,
         upper_bound: float,
         plot=True,
+        show_values=True,
         path_to_save_pdf="",
 ) -> ndarray:
     """Generate a cluster of correlated features.
@@ -46,6 +47,7 @@ def generate_correlated_cluster(
         lower_bound: Lower bound of the generated correlations.
         upper_bound: Upper bound of the generated correlations.
         plot: Plot the generated cluster of correlated features.
+        show_values: Show the correlation values in the visualization.
         path_to_save_pdf: Path to save the visualization as pdf.
 
     Returns:
@@ -96,7 +98,7 @@ def generate_correlated_cluster(
         f"does not match number of features {number_of_features}"
     )
     if plot:
-        plot_correlated_cluster(covariant_cluster, path_to_save_pdf=path_to_save_pdf)
+        plot_correlated_cluster(covariant_cluster, show_values=show_values, path_to_save_pdf=path_to_save_pdf)
     return covariant_cluster
 
 
