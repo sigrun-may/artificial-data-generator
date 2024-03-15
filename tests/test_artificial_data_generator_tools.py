@@ -42,11 +42,6 @@ class TestArtificialDataGenerator(unittest.TestCase):
         result = adgt.shift_class_to_enlarge_effectsize(input_data, 2)
         self.assertEqual(result.shape, input_data.shape)
 
-    def test_build_class(self):
-        input_data = [np.random.normal(0, 1, (100, 5)) for _ in range(5)]
-        result = adgt.build_class(input_data)
-        self.assertEqual(result.shape, (100, 25))
-
     def test_generate_pseudo_class_with_valid_inputs(self):
         result = adgt.generate_pseudo_class(100, 5)
         self.assertEqual(result.shape, (200, 5))
@@ -124,6 +119,34 @@ class TestDropPerfectlySeparatedFeatures(unittest.TestCase):
         data_df = self.data_df[['bm_0', 'label', 'bm_1', 'bm_2']]
         with self.assertRaises(ValueError):
             adgt.drop_perfectly_separated_features([1], data_df)
+
+
+class TestBuildClass(unittest.TestCase):
+    def setUp(self):
+        self.number_of_samples_per_class = 30
+        self.number_of_informative_features = 50
+        self.scale = 1.0
+        self.correlated_clusters_list = [np.random.normal(0, 1, (30, 5)), np.random.normal(0, 1, (30, 5))]
+
+    def test_build_class(self):
+        result = adgt.build_class(self.number_of_samples_per_class, self.number_of_informative_features, self.scale, self.correlated_clusters_list)
+        self.assertEqual(result.shape, (self.number_of_samples_per_class, self.number_of_informative_features))
+
+    def test_build_uncorrelated_class(self):
+        result = adgt.build_class(self.number_of_samples_per_class, self.number_of_informative_features)
+        self.assertEqual(result.shape, (self.number_of_samples_per_class, self.number_of_informative_features))
+
+    def test_zero_samples_per_class(self):
+        with self.assertRaises(ValueError):
+            adgt.build_class(0, self.number_of_informative_features, self.scale, self.correlated_clusters_list)
+
+    def test_zero_informative_features(self):
+        with self.assertRaises(ValueError):
+            adgt.build_class(self.number_of_samples_per_class, 0, self.scale, self.correlated_clusters_list)
+
+    def test_zero_scale(self):
+        with self.assertRaises(ValueError):
+            adgt.build_class(self.number_of_samples_per_class, self.number_of_informative_features, 0, self.correlated_clusters_list)
 
 
 if __name__ == "__main__":
