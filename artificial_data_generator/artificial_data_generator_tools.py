@@ -5,6 +5,7 @@
 # which is available at https://opensource.org/licenses/MIT
 
 """This module provides tools for generating artificial data for classification tasks.
+
 It includes functions for generating correlated features, normal distributed features,
 lognormal distributed features, and random noise features.
 It also provides functions for visualizing the generated data,
@@ -13,19 +14,20 @@ The main function in this module is generate_artificial_classification_data,
 which generates a complete dataset with a specified number of classes,
 each with a specified number of samples and features.
 The generated data can be used for benchmarking and development of new methods
-in machine learning and data analysis."""
+in machine learning and data analysis.
+"""
 
 import logging
+import math
+import warnings
 from typing import Literal
 
 import numpy as np
-from numpy import ndarray
 import pandas as pd
-from matplotlib import pyplot
 import seaborn as sns
+from matplotlib import pyplot
+from numpy import ndarray
 from statsmodels.stats import correlation_tools
-import math
-import warnings
 
 
 def generate_correlated_cluster(
@@ -33,13 +35,19 @@ def generate_correlated_cluster(
     number_of_samples: int,
     lower_bound: float,
     upper_bound: float,
+    plot=True,
+    path_to_save_pdf="",
 ) -> ndarray:
     """Generate a cluster of correlated features.
+
     Args:
         number_of_features: Number of columns of generated data.
         number_of_samples: Number of rows of generated data.
         lower_bound: Lower bound of the generated correlations.
         upper_bound: Upper bound of the generated correlations.
+        plot: Plot the generated cluster of correlated features.
+        path_to_save_pdf: Path to save the visualization as pdf.
+
     Returns:
         Numpy array of the given shape with correlating features in the given range.
     """
@@ -53,7 +61,6 @@ def generate_correlated_cluster(
         high=upper_bound,
         size=(number_of_features, number_of_features),
     )
-
     print("generation of correlation matrix ...")
     # first iteration generating correlations to
     # improve the fit of the covariance matrix
@@ -89,21 +96,25 @@ def generate_correlated_cluster(
         f"Number of columns of generated covariant cluster {covariant_cluster.shape[1]} "
         f"does not match number of features {number_of_features}"
     )
+    if plot:
+        plot_correlated_cluster(covariant_cluster, path_to_save_pdf=path_to_save_pdf)
     return covariant_cluster
 
 
 def generate_normal_distributed_informative_features_for_one_class(
-    number_of_samples: int, number_of_normal_distributed_relevant_features: int, scale: float = 1.0
+    number_of_samples: int, number_of_normal_distributed_relevant_features: int, scale: float = 1.0, plot=True
 ) -> ndarray:
     """Generate normal distributed informative features for one class with the given scale.
+
     Args:
         number_of_samples: Number of rows of generated data.
         number_of_normal_distributed_relevant_features: Number of columns of generated data.
         scale: Scale of the normal distribution.
+        plot: Plot the generated normal distributed informative features.
+
     Returns:
         Numpy array of the given shape with normal distributed class features.
     """
-
     # check if number of relevant features is greater than zero
     if not number_of_normal_distributed_relevant_features > 0:
         raise ValueError("Number of relevant features must be greater than zero.")
@@ -130,6 +141,10 @@ def generate_normal_distributed_informative_features_for_one_class(
             f"-> Try choosing a smaller scale for a small sample size or accept a deviating mean. "
             f"The current scale is {str(scale)}."
         )
+
+    if plot:
+        plot_distribution_of_class_features_for_single_class(relevant_features_np)
+
     return relevant_features_np
 
 
@@ -137,21 +152,24 @@ def transform_normal_distributed_class_features_to_lognormal_distribution(
     class_features_data_array: ndarray,
 ) -> ndarray:
     """Transform the given normal distributed class features to a lognormal distribution to simulate outliers.
+
     Args:
         class_features_data_array: Normal distributed class features to transform.
+
     Returns:
         Numpy array of the given shape with lognormal distributed class features.
     """
-
     lognormal_distributed_class_features_np = np.exp(class_features_data_array)
     return lognormal_distributed_class_features_np
 
 
 def shift_class_to_enlarge_effectsize(class_features_np: ndarray, effect_size: float) -> ndarray:
     """Shift the given class features to simulate the given effect size.
+
     Args:
         class_features_np: Class features to shift.
         effect_size: Effect size to shift the class features to.
+
     Returns:
         Numpy array of the given shape with shifted class features.
     """
@@ -159,29 +177,42 @@ def shift_class_to_enlarge_effectsize(class_features_np: ndarray, effect_size: f
     return class_features_np
 
 
-def build_class(class_features_list: list[ndarray]) -> ndarray:
+def build_class(class_features_list: list[ndarray], plot=True) -> ndarray:
     """Concatenate the given list of class arrays to a complete class.
+
     Args:
         class_features_list: List of class features to concatenate.
+        plot: Plot the concatenated class features.
+
     Returns:
         Numpy array of the given shape with concatenated class features.
     """
+    # class2_data_array = generate_normal_distributed_informative_features_for_one_class(
+    #     number_of_samples=number_of_samples_per_class,
+    #     number_of_normal_distributed_relevant_features=number_of_informative_features - correlated_clusters.shape[1],
+    #     scale=1.5,
+    #     show_plot=False,
+    # )
+
+    if plot:
+        plot_distribution_of_class_features_for_single_class(np.concatenate(class_features_list, axis=1))
     return np.concatenate(class_features_list, axis=1)
 
 
 def generate_pseudo_class(
     number_of_samples_per_class: int, number_of_pseudo_class_features: int, number_of_classes: int = 2
 ) -> ndarray:
-    """
-    Generate a pseudo class with the given number of samples per class and the given number of pseudo class features.
+    """Generate a pseudo class with the given number of samples per class and the given number of pseudo class features.
 
     The pseudo class is generated by concatenating the given number of classes with the given number of
     samples per class. ``number_of_classes`` distinct classes are generated and shuffled to create the pseudo class
     without relation to the class labels.
+
     Args:
         number_of_samples_per_class: Number of samples per class.
         number_of_pseudo_class_features: Number of pseudo class features.
         number_of_classes: Number of classes to generate.
+
     Returns:
         Numpy array of the given shape with pseudo class features.
     """
@@ -230,9 +261,11 @@ def generate_pseudo_class(
 
 def generate_random_features(number_of_samples: int, number_of_random_features: int) -> ndarray:
     """Generate random noise or unrelated features.
+
     Args:
         number_of_samples: Number of rows of generated data.
         number_of_random_features: Number of columns of generated data.
+
     Returns:
         Numpy array of the given shape with normal distributed random numbers.
     """
@@ -252,6 +285,7 @@ def generate_artificial_classification_data(
     number_of_pseudo_classes: int = 2,
 ) -> pd.DataFrame:
     """Generate artificial classification data.
+
     Args:
         generated_classes_list: List of labeled classes.
         number_of_samples_per_class: Number of samples per class.
@@ -259,6 +293,7 @@ def generate_artificial_classification_data(
         number_of_random_features: Number of random features to generate.
         number_of_pseudo_class_features: Number of pseudo class features to generate.
         number_of_pseudo_classes: Number of pseudo classes to generate.
+
     Returns:
         Pandas DataFrame of the given shape with concatenated class features. Features are labeled as follows:
 
@@ -300,7 +335,8 @@ def generate_artificial_classification_data(
             class_features_np = np.concatenate(
                 (np.full((class_features_np.shape[0], 1), class_labels_list[i]), class_features_np), axis=1
             )
-            # check of all elements of first column of class_features_data_array are equal to the corresponding class label
+            # check of all elements of first column of class_features_data_array
+            # are equal to the corresponding class label
             assert np.all(class_features_np[:, 0] == class_labels_list[i])
         else:
             class_features_np = np.concatenate((np.full((class_features_np.shape[0], 1), i), class_features_np), axis=1)
@@ -388,8 +424,10 @@ def find_perfectly_separated_features(list_of_informative_class_features: list[n
     values of the same feature in all other classes. This function checks all features of all classes and returns
     a list of indices of perfectly separated features. The indices correspond to the columns of the given data.
     The label must be excluded from the input data.
+
     Args:
-        list_of_informative_class_features: List of arrays containing the informative features for the corresponding class..
+        list_of_informative_class_features: List of arrays containing the informative features for the corresponding class.
+
     Returns:
         List of indices of perfectly separated features.
     """
@@ -426,9 +464,11 @@ def drop_perfectly_separated_features(
     list_of_perfectly_separated_features: list[int], data_df: pd.DataFrame
 ) -> pd.DataFrame:
     """Drop the perfectly separated informative features from the given data.
+
     Args:
         list_of_perfectly_separated_features: List of indices of perfectly separated features.
         data_df: Dataframe containing the data to drop the perfectly separated features from.
+
     Returns:
         Dataframe with dropped perfectly separated features.
     """
@@ -475,6 +515,7 @@ def plot_correlated_cluster(
     path_to_save_pdf="",
 ) -> None:
     """Visualize the given cluster of correlated features.
+
     Args:
         feature_cluster: The cluster of correlated features to visualize.
         correlation_method: Method to calculate the correlation. Possible values are "pearson", "kendall" and "spearman".
@@ -493,7 +534,7 @@ def plot_correlated_cluster(
         sns.heatmap(corr, cmap="Blues")
 
     if path_to_save_pdf != "":
-        pyplot.savefig(path_to_save_pdf, dpi=300, format='pdf')
+        pyplot.savefig(path_to_save_pdf, dpi=300, format="pdf")
 
     pyplot.show()
 
@@ -502,6 +543,7 @@ def plot_distribution_of_class_features_for_single_class(
     class_features_np: ndarray, class_label: int = None, path_to_save_pdf=""
 ) -> None:
     """Visualize the histogram of the given array corresponding to the class features.
+
     Args:
         class_features_np: Class features to visualize.
         class_label: Label of the corresponding class.
@@ -517,13 +559,14 @@ def plot_distribution_of_class_features_for_single_class(
     sns.histplot(data=class_plot_pd)
 
     if path_to_save_pdf != "":
-        pyplot.savefig(path_to_save_pdf, dpi=300, format='pdf')
+        pyplot.savefig(path_to_save_pdf, dpi=300, format="pdf")
 
     pyplot.show()
 
 
 def plot_distributions_of_all_classes(class_features_list: list[np.ndarray], path_to_save_pdf="") -> None:
     """Visualize the histogram of the given list of unlabeled arrays corresponding to the classes.
+
     Args:
         class_features_list: List of (unlabeled) classes to visualize.
         path_to_save_pdf: Path to save the visualization as pdf.
@@ -531,17 +574,18 @@ def plot_distributions_of_all_classes(class_features_list: list[np.ndarray], pat
     sns.set_theme(style="white")
     class_plot_pd = pd.DataFrame()
     for i, class_features_np in enumerate(class_features_list):
-        class_plot_pd["class" + str(i+1)] = class_features_np[:, 1:].flatten()
+        class_plot_pd["class" + str(i + 1)] = class_features_np[:, 1:].flatten()
 
     sns.histplot(data=class_plot_pd)
 
     if path_to_save_pdf != "":
-        pyplot.savefig(path_to_save_pdf, dpi=300, format='pdf')
+        pyplot.savefig(path_to_save_pdf, dpi=300, format="pdf")
     pyplot.show()
 
 
 def plot_correlation_between_classes(class_features_list: list[np.ndarray], path_to_save_pdf="") -> None:
     """Visualize the correlation between the given list of unlabeled arrays corresponding to the classes.
+
     Args:
         class_features_list: List of (unlabeled) classes to visualize.
         path_to_save_pdf: Path to save the visualization as pdf.
@@ -552,6 +596,6 @@ def plot_correlation_between_classes(class_features_list: list[np.ndarray], path
         class_plot_pd["class" + str(i)] = class_features_np.flatten()
 
     if path_to_save_pdf != "":
-        pyplot.savefig(path_to_save_pdf, dpi=300, format='pdf')
+        pyplot.savefig(path_to_save_pdf, dpi=300, format="pdf")
 
     sns.pairplot(class_plot_pd)
