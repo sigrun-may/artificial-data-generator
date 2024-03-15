@@ -5,6 +5,7 @@
 # which is available at https://opensource.org/licenses/MIT
 
 """Visualizer for the generated artificial data.
+
 Visualizes correlation matrices of the correlated feature clusters and class histograms.
 """
 import pandas as pd
@@ -14,10 +15,12 @@ from matplotlib import pyplot
 
 def visualize(data_df, params_dict, path=None) -> None:
     """Visualize generated artificial biomarker data.
+
     Args:
         data_df: DataFrame where each column equals a feature or biomarker candidate. The features must not be shuffled.
         params_dict: The input parameters for the generated artificial data.
         path: Path to folder to save the figures.
+
     Returns:
         None
     """
@@ -77,10 +80,12 @@ def visualize(data_df, params_dict, path=None) -> None:
 
 def visualize_correlation_matrix(data_df: pd.DataFrame, path: str = None, annotate: bool = False) -> None:
     """Visualize correlations.
+
     Args:
         data_df: DataFrame where each column equals a class.
         path: Path to save the figure
         annotate: If the correlation matrix should be annotated.
+
     Returns:
         None
     """

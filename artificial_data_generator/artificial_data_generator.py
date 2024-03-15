@@ -5,6 +5,7 @@
 # which is available at https://opensource.org/licenses/MIT
 
 """Generator for artificial data.
+
 Can be used as baseline for benchmarking and the development of new methods.
 For example, simulation of biomarker data from high-throughput experiments.
 """
@@ -23,10 +24,12 @@ from statsmodels.stats import correlation_tools
 
 def _build_pseudo_classes(params_dict: Dict[str, Any]) -> ndarray:
     """Create pseudo-classes by shuffling artificial classes.
+
     The total number of underlying classes equals the total number of artificial classes.
     Args:
         params_dict: Parameter dict containing number of pseudo-class features and number of artificial classes
                     (see example for parameters of :func:`generate_artificial_classification_data`).
+
     Returns:
         Randomly shuffled pseudo-class: Numpy array of the given shape.
     """
@@ -125,11 +128,13 @@ def _generate_correlated_cluster(
     upper_bound: float,
 ) -> ndarray:
     """Generate a cluster of correlated features.
+
     Args:
         number_of_features: Number of columns of generated data.
         number_of_samples: Number of rows of generated data.
         lower_bound: Lower bound of the generated correlations.
         upper_bound: Upper bound of the generated correlations.
+
     Returns:
         Numpy array of the given shape with correlating features in the given range.
     """
@@ -218,12 +223,14 @@ def _generate_dataframe(
     params_dict: Dict[str, Any],
 ) -> pd.DataFrame:
     """Generate semantic names for the columns of the given DataFrame.
+
     Args:
         data_np: Numpy array with generated data.
         params_dict: Parameter dict including the number of features per
             class, the number of pseudo-class features and the number of random
             features (see example for parameters of
             :func:`generate_artificial_classification_data`).
+
     Returns:
         DataFrame with meaningful named columns.
             - `label` for the labels
@@ -295,8 +302,10 @@ def _save(data_df, params_dict):
 
 def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.DataFrame:
     """Generate artificial classification (e.g. biomarker) data.
+
     Args:
         params_dict: Parameters for the data to generate (see example below).
+
     Returns:
         Generated artificial data.
     Example:
