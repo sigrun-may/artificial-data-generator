@@ -84,6 +84,7 @@
 <span class="c1"># which is available at https://opensource.org/licenses/MIT</span>
 
 <span class="sd">&quot;&quot;&quot;Generator for artificial data.</span>
+
 <span class="sd">Can be used as baseline for benchmarking and the development of new methods.</span>
 <span class="sd">For example, simulation of biomarker data from high-throughput experiments.</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -102,10 +103,12 @@
 
 <div class="viewcode-block" id="_build_pseudo_classes"><a class="viewcode-back" href="../../code-doc.html#artificial_data_generator.artificial_data_generator._build_pseudo_classes">[docs]</a><span class="k">def</span> <span class="nf">_build_pseudo_classes</span><span class="p">(</span><span class="n">params_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create pseudo-classes by shuffling artificial classes.</span>
+
 <span class="sd">    The total number of underlying classes equals the total number of artificial classes.</span>
 <span class="sd">    Args:</span>
 <span class="sd">        params_dict: Parameter dict containing number of pseudo-class features and number of artificial classes</span>
 <span class="sd">                    (see example for parameters of :func:`generate_artificial_classification_data`).</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        Randomly shuffled pseudo-class: Numpy array of the given shape.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -204,11 +207,13 @@
     <span class="n">upper_bound</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a cluster of correlated features.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        number_of_features: Number of columns of generated data.</span>
 <span class="sd">        number_of_samples: Number of rows of generated data.</span>
 <span class="sd">        lower_bound: Lower bound of the generated correlations.</span>
 <span class="sd">        upper_bound: Upper bound of the generated correlations.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        Numpy array of the given shape with correlating features in the given range.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -297,12 +302,14 @@
     <span class="n">params_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate semantic names for the columns of the given DataFrame.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        data_np: Numpy array with generated data.</span>
 <span class="sd">        params_dict: Parameter dict including the number of features per</span>
 <span class="sd">            class, the number of pseudo-class features and the number of random</span>
 <span class="sd">            features (see example for parameters of</span>
 <span class="sd">            :func:`generate_artificial_classification_data`).</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        DataFrame with meaningful named columns.</span>
 <span class="sd">            - `label` for the labels</span>
@@ -374,8 +381,10 @@
 
 <div class="viewcode-block" id="generate_artificial_classification_data"><a class="viewcode-back" href="../../code-doc.html#artificial_data_generator.artificial_data_generator.generate_artificial_classification_data">[docs]</a><span class="k">def</span> <span class="nf">generate_artificial_classification_data</span><span class="p">(</span><span class="n">params_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate artificial classification (e.g. biomarker) data.</span>
+
 <span class="sd">    Args:</span>
 <span class="sd">        params_dict: Parameters for the data to generate (see example below).</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        Generated artificial data.</span>
 <span class="sd">    Example:</span>
