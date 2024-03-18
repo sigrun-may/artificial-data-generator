@@ -1,3 +1,83 @@
+[tool.poetry]
+name = "artificial-data-generator"
+version = "0.0.2rc2"
+description = ""
+authors = ["Sigrun May <s.may@ostfalia.de>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/sigrun-may/artificial-data-generator"
+keywords = [
+    "artificial data",
+]
+# all classifiers see https://pypi.org/classifiers/
+classifiers = [
+    # "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
+    # "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Operating System :: OS Independent",
+]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/sigrun-may/artificial-data-generator/issues"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pyyaml = "*"
+numpy = "*"
+pandas = "*"
+seaborn = "*"
+matplotlib = "*"
+statsmodels = "*"
+black = {version = "*", optional = true}
+flake8 = {version = "*", optional = true}
+isort = {version = "*", optional = true}
+mdformat = {version = "*", optional = true}
+pydocstyle = {version = "*", optional = true}
+mypy = {version = "*", optional = true}
+pylint = {version = "*", optional = true}
+pylintfileheader = {version = "*", optional = true}
+pytest = {version = "*", optional = true}
+sphinx = {version = "*", optional = true}
+sphinx_rtd_theme = {version = "*", optional = true}
+myst_parser = {version = "*", optional = true}
+sphinx_copybutton = {version = "*", optional = true}
+
+[tool.poetry.extras]
+filcheckinges = [
+    "black",
+    "flake8",
+    "isort",
+    "mdformat",
+    "pydocstyle",
+    "mypy",
+    "pylint",
+    "pylintfileheader",
+]
+testing = ["pytest"]
+doc = ["sphinx", "sphinx_rtd_theme", "myst_parser", "sphinx_copybutton"]
+
 [tool.black]
 line-length = 120
 target-version = ["py39"]
