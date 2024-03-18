@@ -51,33 +51,25 @@ pandas = "*"
 seaborn = "*"
 matplotlib = "*"
 statsmodels = "*"
-black = {version = "*", optional = true}
-flake8 = {version = "*", optional = true}
-isort = {version = "*", optional = true}
-mdformat = {version = "*", optional = true}
-pydocstyle = {version = "*", optional = true}
-mypy = {version = "*", optional = true}
-pylint = {version = "*", optional = true}
-pylintfileheader = {version = "*", optional = true}
-pytest = {version = "*", optional = true}
-sphinx = {version = "*", optional = true}
-sphinx_rtd_theme = {version = "*", optional = true}
-myst_parser = {version = "*", optional = true}
-sphinx_copybutton = {version = "*", optional = true}
 
-[tool.poetry.extras]
-filcheckinges = [
-    "black",
-    "flake8",
-    "isort",
-    "mdformat",
-    "pydocstyle",
-    "mypy",
-    "pylint",
-    "pylintfileheader",
-]
-testing = ["pytest"]
-doc = ["sphinx", "sphinx_rtd_theme", "myst_parser", "sphinx_copybutton"]
+[tool.poetry.group.lint.dependencies]
+black = "*"
+flake8 = "*"
+isort = "*"
+mdformat = "*"
+pydocstyle = "*"
+mypy = "*"
+pylint = "*"
+pylintfileheader = "*"
+
+[tool.poetry.group.test.dependencies]
+pytest = "*"
+
+[tool.poetry.group.doc.dependencies]
+sphinx = "*"
+sphinx_rtd_theme = "*"
+myst_parser = "*"
+sphinx_copybutton = "*"
 
 [tool.black]
 line-length = 120
