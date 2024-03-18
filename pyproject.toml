@@ -6,6 +6,7 @@ authors = ["Sigrun May <s.may@ostfalia.de>"]
 license = "MIT"
 readme = "README.md"
 homepage = "https://github.com/sigrun-may/artificial-data-generator"
+include = ["LICENSE", "Makefile"]
 keywords = [
     "artificial data",
 ]
