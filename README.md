@@ -98,10 +98,10 @@ $ pip install artificial-data-generator
 ## Project Setup
 
 We recommend to do the setup in a text console and not with a GUI tool.
-This offers better controle and transparency.
+This offers better control and transparency.
 
 We use [Poetry](https://python-poetry.org/docs/) and
-[pyenv](https://github.com/pyenv/pyenv). Not Conda, Anaconda or direct pip.
+[pyenv](https://github.com/pyenv/pyenv). Not Conda, Anaconda or pip directly.
 
 ### 1. Get Project Source
 
