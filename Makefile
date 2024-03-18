@@ -16,3 +16,6 @@ format:
 	black $(src) $(other-src) $(test-src)
 	isort $(src) $(other-src) $(test-src)
 	mdformat *.md
+
+install:
+	poetry lock && poetry install --all-extras
