@@ -22,7 +22,7 @@ jobs:
     - name: Install
       run: |
         curl -sSL https://install.python-poetry.org | python3 -
-        poetry install --all-extras --without lint,test
+        poetry install --all-extras --without testing,filcheckinges
 
     - name: Make
       run: poetry run make -C docs html
