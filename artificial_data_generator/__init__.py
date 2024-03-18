@@ -8,4 +8,4 @@
 
 """Data generator main package."""
 
-__version__ = "0.0.2rc1"
+__version__ = "0.0.2rc2"
