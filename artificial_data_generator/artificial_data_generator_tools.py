@@ -184,6 +184,8 @@ def build_class(
     correlated_clusters_list: Optional[list] = None,
     plot_correlation_matrix: bool = True,
     plot_distribution: bool = True,
+    path_to_save_pdf="",
+
 ) -> ndarray:
     """Build a class with the given number of samples per class and the given number of informative features.
 
@@ -195,6 +197,7 @@ def build_class(
         correlated_clusters_list: List of correlated clusters to include in the class.
         plot_correlation_matrix: Plot the correlation matrix of the correlated class features.
         plot_distribution: Plot the distribution of the class features.
+        path_to_save_pdf: Path to save the visualization as pdf.
 
     Returns:
         Numpy array of the given shape with generated features for the class.
@@ -211,12 +214,26 @@ def build_class(
     if not scale > 0:
         raise ValueError("Scale must be greater than zero.")
 
+    # check if a plot will be generated if a plot path is given
+    if path_to_save_pdf != "" and not (plot_correlation_matrix or plot_distribution):
+        raise ValueError("No plot will be generated. "
+                         "Please set 'plot_correlation_matrix' or 'plot_distribution' to True.")
+
+    # check if path to save pdf is a string
+    if not isinstance(path_to_save_pdf, str):
+        raise ValueError("Path to save pdf must be a string.")
+
+    # check if path to save pdf is valid
+    if path_to_save_pdf != "":
+        if not path_to_save_pdf.endswith(".pdf"):
+            raise ValueError("Path to save pdf must end with '.pdf'.")
+
     class_features_list = []
     if correlated_clusters_list is not None:
         correlated_clusters = np.concatenate(correlated_clusters_list, axis=1)
         if plot_correlation_matrix:
             print("Correlation matrix of correlated clusters:")
-            plot_correlated_cluster(correlated_clusters, show_values=False)
+            plot_correlated_cluster(correlated_clusters, show_values=False, path_to_save_pdf=path_to_save_pdf)
         class_features_list.append(correlated_clusters)
         number_of_normal_distributed_relevant_features = number_of_informative_features - correlated_clusters.shape[1]
     else:
@@ -246,7 +263,8 @@ def build_class(
 
     if plot_distribution:
         print("Distribution of informative class features:")
-        plot_distribution_of_class_features_for_single_class(class_features)
+        plot_distribution_of_class_features_for_single_class(class_features, path_to_save_pdf=path_to_save_pdf)
+
     return class_features
 
 
