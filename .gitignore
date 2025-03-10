@@ -1,4 +1,10 @@
 .idea
+/data
+/plots
+*.egg-info
+*.egg
+.ipynb_checkpoints
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
