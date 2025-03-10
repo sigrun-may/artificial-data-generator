@@ -1,27 +1,25 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Code Documentation &mdash; Artificial Data Generator  documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
       <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=7f485136" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=b3ba4146"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=4825356b"></script>
-        <script src="_static/clipboard.min.js?v=a7894cd8"></script>
-        <script src="_static/copybutton.js?v=f281be69"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -87,15 +85,15 @@
            <div itemprop="articleBody">
              
   <section id="code-documentation">
-<h1>Code Documentation<a class="headerlink" href="#code-documentation" title="Permalink to this heading"></a></h1>
+<h1>Code Documentation<a class="headerlink" href="#code-documentation" title="Link to this heading"></a></h1>
 <section id="module-artificial_data_generator.artificial_data_generator">
-<span id="artificial-data-generator"></span><h2><a class="reference internal" href="#module-artificial_data_generator.artificial_data_generator" title="artificial_data_generator.artificial_data_generator"><code class="xref py py-mod docutils literal notranslate"><span class="pre">artificial_data_generator</span></code></a><a class="headerlink" href="#module-artificial_data_generator.artificial_data_generator" title="Permalink to this heading"></a></h2>
+<span id="artificial-data-generator"></span><h2><a class="reference internal" href="#module-artificial_data_generator.artificial_data_generator" title="artificial_data_generator.artificial_data_generator"><code class="xref py py-mod docutils literal notranslate"><span class="pre">artificial_data_generator</span></code></a><a class="headerlink" href="#module-artificial_data_generator.artificial_data_generator" title="Link to this heading"></a></h2>
 <p>Generator for artificial data.</p>
 <p>Can be used as baseline for benchmarking and the development of new methods.
 For example, simulation of biomarker data from high-throughput experiments.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="artificial_data_generator.artificial_data_generator._build_pseudo_classes">
-<span class="sig-prename descclassname"><span class="pre">artificial_data_generator.artificial_data_generator.</span></span><span class="sig-name descname"><span class="pre">_build_pseudo_classes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/artificial_data_generator/artificial_data_generator.html#_build_pseudo_classes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#artificial_data_generator.artificial_data_generator._build_pseudo_classes" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">artificial_data_generator.artificial_data_generator.</span></span><span class="sig-name descname"><span class="pre">_build_pseudo_classes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/artificial_data_generator/artificial_data_generator.html#_build_pseudo_classes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#artificial_data_generator.artificial_data_generator._build_pseudo_classes" title="Link to this definition"></a></dt>
 <dd><p>Create pseudo-classes by shuffling artificial classes.</p>
 <p>The total number of underlying classes equals the total number of artificial classes.
 :param params_dict: Parameter dict containing number of pseudo-class features and number of artificial classes</p>
@@ -110,42 +108,42 @@ For example, simulation of biomarker data from high-throughput experiments.</p>
 <dd class="field-even"><p>Randomly shuffled pseudo-class</p>
 </dd>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>params_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em>) – </p>
+<dd class="field-odd"><p><strong>params_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="artificial_data_generator.artificial_data_generator._generate_correlated_cluster">
-<span class="sig-prename descclassname"><span class="pre">artificial_data_generator.artificial_data_generator.</span></span><span class="sig-name descname"><span class="pre">_generate_correlated_cluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_of_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/artificial_data_generator/artificial_data_generator.html#_generate_correlated_cluster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#artificial_data_generator.artificial_data_generator._generate_correlated_cluster" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">artificial_data_generator.artificial_data_generator.</span></span><span class="sig-name descname"><span class="pre">_generate_correlated_cluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_of_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_of_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/artificial_data_generator/artificial_data_generator.html#_generate_correlated_cluster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#artificial_data_generator.artificial_data_generator._generate_correlated_cluster" title="Link to this definition"></a></dt>
 <dd><p>Generate a cluster of correlated features.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>number_of_features</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Number of columns of generated data.</p></li>
-<li><p><strong>number_of_samples</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Number of rows of generated data.</p></li>
-<li><p><strong>lower_bound</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Lower bound of the generated correlations.</p></li>
-<li><p><strong>upper_bound</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a>) – Upper bound of the generated correlations.</p></li>
+<li><p><strong>number_of_features</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of columns of generated data.</p></li>
+<li><p><strong>number_of_samples</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Number of rows of generated data.</p></li>
+<li><p><strong>lower_bound</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Lower bound of the generated correlations.</p></li>
+<li><p><strong>upper_bound</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – Upper bound of the generated correlations.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Numpy array of the given shape with correlating features in the given range.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>ndarray</em></a></p>
+<dd class="field-odd"><p><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a></p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="artificial_data_generator.artificial_data_generator._generate_dataframe">
-<span class="sig-prename descclassname"><span class="pre">artificial_data_generator.artificial_data_generator.</span></span><span class="sig-name descname"><span class="pre">_generate_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_np</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/artificial_data_generator/artificial_data_generator.html#_generate_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#artificial_data_generator.artificial_data_generator._generate_dataframe" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">artificial_data_generator.artificial_data_generator.</span></span><span class="sig-name descname"><span class="pre">_generate_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_np</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/artificial_data_generator/artificial_data_generator.html#_generate_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#artificial_data_generator.artificial_data_generator._generate_dataframe" title="Link to this definition"></a></dt>
 <dd><p>Generate semantic names for the columns of the given DataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>data_np</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.26)"><em>ndarray</em></a>) – Numpy array with generated data.</p></li>
-<li><p><strong>params_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em>) – Parameter dict including the number of features per
+<li><p><strong>data_np</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><em>ndarray</em></a>) – Numpy array with generated data.</p></li>
+<li><p><strong>params_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Parameter dict including the number of features per
 class, the number of pseudo-class features and the number of random
 features (see example for parameters of
 <a class="reference internal" href="#artificial_data_generator.artificial_data_generator.generate_artificial_classification_data" title="artificial_data_generator.artificial_data_generator.generate_artificial_classification_data"><code class="xref py py-func docutils literal notranslate"><span class="pre">generate_artificial_classification_data()</span></code></a>).</p></li>
@@ -171,11 +169,11 @@ features (see example for parameters of
 
 <dl class="py function">
 <dt class="sig sig-object py" id="artificial_data_generator.artificial_data_generator.generate_artificial_classification_data">
-<span class="sig-prename descclassname"><span class="pre">artificial_data_generator.artificial_data_generator.</span></span><span class="sig-name descname"><span class="pre">generate_artificial_classification_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/artificial_data_generator/artificial_data_generator.html#generate_artificial_classification_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#artificial_data_generator.artificial_data_generator.generate_artificial_classification_data" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">artificial_data_generator.artificial_data_generator.</span></span><span class="sig-name descname"><span class="pre">generate_artificial_classification_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params_dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/artificial_data_generator/artificial_data_generator.html#generate_artificial_classification_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#artificial_data_generator.artificial_data_generator.generate_artificial_classification_data" title="Link to this definition"></a></dt>
 <dd><p>Generate artificial classification (e.g. biomarker) data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>params_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.12)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.12)"><em>Any</em></a><em>]</em>) – Parameters for the data to generate (see example below).</p>
+<dd class="field-odd"><p><strong>params_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><em>Dict</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.13)"><em>Any</em></a><em>]</em>) – Parameters for the data to generate (see example below).</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Generated artificial data.</p>
