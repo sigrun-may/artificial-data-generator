@@ -1,6 +1,7 @@
 .idea
 /data
-/plots
+/examples/plots
+/examples/data
 *.egg-info
 *.egg
 .ipynb_checkpoints
