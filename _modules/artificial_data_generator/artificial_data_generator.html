@@ -111,7 +111,10 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        Randomly shuffled pseudo-class: Numpy array of the given shape.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">rng</span> <span class="o">=</span> <span class="n">default_rng</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;default_rng&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">default_rng</span><span class="p">()</span>
     <span class="n">simulated_classes</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">number_of_pseudo_class_samples</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -153,24 +156,65 @@
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_build_single_class</span><span class="p">(</span><span class="n">class_params_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">number_of_relevant_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
-    <span class="n">class_data_np</span> <span class="o">=</span> <span class="n">_generate_normal_distributed_class</span><span class="p">(</span><span class="n">class_params_dict</span><span class="p">,</span> <span class="n">number_of_relevant_features</span><span class="p">)</span>
+<div class="viewcode-block" id="_build_single_class">
+<a class="viewcode-back" href="../../code-doc.html#artificial_data_generator.artificial_data_generator._build_single_class">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_build_single_class</span><span class="p">(</span><span class="n">class_params_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">number_of_relevant_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a single class with the given parameters.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        class_params_dict: Parameter dict for the class to generate.</span>
+<span class="sd">            The key equals the class label.</span>
+<span class="sd">            &quot;number_of_samples&quot;: Number of samples to generate.</span>
+<span class="sd">            &quot;distribution&quot;: Distribution type (&quot;normal&quot; or &quot;lognormal&quot;).</span>
+<span class="sd">            &quot;mode&quot;: Mean (&quot;centre&quot;) of the distribution.</span>
+<span class="sd">            &quot;scale&quot;: Standard deviation (spread or “width”) of the distribution. Must be non-negative.</span>
+<span class="sd">            &quot;correlated_features&quot;: Dict with parameters for correlated features (see _generate_correlated_features).</span>
+<span class="sd">        number_of_relevant_features: Number of relevant features to generate.</span>
+<span class="sd">        rng: Random number generator.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array with generated class data.</span>
+<span class="sd">            The first column is the label column.</span>
+<span class="sd">            The rest of the columns are the features.</span>
+<span class="sd">            The number of columns equals the number of relevant features.</span>
+<span class="sd">            The number of rows equals the number of samples.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">class_data_np</span> <span class="o">=</span> <span class="n">_generate_normal_distributed_class</span><span class="p">(</span><span class="n">class_params_dict</span><span class="p">,</span> <span class="n">number_of_relevant_features</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">class_params_dict</span><span class="p">[</span><span class="s2">&quot;distribution&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;lognormal&quot;</span><span class="p">:</span>
         <span class="n">class_data_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">class_data_np</span><span class="p">)</span>
 
     <span class="c1"># shift class data to expected mode</span>
     <span class="n">class_data_np</span> <span class="o">=</span> <span class="n">class_data_np</span> <span class="o">+</span> <span class="n">class_params_dict</span><span class="p">[</span><span class="s2">&quot;mode&quot;</span><span class="p">]</span>
 
-    <span class="k">return</span> <span class="n">class_data_np</span>
+    <span class="k">return</span> <span class="n">class_data_np</span></div>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_generate_normal_distributed_class</span><span class="p">(</span><span class="n">class_params_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">number_of_relevant_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
+
+<div class="viewcode-block" id="_generate_normal_distributed_class">
+<a class="viewcode-back" href="../../code-doc.html#artificial_data_generator.artificial_data_generator._generate_normal_distributed_class">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_generate_normal_distributed_class</span><span class="p">(</span><span class="n">class_params_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">number_of_relevant_features</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate normal distributed class data.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        class_params_dict: Parameter dict for the class to generate.</span>
+<span class="sd">            The key equals the class label.</span>
+<span class="sd">            &quot;number_of_samples&quot;: Number of samples to generate.</span>
+<span class="sd">            &quot;distribution&quot;: Distribution type (&quot;normal&quot; or &quot;lognormal&quot;).</span>
+<span class="sd">            &quot;mode&quot;: Mean (&quot;centre&quot;) of the distribution.</span>
+<span class="sd">            &quot;scale&quot;: Standard deviation (spread or “width”) of the distribution. Must be non-negative.</span>
+<span class="sd">            &quot;correlated_features&quot;: Dict with parameters for correlated features (see _generate_correlated_features).</span>
+<span class="sd">        number_of_relevant_features: Number of relevant features to generate.</span>
+<span class="sd">        rng: Random number generator.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array with generated class data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">class_features_list</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="n">number_of_normal_distributed_random_features</span> <span class="o">=</span> <span class="n">number_of_relevant_features</span>
     <span class="c1"># generate correlated features?</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">class_params_dict</span><span class="p">[</span><span class="s2">&quot;correlated_features&quot;</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">correlated_features</span> <span class="o">=</span> <span class="n">_generate_correlated_features</span><span class="p">(</span><span class="n">class_params_dict</span><span class="p">)</span>
+        <span class="n">correlated_features</span> <span class="o">=</span> <span class="n">_generate_correlated_features</span><span class="p">(</span><span class="n">class_params_dict</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">correlated_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">number_of_normal_distributed_random_features</span>
         <span class="n">number_of_normal_distributed_random_features</span> <span class="o">-=</span> <span class="n">correlated_features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">assert</span> <span class="n">number_of_normal_distributed_random_features</span> <span class="o">&gt;=</span> <span class="mi">0</span>
@@ -180,7 +224,6 @@
 
     <span class="c1"># generate normal distributed random data</span>
     <span class="k">if</span> <span class="n">number_of_normal_distributed_random_features</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">rng</span> <span class="o">=</span> <span class="n">default_rng</span><span class="p">()</span>
         <span class="n">relevant_features</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span>
             <span class="n">loc</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">scale</span><span class="o">=</span><span class="n">class_params_dict</span><span class="p">[</span><span class="s2">&quot;scale&quot;</span><span class="p">],</span>
@@ -197,7 +240,8 @@
 
     <span class="n">complete_class_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">class_features_list</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">complete_class_np</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="n">class_params_dict</span><span class="p">[</span><span class="s2">&quot;number_of_samples&quot;</span><span class="p">],</span> <span class="n">number_of_relevant_features</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">complete_class_np</span>
+    <span class="k">return</span> <span class="n">complete_class_np</span></div>
+
 
 
 <div class="viewcode-block" id="_generate_correlated_cluster">
@@ -207,19 +251,21 @@
     <span class="n">number_of_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">lower_bound</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">upper_bound</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">rng</span><span class="p">:</span> <span class="n">default_rng</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a cluster of correlated features.</span>
-
 <span class="sd">    Args:</span>
 <span class="sd">        number_of_features: Number of columns of generated data.</span>
 <span class="sd">        number_of_samples: Number of rows of generated data.</span>
 <span class="sd">        lower_bound: Lower bound of the generated correlations.</span>
 <span class="sd">        upper_bound: Upper bound of the generated correlations.</span>
-
+<span class="sd">        rng: Random number generator.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">        Numpy array of the given shape with correlating features in the given range.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">rng</span> <span class="o">=</span> <span class="n">default_rng</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">rng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># use default random number generator</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">default_rng</span><span class="p">()</span>
 
     <span class="c1"># generate random matrix to constrain a range of values</span>
     <span class="c1"># and specify a starting point</span>
@@ -264,7 +310,20 @@
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_generate_correlated_features</span><span class="p">(</span><span class="n">class_params_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
+<div class="viewcode-block" id="_generate_correlated_features">
+<a class="viewcode-back" href="../../code-doc.html#artificial_data_generator.artificial_data_generator._generate_correlated_features">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_generate_correlated_features</span><span class="p">(</span><span class="n">class_params_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">rng</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate correlated features for a given class.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        class_params_dict: Parameter dict for the class to generate.</span>
+<span class="sd">            The key equals the class label.</span>
+<span class="sd">            &quot;correlated_features&quot;: Dict with parameters for correlated features (see _generate_correlated_features).</span>
+<span class="sd">        rng: Random number generator.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array with generated correlated features.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">correlated_feature_clusters</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">cluster_params_dict</span> <span class="ow">in</span> <span class="n">class_params_dict</span><span class="p">[</span><span class="s2">&quot;correlated_features&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
         <span class="n">correlated_feature_cluster</span> <span class="o">=</span> <span class="n">_generate_correlated_cluster</span><span class="p">(</span>
@@ -272,17 +331,41 @@
             <span class="n">number_of_samples</span><span class="o">=</span><span class="n">class_params_dict</span><span class="p">[</span><span class="s2">&quot;number_of_samples&quot;</span><span class="p">],</span>
             <span class="n">lower_bound</span><span class="o">=</span><span class="n">cluster_params_dict</span><span class="p">[</span><span class="s2">&quot;correlation_lower_bound&quot;</span><span class="p">],</span>
             <span class="n">upper_bound</span><span class="o">=</span><span class="n">cluster_params_dict</span><span class="p">[</span><span class="s2">&quot;correlation_upper_bound&quot;</span><span class="p">],</span>
+            <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="c1"># repeat random generation until lower bound is reached</span>
         <span class="n">correlated_feature_cluster</span> <span class="o">=</span> <span class="n">_repeat_correlation_cluster_generation</span><span class="p">(</span>
-            <span class="n">correlated_feature_cluster</span><span class="p">,</span> <span class="n">cluster_params_dict</span>
+            <span class="n">correlated_feature_cluster</span><span class="p">,</span> <span class="n">cluster_params_dict</span><span class="p">,</span> <span class="n">rng</span>
         <span class="p">)</span>
         <span class="n">correlated_feature_clusters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">correlated_feature_cluster</span><span class="p">)</span>
     <span class="n">correlated_features</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">correlated_feature_clusters</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">correlated_features</span>
+    <span class="k">return</span> <span class="n">correlated_features</span></div>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_repeat_correlation_cluster_generation</span><span class="p">(</span><span class="n">correlated_feature_cluster</span><span class="p">,</span> <span class="n">cluster_params_dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
+
+<div class="viewcode-block" id="_repeat_correlation_cluster_generation">
+<a class="viewcode-back" href="../../code-doc.html#artificial_data_generator.artificial_data_generator._repeat_correlation_cluster_generation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_repeat_correlation_cluster_generation</span><span class="p">(</span><span class="n">correlated_feature_cluster</span><span class="p">,</span> <span class="n">cluster_params_dict</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Repeat random generation of correlated features until lower bound is reached.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        correlated_feature_cluster: Numpy array with generated correlated features.</span>
+<span class="sd">        cluster_params_dict: Parameter dict for the cluster to generate.</span>
+<span class="sd">            &quot;correlation_lower_bound&quot;: Lower bounds for the correlation</span>
+<span class="sd">                                       of each cluster of correlated features within a normal</span>
+<span class="sd">                                       distributed class.</span>
+<span class="sd">            &quot;correlation_upper_bound&quot;: Upper bounds for the correlation</span>
+<span class="sd">                                       of each cluster of correlated features within a normal</span>
+<span class="sd">                                       distributed class.</span>
+<span class="sd">        rng: Random number generator.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Numpy array with generated correlated features.</span>
+<span class="sd">            The number of columns equals the number of features.</span>
+<span class="sd">            The number of rows equals the number of samples.</span>
+<span class="sd">            The values are normally distributed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="c1"># repeat random generation until lower bound is reached</span>
     <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">correlation_matrix_pd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">correlated_feature_cluster</span><span class="p">)</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;spearman&quot;</span><span class="p">)</span>
@@ -293,11 +376,13 @@
             <span class="n">number_of_samples</span><span class="o">=</span><span class="n">correlated_feature_cluster</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
             <span class="n">lower_bound</span><span class="o">=</span><span class="n">cluster_params_dict</span><span class="p">[</span><span class="s2">&quot;correlation_lower_bound&quot;</span><span class="p">],</span>
             <span class="n">upper_bound</span><span class="o">=</span><span class="n">cluster_params_dict</span><span class="p">[</span><span class="s2">&quot;correlation_upper_bound&quot;</span><span class="p">],</span>
+            <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">correlation_matrix_pd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">correlated_feature_cluster</span><span class="p">)</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;spearman&quot;</span><span class="p">)</span>
         <span class="n">min_corr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">correlation_matrix_pd</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
         <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">return</span> <span class="n">correlated_feature_cluster</span>
+    <span class="k">return</span> <span class="n">correlated_feature_cluster</span></div>
+
 
 
 <div class="viewcode-block" id="_generate_dataframe">
@@ -351,7 +436,20 @@
 
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_shuffle_features</span><span class="p">(</span><span class="n">data_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">params_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<div class="viewcode-block" id="_shuffle_features">
+<a class="viewcode-back" href="../../code-doc.html#artificial_data_generator.artificial_data_generator._shuffle_features">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">_shuffle_features</span><span class="p">(</span><span class="n">data_df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">params_dict</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Shuffle the features of the given DataFrame.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        data_df: DataFrame with generated data.</span>
+<span class="sd">        params_dict: Parameter dict including the number of features per</span>
+<span class="sd">            class, the number of pseudo-class features and the number of random</span>
+<span class="sd">            features (see example for parameters of</span>
+<span class="sd">            :func:`generate_artificial_classification_data`).</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        DataFrame with shuffled features.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># shuffle all features</span>
     <span class="k">if</span> <span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;shuffle_features&quot;</span><span class="p">]:</span>
         <span class="n">column_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">data_df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
@@ -359,10 +457,18 @@
         <span class="n">shuffled_column_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;label&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">column_names</span>
         <span class="n">data_df</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[</span><span class="n">shuffled_column_names</span><span class="p">]</span>
         <span class="k">assert</span> <span class="n">data_df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;label&quot;</span>
-    <span class="k">return</span> <span class="n">data_df</span>
+    <span class="k">return</span> <span class="n">data_df</span></div>
 
 
+
+<div class="viewcode-block" id="_save">
+<a class="viewcode-back" href="../../code-doc.html#artificial_data_generator.artificial_data_generator._save">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">_save</span><span class="p">(</span><span class="n">data_df</span><span class="p">,</span> <span class="n">params_dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save the generated data and parameters to the given paths.</span>
+<span class="sd">    Args:</span>
+<span class="sd">        data_df: DataFrame with generated data.</span>
+<span class="sd">        params_dict: Parameter dict including the paths to save the data and parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s2">&quot;path_to_save_csv&quot;</span> <span class="ow">in</span> <span class="n">params_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">and</span> <span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;path_to_save_csv&quot;</span><span class="p">]:</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;path_to_save_csv&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;path_to_save_csv&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">)</span>
@@ -382,7 +488,8 @@
         <span class="c1"># f = open(params_dict[&quot;path_to_save_meta_data&quot;], &quot;x&quot;)  # throw exception if file exists</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;path_to_save_meta_data&quot;</span><span class="p">],</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">params_dict</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Meta data successfully saved in </span><span class="si">{</span><span class="n">params_dict</span><span class="p">[</span><span class="s1">&#39;path_to_save_meta_data&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Meta data successfully saved in </span><span class="si">{</span><span class="n">params_dict</span><span class="p">[</span><span class="s1">&#39;path_to_save_meta_data&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="generate_artificial_classification_data">
@@ -421,6 +528,7 @@
 <span class="sd">                            3: {&quot;number_of_samples&quot;: 15, &quot;distribution&quot;: &quot;normal&quot;, &quot;mode&quot;: -10,</span>
 <span class="sd">                                &quot;scale&quot;: 2, &quot;correlated_features&quot;: {}},</span>
 <span class="sd">                        },</span>
+<span class="sd">                        &quot;seed&quot;: 42,</span>
 <span class="sd">                        &quot;path_to_save_csv&quot;: &quot;your_path_to_save.csv&quot;,</span>
 <span class="sd">                        &quot;path_to_save_feather&quot;: &quot;&quot;,</span>
 <span class="sd">                        &quot;path_to_save_meta_data&quot;: &quot;your_path_to_save_params_dict.yaml&quot;,</span>
@@ -459,19 +567,40 @@
 <span class="sd">                                                                       of each cluster of correlated</span>
 <span class="sd">                                                                       features within a normal</span>
 <span class="sd">                                                                       distributed class. Default is 1.</span>
+<span class="sd">        &quot;seed&quot;: Seed for reproducibility. If None, a random seed is used.</span>
 <span class="sd">        &quot;path_to_save_csv&quot;: &quot;your_path_to_save.csv&quot;</span>
 <span class="sd">        &quot;path_to_save_feather&quot;: &quot;your_path_to_save.feather&quot;</span>
 <span class="sd">        &quot;path_to_save_meta_data&quot;: &quot;your_path_to_save_params_dict.yaml&quot;</span>
 <span class="sd">        &quot;shuffle_features&quot;: If generated features should be shuffled.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># validate input parameters</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;classes&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;random_features&quot;</span><span class="p">],</span> <span class="nb">dict</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;random_features&quot;</span><span class="p">][</span><span class="s2">&quot;number_of_features&quot;</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;number_of_relevant_features&quot;</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;number_of_pseudo_class_features&quot;</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)))</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;path_to_save_csv&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)))</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;path_to_save_feather&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)))</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;path_to_save_meta_data&quot;</span><span class="p">],</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="kc">None</span><span class="p">)))</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;shuffle_features&quot;</span><span class="p">],</span> <span class="nb">bool</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;number_of_relevant_features&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;number_of_pseudo_class_features&quot;</span><span class="p">]</span> <span class="o">+</span>
+            <span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;random_features&quot;</span><span class="p">][</span><span class="s2">&quot;number_of_features&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">),</span> <span class="s2">&quot;At least one feature must be generated.&quot;</span>
+
+    <span class="k">if</span> <span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">],</span> <span class="nb">int</span><span class="p">)</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">default_rng</span><span class="p">(</span><span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;seed&quot;</span><span class="p">])</span>
+        <span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;default_rng&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rng</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">rng</span> <span class="o">=</span> <span class="n">default_rng</span><span class="p">()</span>
 
     <span class="c1"># generate relevant features</span>
     <span class="n">classes_list</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">class_number</span><span class="p">,</span> <span class="n">class_params_dict</span> <span class="ow">in</span> <span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;classes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="c1"># generate label</span>
         <span class="n">label_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">class_params_dict</span><span class="p">[</span><span class="s2">&quot;number_of_samples&quot;</span><span class="p">],</span> <span class="mi">1</span><span class="p">),</span> <span class="n">fill_value</span><span class="o">=</span><span class="n">class_number</span><span class="p">)</span>
-        <span class="n">data_class_np</span> <span class="o">=</span> <span class="n">_build_single_class</span><span class="p">(</span><span class="n">class_params_dict</span><span class="p">,</span> <span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;number_of_relevant_features&quot;</span><span class="p">])</span>
+        <span class="n">data_class_np</span> <span class="o">=</span> <span class="n">_build_single_class</span><span class="p">(</span><span class="n">class_params_dict</span><span class="p">,</span> <span class="n">params_dict</span><span class="p">[</span><span class="s2">&quot;number_of_relevant_features&quot;</span><span class="p">],</span> <span class="n">rng</span><span class="p">)</span>
         <span class="n">labeled_data_class_np</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">label_np</span><span class="p">,</span> <span class="n">data_class_np</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">classes_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">labeled_data_class_np</span><span class="p">)</span>
 
