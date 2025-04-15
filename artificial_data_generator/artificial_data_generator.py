@@ -33,7 +33,10 @@ def _build_pseudo_classes(params_dict: Dict[str, Any]) -> ndarray:
     Returns:
         Randomly shuffled pseudo-class: Numpy array of the given shape.
     """
-    rng = default_rng()
+    if params_dict["seed"] is not None:
+        rng = params_dict["default_rng"]
+    else:
+        rng = default_rng()
     simulated_classes = []
     number_of_pseudo_class_samples = 0
 
@@ -74,8 +77,28 @@ def _build_pseudo_classes(params_dict: Dict[str, Any]) -> ndarray:
     return classes
 
 
-def _build_single_class(class_params_dict: Dict[str, Any], number_of_relevant_features: int) -> ndarray:
-    class_data_np = _generate_normal_distributed_class(class_params_dict, number_of_relevant_features)
+def _build_single_class(class_params_dict: Dict[str, Any], number_of_relevant_features: int, rng) -> ndarray:
+    """Generate a single class with the given parameters.
+
+    Args:
+        class_params_dict: Parameter dict for the class to generate.
+            The key equals the class label.
+            "number_of_samples": Number of samples to generate.
+            "distribution": Distribution type ("normal" or "lognormal").
+            "mode": Mean ("centre") of the distribution.
+            "scale": Standard deviation (spread or “width”) of the distribution. Must be non-negative.
+            "correlated_features": Dict with parameters for correlated features (see _generate_correlated_features).
+        number_of_relevant_features: Number of relevant features to generate.
+        rng: Random number generator.
+
+    Returns:
+        Numpy array with generated class data.
+            The first column is the label column.
+            The rest of the columns are the features.
+            The number of columns equals the number of relevant features.
+            The number of rows equals the number of samples.
+    """
+    class_data_np = _generate_normal_distributed_class(class_params_dict, number_of_relevant_features, rng)
     if class_params_dict["distribution"] == "lognormal":
         class_data_np = np.exp(class_data_np)
 
@@ -85,13 +108,29 @@ def _build_single_class(class_params_dict: Dict[str, Any], number_of_relevant_fe
     return class_data_np
 
 
-def _generate_normal_distributed_class(class_params_dict: Dict[str, Any], number_of_relevant_features: int) -> ndarray:
+def _generate_normal_distributed_class(class_params_dict: Dict[str, Any], number_of_relevant_features: int, rng) -> ndarray:
+    """Generate normal distributed class data.
+
+    Args:
+        class_params_dict: Parameter dict for the class to generate.
+            The key equals the class label.
+            "number_of_samples": Number of samples to generate.
+            "distribution": Distribution type ("normal" or "lognormal").
+            "mode": Mean ("centre") of the distribution.
+            "scale": Standard deviation (spread or “width”) of the distribution. Must be non-negative.
+            "correlated_features": Dict with parameters for correlated features (see _generate_correlated_features).
+        number_of_relevant_features: Number of relevant features to generate.
+        rng: Random number generator.
+
+    Returns:
+        Numpy array with generated class data.
+    """
     class_features_list = []
 
     number_of_normal_distributed_random_features = number_of_relevant_features
     # generate correlated features?
     if len(class_params_dict["correlated_features"]) > 0:
-        correlated_features = _generate_correlated_features(class_params_dict)
+        correlated_features = _generate_correlated_features(class_params_dict, rng)
         assert correlated_features.shape[1] <= number_of_normal_distributed_random_features
         number_of_normal_distributed_random_features -= correlated_features.shape[1]
         assert number_of_normal_distributed_random_features >= 0
@@ -101,7 +140,6 @@ def _generate_normal_distributed_class(class_params_dict: Dict[str, Any], number
 
     # generate normal distributed random data
     if number_of_normal_distributed_random_features > 0:
-        rng = default_rng()
         relevant_features = rng.normal(
             loc=0,
             scale=class_params_dict["scale"],
@@ -126,19 +164,21 @@ def _generate_correlated_cluster(
     number_of_samples: int,
     lower_bound: float,
     upper_bound: float,
+    rng: default_rng = None,
 ) -> ndarray:
     """Generate a cluster of correlated features.
-
     Args:
         number_of_features: Number of columns of generated data.
         number_of_samples: Number of rows of generated data.
         lower_bound: Lower bound of the generated correlations.
         upper_bound: Upper bound of the generated correlations.
-
+        rng: Random number generator.
     Returns:
         Numpy array of the given shape with correlating features in the given range.
     """
-    rng = default_rng()
+    if rng is None:
+        # use default random number generator
+        rng = default_rng()
 
     # generate random matrix to constrain a range of values
     # and specify a starting point
@@ -182,7 +222,18 @@ def _generate_correlated_cluster(
     return covariant_cluster
 
 
-def _generate_correlated_features(class_params_dict: Dict[str, Any]) -> ndarray:
+def _generate_correlated_features(class_params_dict: Dict[str, Any], rng) -> ndarray:
+    """Generate correlated features for a given class.
+
+    Args:
+        class_params_dict: Parameter dict for the class to generate.
+            The key equals the class label.
+            "correlated_features": Dict with parameters for correlated features (see _generate_correlated_features).
+        rng: Random number generator.
+
+    Returns:
+        Numpy array with generated correlated features.
+    """
     correlated_feature_clusters = []
     for cluster_params_dict in class_params_dict["correlated_features"].values():
         correlated_feature_cluster = _generate_correlated_cluster(
@@ -190,17 +241,38 @@ def _generate_correlated_features(class_params_dict: Dict[str, Any]) -> ndarray:
             number_of_samples=class_params_dict["number_of_samples"],
             lower_bound=cluster_params_dict["correlation_lower_bound"],
             upper_bound=cluster_params_dict["correlation_upper_bound"],
+            rng=rng,
         )
         # repeat random generation until lower bound is reached
         correlated_feature_cluster = _repeat_correlation_cluster_generation(
-            correlated_feature_cluster, cluster_params_dict
+            correlated_feature_cluster, cluster_params_dict, rng
         )
         correlated_feature_clusters.append(correlated_feature_cluster)
     correlated_features = np.concatenate(correlated_feature_clusters, axis=1)
     return correlated_features
 
 
-def _repeat_correlation_cluster_generation(correlated_feature_cluster, cluster_params_dict) -> ndarray:
+def _repeat_correlation_cluster_generation(correlated_feature_cluster, cluster_params_dict, rng) -> ndarray:
+    """ Repeat random generation of correlated features until lower bound is reached.
+
+    Args:
+        correlated_feature_cluster: Numpy array with generated correlated features.
+        cluster_params_dict: Parameter dict for the cluster to generate.
+            "correlation_lower_bound": Lower bounds for the correlation
+                                       of each cluster of correlated features within a normal
+                                       distributed class.
+            "correlation_upper_bound": Upper bounds for the correlation
+                                       of each cluster of correlated features within a normal
+                                       distributed class.
+        rng: Random number generator.
+
+    Returns:
+        Numpy array with generated correlated features.
+            The number of columns equals the number of features.
+            The number of rows equals the number of samples.
+            The values are normally distributed.
+    """
+
     # repeat random generation until lower bound is reached
     counter = 0
     correlation_matrix_pd = pd.DataFrame(correlated_feature_cluster).corr(method="spearman")
@@ -211,6 +283,7 @@ def _repeat_correlation_cluster_generation(correlated_feature_cluster, cluster_p
             number_of_samples=correlated_feature_cluster.shape[0],
             lower_bound=cluster_params_dict["correlation_lower_bound"],
             upper_bound=cluster_params_dict["correlation_upper_bound"],
+            rng=rng,
         )
         correlation_matrix_pd = pd.DataFrame(correlated_feature_cluster).corr(method="spearman")
         min_corr = np.amin(correlation_matrix_pd.values)
@@ -266,7 +339,18 @@ def _generate_dataframe(
     return data_df
 
 
-def _shuffle_features(data_df: pd.DataFrame, params_dict: Dict[str, Any]):
+def _shuffle_features(data_df: pd.DataFrame, params_dict: Dict[str, Any]) -> pd.DataFrame:
+    """Shuffle the features of the given DataFrame.
+
+    Args:
+        data_df: DataFrame with generated data.
+        params_dict: Parameter dict including the number of features per
+            class, the number of pseudo-class features and the number of random
+            features (see example for parameters of
+            :func:`generate_artificial_classification_data`).
+    Returns:
+        DataFrame with shuffled features.
+    """
     # shuffle all features
     if params_dict["shuffle_features"]:
         column_names = list(data_df.columns[1:])
@@ -278,6 +362,11 @@ def _shuffle_features(data_df: pd.DataFrame, params_dict: Dict[str, Any]):
 
 
 def _save(data_df, params_dict):
+    """Save the generated data and parameters to the given paths.
+    Args:
+        data_df: DataFrame with generated data.
+        params_dict: Parameter dict including the paths to save the data and parameters.
+    """
     if "path_to_save_csv" in params_dict.keys() and params_dict["path_to_save_csv"]:
         assert isinstance(params_dict["path_to_save_csv"], str)
         assert params_dict["path_to_save_csv"].endswith(".csv")
@@ -334,6 +423,7 @@ def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.D
                             3: {"number_of_samples": 15, "distribution": "normal", "mode": -10,
                                 "scale": 2, "correlated_features": {}},
                         },
+                        "seed": 42,
                         "path_to_save_csv": "your_path_to_save.csv",
                         "path_to_save_feather": "",
                         "path_to_save_meta_data": "your_path_to_save_params_dict.yaml",
@@ -372,19 +462,40 @@ def generate_artificial_classification_data(params_dict: Dict[str, Any]) -> pd.D
                                                                        of each cluster of correlated
                                                                        features within a normal
                                                                        distributed class. Default is 1.
+        "seed": Seed for reproducibility. If None, a random seed is used.
         "path_to_save_csv": "your_path_to_save.csv"
         "path_to_save_feather": "your_path_to_save.feather"
         "path_to_save_meta_data": "your_path_to_save_params_dict.yaml"
         "shuffle_features": If generated features should be shuffled.
     """
     # validate input parameters
+    assert isinstance(params_dict, dict)
+    assert isinstance(params_dict["classes"], dict)
+    assert isinstance(params_dict["random_features"], dict)
+    assert isinstance(params_dict["random_features"]["number_of_features"], int)
+    assert isinstance(params_dict["number_of_relevant_features"], int)
+    assert isinstance(params_dict["number_of_pseudo_class_features"], int)
+    assert isinstance(params_dict["seed"], (int, type(None)))
+    assert isinstance(params_dict["path_to_save_csv"], (str, type(None)))
+    assert isinstance(params_dict["path_to_save_feather"], (str, type(None)))
+    assert isinstance(params_dict["path_to_save_meta_data"], (str, type(None)))
+    assert isinstance(params_dict["shuffle_features"], bool)
+    assert (params_dict["number_of_relevant_features"] + params_dict["number_of_pseudo_class_features"] +
+            params_dict["random_features"]["number_of_features"] > 0), "At least one feature must be generated."
+
+    if params_dict["seed"] is not None:
+        assert isinstance(params_dict["seed"], int)
+        rng = default_rng(params_dict["seed"])
+        params_dict["default_rng"] = rng
+    else:
+        rng = default_rng()
 
     # generate relevant features
     classes_list = []
     for class_number, class_params_dict in params_dict["classes"].items():
         # generate label
         label_np = np.full((class_params_dict["number_of_samples"], 1), fill_value=class_number)
-        data_class_np = _build_single_class(class_params_dict, params_dict["number_of_relevant_features"])
+        data_class_np = _build_single_class(class_params_dict, params_dict["number_of_relevant_features"], rng)
         labeled_data_class_np = np.concatenate((label_np, data_class_np), axis=1)
         classes_list.append(labeled_data_class_np)
 

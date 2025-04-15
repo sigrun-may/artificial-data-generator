@@ -484,7 +484,7 @@ def generate_artificial_classification_data(
     return artificial_classification_data_df
 
 
-def find_perfectly_separated_features(list_of_informative_class_features: list[np.ndarray]) -> list[int]:
+def find_perfectly_separated_features(list_of_feature_values_per_class: list[np.ndarray]) -> list[int]:
     """Find perfectly separated features in the given data.
 
     A feature is perfectly separated if all values of this feature are smaller or greater than the corresponding
@@ -493,50 +493,53 @@ def find_perfectly_separated_features(list_of_informative_class_features: list[n
     The label must be excluded from the input data.
 
     Args:
-        list_of_informative_class_features: List of arrays containing the informative features for the corresponding class.
+        list_of_feature_values_per_class: List of feature values per class. Each element of the list is a numpy array
+            with shape (number_of_samples_per_class, number_of_features). The number of columns or features must be
+            equal for each element of the given list. Each element of the list corresponds to a class. Note that the
+            target/ labels of the given data must be excluded from the input data.
 
     Returns:
         List of indices of perfectly separated features.
     """
     # check if number of classes is greater than one
-    if not len(list_of_informative_class_features) > 1:
+    if not len(list_of_feature_values_per_class) > 1:
         raise ValueError("Number of classes must be greater than one.")
 
     # check if number of features is greater than zero
-    if not len(list_of_informative_class_features[0]) > 0:
+    if not len(list_of_feature_values_per_class[0]) > 0:
         raise ValueError("Number of features must be greater than zero.")
 
     # check if number of features is equal in each class
-    for i in range(len(list_of_informative_class_features) - 1):
-        if not list_of_informative_class_features[i + 1].shape[1] == list_of_informative_class_features[i].shape[1]:
+    for i in range(len(list_of_feature_values_per_class) - 1):
+        if not list_of_feature_values_per_class[i + 1].shape[1] == list_of_feature_values_per_class[i].shape[1]:
             raise ValueError("Number of features must be equal in each class.")
 
     # check which features perfectly separate all classes
     perfectly_separating_features = []
 
     # iterate over all features
-    for i in range(list_of_informative_class_features[0].shape[1]):
+    for i in range(list_of_feature_values_per_class[0].shape[1]):
         # iterate over all classes
-        for j in range(len(list_of_informative_class_features) - 1):
+        for j in range(len(list_of_feature_values_per_class) - 1):
             # check if all features of class j are smaller or greater than the corresponding features of class j+1
             if np.all(
-                list_of_informative_class_features[j][:, i] < list_of_informative_class_features[j + 1][:, i]
-            ) or np.all(list_of_informative_class_features[j][:, i] > list_of_informative_class_features[j + 1][:, i]):
+                    list_of_feature_values_per_class[j][:, i] < list_of_feature_values_per_class[j + 1][:, i]
+            ) or np.all(list_of_feature_values_per_class[j][:, i] > list_of_feature_values_per_class[j + 1][:, i]):
                 # print(f"Feature {i} perfectly separates class {j} and class {j + 1}")
                 perfectly_separating_features.append(i)
     return perfectly_separating_features
 
 
 def drop_perfectly_separated_features(
-    list_of_perfectly_separated_features: list[int], data_df: pd.DataFrame
+    list_of_perfectly_separated_features: list[int], data_df: pd.DataFrame, target_column_name: str|None = None
 ) -> pd.DataFrame:
     """Drop the perfectly separated informative features from the given data.
 
     Args:
         list_of_perfectly_separated_features: List of indices of perfectly separated features.
-        data_df: Dataframe containing the data to drop the perfectly separated features from. The label must be
-            included in the first column.
-
+        data_df: Dataframe containing the data to drop the perfectly separated features from.
+        target_column_name: Name of the target column (label) in the dataframe. If None, the first column is assumed to
+            be the target column.
     Returns:
         Dataframe with dropped perfectly separated features.
     """
@@ -547,14 +550,14 @@ def drop_perfectly_separated_features(
     if not len(data_df.columns) > len(list_of_perfectly_separated_features):
         raise ValueError("Number of columns in dataframe must be greater than number of perfectly separated features.")
 
-    # check if label is the first column
-    if not data_df.columns[0] == "label":
-        raise ValueError("Label must be the first column.")
-
     # select columns to drop by index
-    feature_names = data_df.columns
-    feature_names = feature_names.drop(["label"])  # exclude label
-    assert "label" not in feature_names, "Feature names must not include 'label'"
+    if target_column_name is not None:
+        if target_column_name not in data_df.columns:
+            raise ValueError(f"Target column name {target_column_name} not found in dataframe columns.")
+        feature_names = data_df.columns.drop([target_column_name])
+        assert target_column_name not in feature_names, "Feature names must not include 'target_column_name'"
+    else:
+        feature_names = data_df.columns[1:]
     columns_to_drop = feature_names[list_of_perfectly_separated_features]
     for i, column_name in enumerate(columns_to_drop):
         assert (
@@ -573,9 +576,12 @@ def drop_perfectly_separated_features(
     for dropped_column in columns_to_drop:
         assert dropped_column not in data_df.columns, f"Perfectly separated feature {dropped_column} was not dropped"
 
-    # check if label is still the first column
-    assert data_df.columns[0] == "label", "Label must be the first column"
-
+    if target_column_name is not None:
+        # check if target column is still the DataFrame
+        assert target_column_name in data_df.columns, (
+            f"Target column {target_column_name} was dropped. "
+            f"Please check if the target column is still in the DataFrame."
+        )
     return data_df
 
 

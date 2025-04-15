@@ -28,6 +28,7 @@ params_dict = {
         2: {"number_of_samples": 15, "distribution": "normal", "mode": 1, "scale": 2, "correlated_features": {}},
         3: {"number_of_samples": 15, "distribution": "normal", "mode": -10, "scale": 2, "correlated_features": {}},
     },
+    "seed": None,
     "path_to_save_csv": "your_path_to_save.csv",
     "path_to_save_feather": "",
     "path_to_save_meta_data": "your_path_to_save_params_dict.yaml",

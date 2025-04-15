@@ -115,10 +115,10 @@ class TestDropPerfectlySeparatedFeatures(unittest.TestCase):
         with self.assertRaises(ValueError):
             adgt.drop_perfectly_separated_features([0, 1, 2, 3], self.data_df)
 
-    def test_label_not_first_column(self):
-        data_df = self.data_df[['bm_0', 'label', 'bm_1', 'bm_2']]
+    def test_target_not_in_data_df(self):
+        data_df = self.data_df[['bm_0', 'bm_1', 'bm_2']]
         with self.assertRaises(ValueError):
-            adgt.drop_perfectly_separated_features([1], data_df)
+            adgt.drop_perfectly_separated_features([1], data_df, target_column_name="label")
 
 
 class TestBuildClass(unittest.TestCase):
