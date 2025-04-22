@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "artificial-data-generator"
-version = "0.0.4rc1"
+version = "0.0.4rc3"
 description = ""
 authors = ["Sigrun May <s.may@ostfalia.de>"]
 license = "MIT"
